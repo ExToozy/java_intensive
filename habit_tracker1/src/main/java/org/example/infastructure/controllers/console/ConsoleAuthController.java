@@ -1,6 +1,6 @@
 package org.example.infastructure.controllers.console;
 
-import org.example.core.exceptions.InvalidEmail;
+import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserAlreadyExistException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
@@ -18,7 +18,7 @@ public class ConsoleAuthController {
         return authService.login(dto);
     }
 
-    public User register(CreateUserDto dto) throws UserAlreadyExistException, InvalidEmail {
+    public User register(CreateUserDto dto) throws UserAlreadyExistException, InvalidEmailException {
         return authService.register(dto);
     }
 }

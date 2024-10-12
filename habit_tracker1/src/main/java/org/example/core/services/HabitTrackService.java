@@ -25,7 +25,8 @@ public class HabitTrackService {
         List<HabitTrack> tracks = getHabitTracks(habit.getId());
         Period period = habit.getFrequency().toPeriod();
         return tracks.stream()
-                .anyMatch(habitTrack -> habitTrack.getCompleteDate().isAfter(LocalDate.now().minusDays(period.getDays())));
+                .anyMatch(habitTrack ->
+                        habitTrack.getCompleteDate().isAfter(LocalDate.now().minusDays(period.getDays())));
     }
 
     public List<HabitTrack> getHabitTracks(UUID habitId) {

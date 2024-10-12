@@ -117,7 +117,7 @@ public class HabitService {
         } else {
             lastCompleteDay = LocalDate.EPOCH;
             for (var track : tracks) {
-                if (lastCompleteDay.isAfter(track.getCompleteDate())) {
+                if (lastCompleteDay.isBefore(track.getCompleteDate())) {
                     lastCompleteDay = track.getCompleteDate();
                 }
             }

@@ -1,6 +1,6 @@
 package org.example.presentation;
 
-import org.example.core.exceptions.InvalidEmail;
+import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserAlreadyExistException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.Habit;
@@ -11,6 +11,7 @@ import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
 import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
 import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
 import org.example.core.repositories.user_repository.dtos.CreateUserDto;
+import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 import org.example.infastructure.controllers.console.ConsoleAuthController;
 import org.example.infastructure.controllers.console.ConsoleHabitController;
 import org.example.infastructure.controllers.console.ConsoleHabitTrackController;
@@ -124,7 +125,7 @@ public class HabitTracker {
                 ConsoleOutHelper.printMessage("User with these credentials not found");
             } catch (UserAlreadyExistException e) {
                 ConsoleOutHelper.printMessage("A user with such emails already exists");
-            } catch (InvalidEmail e) {
+            } catch (InvalidEmailException e) {
                 ConsoleOutHelper.printMessage("Please enter a valid email");
             }
         } while (user == null);
@@ -139,7 +140,7 @@ public class HabitTracker {
         }
     }
 
-    private User authOrRegisterUser() throws UserNotFoundException, UserAlreadyExistException, InvalidEmail {
+    private User authOrRegisterUser() throws UserNotFoundException, UserAlreadyExistException, InvalidEmailException {
         AuthAction action = getActionFromInput(AuthAction.class);
         return handleAuthUserAction(action);
     }
@@ -193,8 +194,56 @@ public class HabitTracker {
             openHabit(habitIndex, habits);
         } else if (userAction == UserAction.SHOW_STATISTICS) {
             showHabitStatistics(user);
+        } else if (userAction == UserAction.DELETE) {
+            userController.deleteUser(user.getId());
+            return true;
+        } else if (userAction == UserAction.UPDATE) {
+            return handleUpdateUserAction(user);
         }
         return userAction == UserAction.EXIT;
+    }
+
+    private boolean handleUpdateUserAction(User user) {
+        UpdateUserAction action = getActionFromInput(UpdateUserAction.class);
+        switch (action) {
+            case UPDATE_EMAIL -> {
+                return handleUpdateUserEmailAction(user);
+            }
+            case UPDATE_PASSWORD -> {
+                return handleUpdateUserPasswordAction(user);
+            }
+            case CANCEL -> {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean handleUpdateUserPasswordAction(User user) {
+        ConsoleOutHelper.printMessage("Write a new password");
+        String password = ConsoleInHelper.readLine();
+        try {
+            userController.updateUser(new UpdateUserDto(user.getId(), user.getEmail(), password));
+        } catch (UserNotFoundException e) {
+            ConsoleOutHelper.printMessage("Error while updating a password, try later");
+        } catch (InvalidEmailException ignored) {
+
+        }
+        return false;
+    }
+
+    private boolean handleUpdateUserEmailAction(User user) {
+        ConsoleOutHelper.printMessage("Write a new email");
+        String email = ConsoleInHelper.readLine();
+        try {
+            userController.updateUser(new UpdateUserDto(user.getId(), email, user.getEmail()));
+            return true;
+        } catch (UserNotFoundException e) {
+            ConsoleOutHelper.printMessage("Error while updating a password, try later");
+        } catch (InvalidEmailException e) {
+            ConsoleOutHelper.printMessage("Invalid email. Try again");
+        }
+        return false;
     }
 
     private List<Habit> getUserHabitsByFilter(User user, HabitsShowFilter filter) {
@@ -229,7 +278,7 @@ public class HabitTracker {
         }
     }
 
-    private User handleAuthUserAction(AuthAction action) throws UserNotFoundException, UserAlreadyExistException, InvalidEmail {
+    private User handleAuthUserAction(AuthAction action) throws UserNotFoundException, UserAlreadyExistException, InvalidEmailException {
         ConsoleOutHelper.printMessage("Enter email:");
         String login = ConsoleInHelper.readLine();
         ConsoleOutHelper.printMessage("Enter password:");

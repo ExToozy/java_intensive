@@ -1,5 +1,6 @@
 package org.example.core.services;
 
+import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.user_repository.IUserRepository;
@@ -9,6 +10,7 @@ import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class UserService {
     private final IUserRepository userRepository;
@@ -46,6 +48,11 @@ public class UserService {
         userRepository.changeUserAdminStatus(dto);
     }
 
-    public void update(UpdateUserDto dto) {
+    public void update(UpdateUserDto dto) throws UserNotFoundException, InvalidEmailException {
+        Pattern emailPattern = Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+        if (!emailPattern.matcher(dto.getEmail()).matches()) {
+            throw new InvalidEmailException();
+        }
+        userRepository.update(dto);
     }
 }

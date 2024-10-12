@@ -11,12 +11,7 @@ import java.util.UUID;
 public interface IHabitRepository {
     void create(CreateHabitDto dto);
 
-    Habit get(UUID id);
-
-    List<Habit> getAll();
-
     List<Habit> getAllHabitsByUserId(UUID userId);
-
 
     void update(UpdateHabitDto dto);
 

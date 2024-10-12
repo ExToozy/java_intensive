@@ -9,8 +9,6 @@ import java.util.UUID;
 public interface IHabitTrackRepository {
     void create(CreateHabitTrackDto dto);
 
-    HabitTrack get(UUID id);
-
     List<HabitTrack> getHabitTracks(UUID habitId);
     
     void removeByHabitId(UUID id);

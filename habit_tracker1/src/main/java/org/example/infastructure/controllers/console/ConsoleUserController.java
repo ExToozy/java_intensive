@@ -1,5 +1,6 @@
 package org.example.infastructure.controllers.console;
 
+import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
@@ -16,7 +17,7 @@ public class ConsoleUserController {
         this.userService = userService;
     }
 
-    public void updateUser(UpdateUserDto dto) {
+    public void updateUser(UpdateUserDto dto) throws UserNotFoundException, InvalidEmailException {
         userService.update(dto);
     }
 

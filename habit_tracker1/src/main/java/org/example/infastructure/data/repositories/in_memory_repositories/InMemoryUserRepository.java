@@ -12,29 +12,30 @@ import org.example.infastructure.data.mappers.UserMapper;
 import org.example.infastructure.data.models.UserEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class InMemoryUserRepository implements IUserRepository {
     private final Mapper<User, UserEntity> mapper = new UserMapper();
-    private List<UserEntity> users = new ArrayList<>();
+    private final List<UserEntity> users = new ArrayList<>();
 
     public InMemoryUserRepository() {
-        users.add(
+        users.addAll(Arrays.asList(
                 new UserEntity(
                         UUID.fromString("00000000-0000-0000-0000-000000000000"),
                         "ex@mail.ru",
                         PasswordManager.getPasswordHash("123"),
                         false
-                )
-        );
-        users.add(
+                ),
+
                 new UserEntity(
                         UUID.fromString("00000000-0000-0000-0000-000000000001"),
                         "admin",
                         PasswordManager.getPasswordHash("admin"),
                         true
                 )
+            )
         );
     }
 

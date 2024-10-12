@@ -1,6 +1,6 @@
 package org.example.core.services;
 
-import org.example.core.exceptions.InvalidEmail;
+import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserAlreadyExistException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
@@ -18,16 +18,16 @@ public class AuthService {
 
     public User login(CreateUserDto dto) throws UserNotFoundException {
         User user = userService.getUserByEmail(dto.getEmail());
-        if (PasswordManager.checkPassword(dto.getPassword())) {
+        if (!PasswordManager.checkPasswordEquals(dto.getPassword(), user.getPassword())) {
             throw new UserNotFoundException();
         }
         return user;
     }
 
-    public User register(CreateUserDto dto) throws SecurityException, UserAlreadyExistException, InvalidEmail {
+    public User register(CreateUserDto dto) throws SecurityException, UserAlreadyExistException, InvalidEmailException {
         Pattern emailPattern = Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         if (!emailPattern.matcher(dto.getEmail()).matches()) {
-            throw new InvalidEmail();
+            throw new InvalidEmailException();
         }
 
         if (userService.checkEmailExist(dto.getEmail())) {

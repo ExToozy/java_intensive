@@ -12,6 +12,7 @@ import org.example.infastructure.data.models.HabitEntity;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,35 +22,32 @@ public class InMemoryHabitRepository implements IHabitRepository {
 
     public InMemoryHabitRepository() {
         UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
-        habits.add(
+        habits.addAll(Arrays.asList(
                 new HabitEntity(
                         UUID.fromString("00000000-0000-0000-0000-000000000000"),
                         userId,
-                        "Попить воды",
-                        "Каждый день надо пить 2 литра воды",
+                        "Drink water",
+                        "Need to drink 2 liters of water every day",
                         HabitFrequency.DAILY,
                         LocalDate.now()
-                )
-        );
-        habits.add(
+                ),
                 new HabitEntity(
                         UUID.fromString("00000000-0000-0000-0000-000000000001"),
                         userId,
-                        "Пройти 10000 шагов",
-                        "Каждый день надо ходить не менее 10000 шагов",
+                        "Walk 10000 steps",
+                        "Need to walk at least 10000 steps every day",
                         HabitFrequency.DAILY,
                         LocalDate.now()
-                )
-        );
-        habits.add(
+                ),
                 new HabitEntity(
                         UUID.fromString("00000000-0000-0000-0000-000000000002"),
                         userId,
-                        "Тренировка",
-                        "Ходить в зал 1 раз в неделю",
+                        "Training",
+                        "Go to the gym once a week",
                         HabitFrequency.WEEKLY,
                         LocalDate.now().minusDays(Period.ofWeeks(3).getDays())
                 )
+            )
         );
     }
 
@@ -66,16 +64,6 @@ public class InMemoryHabitRepository implements IHabitRepository {
         habits.add(habit);
     }
 
-
-    @Override
-    public Habit get(UUID id) {
-        return null;
-    }
-
-    @Override
-    public List<Habit> getAll() {
-        return null;
-    }
 
     @Override
     public List<Habit> getAllHabitsByUserId(UUID userId) {
@@ -102,6 +90,6 @@ public class InMemoryHabitRepository implements IHabitRepository {
 
     @Override
     public void remove(UUID id) {
-        habits.removeIf(habitEntity -> habitEntity.getId() == id);
+        habits.removeIf(habitEntity -> habitEntity.getId().equals(id));
     }
 }

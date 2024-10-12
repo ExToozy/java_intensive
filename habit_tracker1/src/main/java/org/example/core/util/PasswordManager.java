@@ -14,9 +14,9 @@ public class PasswordManager {
     private PasswordManager() {
     }
 
-    public static boolean checkPassword(String password) {
+    public static boolean checkPasswordEquals(String password, String userPassword) {
         String passwordHash = getPasswordHash(password);
-        return password.equals(passwordHash);
+        return userPassword.equals(passwordHash);
     }
 
     public static String getPasswordHash(String password) {
