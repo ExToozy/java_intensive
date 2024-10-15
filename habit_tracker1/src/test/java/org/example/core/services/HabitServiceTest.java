@@ -182,8 +182,6 @@ class HabitServiceTest {
     void getHabitStatistics() {
         var statistics = habitService.getHabitStatistics(UUID.fromString("00000000-0000-0000-0000-000000000000"));
         for (var habitStat : statistics.entrySet()) {
-            System.out.println(habitStat.getKey().getId());
-            System.out.println(habitStat.getValue());
             if (habitStat.getKey().getId().equals(UUID.fromString("00000000-0000-0000-0000-000000000001"))) {
                 assertThat(habitStat.getValue().get("completion_percent")).isZero();
                 assertThat(habitStat.getValue().get("track_count")).isZero();
@@ -256,6 +254,6 @@ class HabitServiceTest {
                 HabitFrequency.WEEKLY,
                 LocalDate.now().minusDays(Period.ofWeeks(3).getDays())
         );
-        assertThat(habitService.getHabitDeadlineDay(habit)).isEqualTo(LocalDate.of(2024, 10, 19));
+        assertThat(habitService.getHabitDeadlineDay(habit)).isEqualTo(LocalDate.now().plusDays(7));
     }
 }
