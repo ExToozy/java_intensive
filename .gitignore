@@ -1,6 +1,3 @@
 .idea
 build
 .gradle
-gradle
-gradlew*
-habit_tracker1/habit_tracker1.*
