@@ -1,19 +1,20 @@
-package org.example.infastructure.data.repositories.in_memory_repositories;
+package org.example.infrastructure.data.repositories.in_memory_repositories;
 
 import org.example.core.models.HabitFrequency;
 import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
 import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
-import org.example.infastructure.data.models.HabitEntity;
+import org.example.infrastructure.configs.DbConfig;
+import org.example.infrastructure.data.models.HabitEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,10 +25,10 @@ class InMemoryHabitRepositoryTest {
 
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
-        var userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        var userId = 0;
         var habits = new ArrayList<>(Arrays.asList(
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                        0,
                         userId,
                         "testUser1HabitName",
                         "testUser1HabitDescription",
@@ -35,7 +36,7 @@ class InMemoryHabitRepositoryTest {
                         LocalDate.now()
                 ),
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
+                        1,
                         userId,
                         "testUser1HabitName",
                         "testUser1HabitDescription",
@@ -43,7 +44,7 @@ class InMemoryHabitRepositoryTest {
                         LocalDate.now()
                 ),
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        2,
                         userId,
                         "testUser1HabitName",
                         "testUser1HabitDescription",
@@ -51,8 +52,8 @@ class InMemoryHabitRepositoryTest {
                         LocalDate.now().minusDays(Period.ofWeeks(3).getDays())
                 ),
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000003"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
+                        3,
+                        1,
                         "testUser2HabitName",
                         "testUser2HabitDescription",
                         HabitFrequency.DAILY,
@@ -68,23 +69,23 @@ class InMemoryHabitRepositoryTest {
 
     @DisplayName("Check that create habit add habit to memory")
     @Test
-    void create_shouldAddHabitToMemory() {
+    void create_shouldAddHabitToMemory() throws IOException {
+        DbConfig dbConfig = new DbConfig();
         habitRepository.create(
                 new CreateHabitDto(
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        2,
                         "testName",
                         "testDescription",
                         HabitFrequency.DAILY
                 )
         );
 
-        var userHabits = habitRepository.getAllHabitsByUserId(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        var userHabits = habitRepository.getAllHabitsByUserId(2);
         assertThat(userHabits)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(1)
-                .allMatch(habit -> habit.getId() != null &&
-                        habit.getName().equals("testName") &&
+                .allMatch(habit -> habit.getName().equals("testName") &&
                         habit.getDescription().equals("testDescription") &&
                         habit.getFrequency().equals(HabitFrequency.DAILY) &&
                         habit.getDayOfCreation().equals(LocalDate.now())
@@ -94,8 +95,8 @@ class InMemoryHabitRepositoryTest {
     @DisplayName("Check getAllHabitsByUserId return correct habits")
     @Test
     void getAllHabitsByUserId_shouldReturnUserHabits() {
-        var habitsUser1 = habitRepository.getAllHabitsByUserId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
-        var habitsUser2 = habitRepository.getAllHabitsByUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        var habitsUser1 = habitRepository.getAllHabitsByUserId(0);
+        var habitsUser2 = habitRepository.getAllHabitsByUserId(1);
 
         assertThat(habitsUser1).isNotNull().isNotEmpty().hasSize(3);
         assertThat(habitsUser2).isNotNull().isNotEmpty().hasSize(1);
@@ -105,8 +106,8 @@ class InMemoryHabitRepositoryTest {
     @DisplayName("Check that remove really remove habit from memory")
     @Test
     void remove_shouldRemoveHabitFromMemory() {
-        habitRepository.remove(UUID.fromString("00000000-0000-0000-0000-000000000003"));
-        var habitsUser2 = habitRepository.getAllHabitsByUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        habitRepository.remove(3);
+        var habitsUser2 = habitRepository.getAllHabitsByUserId(1);
 
         assertThat(habitsUser2).isNotNull().isEmpty();
     }
@@ -116,17 +117,17 @@ class InMemoryHabitRepositoryTest {
     void update() {
         habitRepository.update(
                 new UpdateHabitDto(
-                        UUID.fromString("00000000-0000-0000-0000-000000000003"),
+                        3,
                         "newHabitName",
                         "newHabitDescription",
                         HabitFrequency.WEEKLY
                 )
         );
         var updatedHabit = habitRepository
-                .getAllHabitsByUserId(UUID.fromString("00000000-0000-0000-0000-000000000001"))
+                .getAllHabitsByUserId(1)
                 .get(0);
 
-        assertThat(updatedHabit.getId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000003"));
+        assertThat(updatedHabit.getId()).isEqualTo(3);
         assertThat(updatedHabit.getName()).isEqualTo("newHabitName");
         assertThat(updatedHabit.getDescription()).isEqualTo("newHabitDescription");
         assertThat(updatedHabit.getFrequency()).isEqualTo(HabitFrequency.WEEKLY);

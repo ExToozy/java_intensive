@@ -4,10 +4,10 @@ import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
 import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
 import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
-import org.example.infastructure.data.models.HabitEntity;
-import org.example.infastructure.data.models.HabitTrackEntity;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
+import org.example.infrastructure.data.models.HabitEntity;
+import org.example.infrastructure.data.models.HabitTrackEntity;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,35 +26,34 @@ class HabitServiceTest {
 
     @BeforeEach
     void setUp() throws IllegalAccessException, NoSuchFieldException {
-        var userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
         var habits = new ArrayList<>(Arrays.asList(
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                        userId,
+                        0,
+                        0,
                         "testUser1HabitName",
                         "testUser1HabitDescription",
                         HabitFrequency.DAILY,
                         LocalDate.now()
                 ),
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
-                        userId,
+                        1,
+                        0,
                         "testUser1HabitName",
                         "testUser1HabitDescription",
                         HabitFrequency.DAILY,
                         LocalDate.now()
                 ),
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                        userId,
+                        2,
+                        0,
                         "testUser1HabitName",
                         "testUser1HabitDescription",
                         HabitFrequency.WEEKLY,
                         LocalDate.now().minusDays(Period.ofWeeks(3).getDays())
                 ),
                 new HabitEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000003"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
+                        3,
+                        1,
                         "testUser2HabitName",
                         "testUser2HabitDescription",
                         HabitFrequency.DAILY,
@@ -66,28 +64,28 @@ class HabitServiceTest {
 
         var tracks = new ArrayList<>(Arrays.asList(
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                        0,
+                        0,
                         LocalDate.now()
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        1,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(0).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        2,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(1).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000003"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        3,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(2).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000004"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000010"),
+                        4,
+                        10,
                         LocalDate.now().minusDays(1)
                 )
         )
@@ -107,8 +105,8 @@ class HabitServiceTest {
     @DisplayName("Check that getUserHabits return user habits")
     @Test
     void getUserHabits_shouldReturnHabits_whenUserHasHabits() {
-        var habitsUser1 = habitService.getUserHabits(UUID.fromString("00000000-0000-0000-0000-000000000000"));
-        var habitsUser2 = habitService.getUserHabits(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        var habitsUser1 = habitService.getUserHabits(0);
+        var habitsUser2 = habitService.getUserHabits(1);
 
         assertThat(habitsUser1).isNotNull().isNotEmpty().hasSize(3);
         assertThat(habitsUser2).isNotNull().isNotEmpty().hasSize(1);
@@ -119,37 +117,37 @@ class HabitServiceTest {
     void createHabit_shouldAddHabitInMemory_whenAllIsCorrect() {
         habitService.createHabit(
                 new CreateHabitDto(
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        2,
                         "testName",
                         "testDescription",
                         HabitFrequency.DAILY
                 )
         );
 
-        var userHabits = habitService.getUserHabits(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        var userHabits = habitService.getUserHabits(2);
         assertThat(userHabits)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(1)
-                .allMatch(habit -> habit.getId() != null &&
+                .allMatch(habit ->
                         habit.getName().equals("testName") &&
-                        habit.getDescription().equals("testDescription") &&
-                        habit.getFrequency().equals(HabitFrequency.DAILY) &&
-                        habit.getDayOfCreation().equals(LocalDate.now())
+                                habit.getDescription().equals("testDescription") &&
+                                habit.getFrequency().equals(HabitFrequency.DAILY) &&
+                                habit.getDayOfCreation().equals(LocalDate.now())
                 );
     }
 
     @DisplayName("Check that getUserHabitsByCompleteStatus return only completed habits")
     @Test
     void getUserHabitsByCompleteStatus_shouldReturnOnlyCompletedHabits_whenWeRequestTrueStatus() {
-        var habits = habitService.getUserHabitsByCompleteStatus(UUID.fromString("00000000-0000-0000-0000-000000000000"), true);
+        var habits = habitService.getUserHabitsByCompleteStatus(0, true);
         assertThat(habits).isNotNull().isNotEmpty().allMatch(habit -> habitService.isCompleteHabit(habit));
     }
 
     @DisplayName("Check that getUserHabitsByCompleteStatus return only not completed habits")
     @Test
     void getUserHabitsByCompleteStatus_shouldReturnOnlyNotCompletedHabits_whenWeRequestFalseStatus() {
-        var habits = habitService.getUserHabitsByCompleteStatus(UUID.fromString("00000000-0000-0000-0000-000000000000"), false);
+        var habits = habitService.getUserHabitsByCompleteStatus(0, false);
         assertThat(habits).isNotNull().isNotEmpty().allMatch(habit -> !habitService.isCompleteHabit(habit));
     }
 
@@ -157,8 +155,8 @@ class HabitServiceTest {
     @Test
     void isCompleteHabit_shouldReturnTrue_WhenHabitIsComplete() {
         Habit habit = new Habit(
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                0,
+                0,
                 "testUser1HabitName",
                 "testUser1HabitDescription",
                 HabitFrequency.DAILY,
@@ -171,8 +169,8 @@ class HabitServiceTest {
     @Test
     void getHabitExecutionCountByPeriod_shouldReturnNumberOfExecution_whenHabitHaveExecutionInRequestPeriod() {
         var habit = new Habit(
-                UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                2,
+                0,
                 "testUser1HabitName",
                 "testUser1HabitDescription",
                 HabitFrequency.WEEKLY,
@@ -187,13 +185,13 @@ class HabitServiceTest {
     @DisplayName("Check statistics for the habit is correct")
     @Test
     void getHabitStatistics_shouldReturnCorrectHabitsStatistics() {
-        var statistics = habitService.getHabitStatistics(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        var statistics = habitService.getHabitStatistics(0);
         for (var habitStat : statistics.entrySet()) {
-            if (habitStat.getKey().getId().equals(UUID.fromString("00000000-0000-0000-0000-000000000001"))) {
+            if (habitStat.getKey().getId() == 1) {
                 assertThat(habitStat.getValue().get("completion_percent")).isZero();
                 assertThat(habitStat.getValue().get("track_count")).isZero();
                 assertThat(habitStat.getValue().get("current_streak")).isZero();
-            } else if (habitStat.getKey().getId().equals(UUID.fromString("00000000-0000-0000-0000-000000000002"))) {
+            } else if (habitStat.getKey().getId() == 2) {
                 assertThat(habitStat.getValue().get("completion_percent")).isEqualTo(75);
                 assertThat(habitStat.getValue().get("track_count")).isEqualTo(3);
                 assertThat(habitStat.getValue().get("current_streak")).isEqualTo(3);
@@ -210,8 +208,8 @@ class HabitServiceTest {
     @Test
     void getHabitStreak_shouldReturnHabitStreak_whenHabitHasStreak() {
         var habit = new Habit(
-                UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                2,
+                0,
                 "testUser1HabitName",
                 "testUser1HabitDescription",
                 HabitFrequency.WEEKLY,
@@ -223,10 +221,10 @@ class HabitServiceTest {
     @DisplayName("Check remove habits and their tracks")
     @Test
     void removeHabitAndTracks_shouldRemoveHabitAndTheirTracksInMemory() {
-        habitService.removeHabitAndTracks(UUID.fromString("00000000-0000-0000-0000-000000000003"));
-        var userHabits = habitService.getUserHabits(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        habitService.removeHabitAndTracks(3);
+        var userHabits = habitService.getUserHabits(1);
 
-        var habitTracks = habitTrackService.getHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000003"));
+        var habitTracks = habitTrackService.getHabitTracks(3);
 
         assertThat(userHabits).isNotNull().isEmpty();
         assertThat(habitTracks).isNotNull().isEmpty();
@@ -237,17 +235,17 @@ class HabitServiceTest {
     void updateHabit_shouldUpdateHabit() {
         habitService.updateHabit(
                 new UpdateHabitDto(
-                        UUID.fromString("00000000-0000-0000-0000-000000000003"),
+                        3,
                         "newHabitName",
                         "newHabitDescription",
                         HabitFrequency.WEEKLY
                 )
         );
         var updatedHabit = habitService
-                .getUserHabits(UUID.fromString("00000000-0000-0000-0000-000000000001"))
+                .getUserHabits(1)
                 .get(0);
 
-        assertThat(updatedHabit.getId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000003"));
+        assertThat(updatedHabit.getId()).isEqualTo(3);
         assertThat(updatedHabit.getName()).isEqualTo("newHabitName");
         assertThat(updatedHabit.getDescription()).isEqualTo("newHabitDescription");
         assertThat(updatedHabit.getFrequency()).isEqualTo(HabitFrequency.WEEKLY);
@@ -258,8 +256,8 @@ class HabitServiceTest {
     @Test
     void getHabitDeadlineDay_shouldGetCorrectDeadlineDay() {
         var habit = new Habit(
-                UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                2,
+                0,
                 "testUser1HabitName",
                 "testUser1HabitDescription",
                 HabitFrequency.WEEKLY,

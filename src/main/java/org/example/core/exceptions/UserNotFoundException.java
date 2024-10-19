@@ -1,7 +1,7 @@
 package org.example.core.exceptions;
 
 /**
- * Исключение обозначающие что пользователь не найден
+ * РСЃРєР»СЋС‡РµРЅРёРµ РѕР±РѕР·РЅР°С‡Р°СЋС‰РёРµ С‡С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
  */
 public class UserNotFoundException extends Exception {
 }

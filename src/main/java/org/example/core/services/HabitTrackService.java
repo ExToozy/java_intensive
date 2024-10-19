@@ -8,41 +8,40 @@ import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrac
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Сервис для работы с отметками привычек.
- * Позволяет создавать отметки о выполнении привычки и проверять их статус.
+ * РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕС‚РјРµС‚РєР°РјРё РїСЂРёРІС‹С‡РµРє.
+ * РџРѕР·РІРѕР»СЏРµС‚ СЃРѕР·РґР°РІР°С‚СЊ РѕС‚РјРµС‚РєРё Рѕ РІС‹РїРѕР»РЅРµРЅРёРё РїСЂРёРІС‹С‡РєРё Рё РїСЂРѕРІРµСЂСЏС‚СЊ РёС… СЃС‚Р°С‚СѓСЃ.
  */
 public class HabitTrackService {
 
     private final IHabitTrackRepository habitTrackRepository;
 
     /**
-     * Конструктор {@link HabitTrackService}.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ {@link HabitTrackService}.
      *
-     * @param habitTrackRepository {@link IHabitTrackRepository} репозиторий для работы с отметками
+     * @param habitTrackRepository {@link IHabitTrackRepository} СЂРµРїРѕР·РёС‚РѕСЂРёР№ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕС‚РјРµС‚РєР°РјРё
      */
     public HabitTrackService(IHabitTrackRepository habitTrackRepository) {
         this.habitTrackRepository = habitTrackRepository;
     }
 
     /**
-     * Помечает привычку как выполненную, создавая отметку о выполнении.
+     * РџРѕРјРµС‡Р°РµС‚ РїСЂРёРІС‹С‡РєСѓ РєР°Рє РІС‹РїРѕР»РЅРµРЅРЅСѓСЋ, СЃРѕР·РґР°РІР°СЏ РѕС‚РјРµС‚РєСѓ Рѕ РІС‹РїРѕР»РЅРµРЅРёРё.
      *
-     * @param dto {@link CreateHabitTrackDto} данные для создания записи о выполнении привычки
+     * @param dto {@link CreateHabitTrackDto} РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Р·Р°РїРёСЃРё Рѕ РІС‹РїРѕР»РЅРµРЅРёРё РїСЂРёРІС‹С‡РєРё
      */
     public void completeHabit(CreateHabitTrackDto dto) {
         habitTrackRepository.create(dto);
     }
 
     /**
-     * Проверяет, выполнена ли привычка.
-     * Привычка является выполненой если существует такая отметка,
-     * с момента создания которой, прошло меньше дней чем период выполнения привычки
+     * РџСЂРѕРІРµСЂСЏРµС‚, РІС‹РїРѕР»РЅРµРЅР° Р»Рё РїСЂРёРІС‹С‡РєР°.
+     * РџСЂРёРІС‹С‡РєР° СЏРІР»СЏРµС‚СЃСЏ РІС‹РїРѕР»РЅРµРЅРѕР№ РµСЃР»Рё СЃСѓС‰РµСЃС‚РІСѓРµС‚ С‚Р°РєР°СЏ РѕС‚РјРµС‚РєР°,
+     * СЃ РјРѕРјРµРЅС‚Р° СЃРѕР·РґР°РЅРёСЏ РєРѕС‚РѕСЂРѕР№, РїСЂРѕС€Р»Рѕ РјРµРЅСЊС€Рµ РґРЅРµР№ С‡РµРј РїРµСЂРёРѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРёРІС‹С‡РєРё
      *
-     * @param habit привычка для проверки
-     * @return true, если привычка выполнена в указанный период, иначе false
+     * @param habit РїСЂРёРІС‹С‡РєР° РґР»СЏ РїСЂРѕРІРµСЂРєРё
+     * @return true, РµСЃР»Рё РїСЂРёРІС‹С‡РєР° РІС‹РїРѕР»РЅРµРЅР° РІ СѓРєР°Р·Р°РЅРЅС‹Р№ РїРµСЂРёРѕРґ, РёРЅР°С‡Рµ false
      */
     public boolean isCompleteHabit(Habit habit) {
         List<HabitTrack> tracks = getHabitTracks(habit.getId());
@@ -55,21 +54,21 @@ public class HabitTrackService {
     }
 
     /**
-     * Возвращает список отметок о выпонении для указанной привычки.
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РѕС‚РјРµС‚РѕРє Рѕ РІС‹РїРѕРЅРµРЅРёРё РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕР№ РїСЂРёРІС‹С‡РєРё.
      *
-     * @param habitId идентификатор привычки
-     * @return список записей отслеживания привычки
+     * @param habitId РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРёРІС‹С‡РєРё
+     * @return СЃРїРёСЃРѕРє Р·Р°РїРёСЃРµР№ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїСЂРёРІС‹С‡РєРё
      */
-    public List<HabitTrack> getHabitTracks(UUID habitId) {
+    public List<HabitTrack> getHabitTracks(int habitId) {
         return habitTrackRepository.getHabitTracks(habitId);
     }
 
     /**
-     * Удаляет все отметки о выпонении для указанной привычки.
+     * РЈРґР°Р»СЏРµС‚ РІСЃРµ РѕС‚РјРµС‚РєРё Рѕ РІС‹РїРѕРЅРµРЅРёРё РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕР№ РїСЂРёРІС‹С‡РєРё.
      *
-     * @param habitId идентификатор привычки
+     * @param habitId РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРёРІС‹С‡РєРё
      */
-    public void removeHabitTracks(UUID habitId) {
+    public void removeHabitTracks(int habitId) {
         habitTrackRepository.removeByHabitId(habitId);
     }
 }

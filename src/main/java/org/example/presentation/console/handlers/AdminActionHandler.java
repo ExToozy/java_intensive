@@ -1,7 +1,7 @@
 package org.example.presentation.console.handlers;
 
 import org.example.core.models.User;
-import org.example.infastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.ActionManager;
 import org.example.presentation.console.actions.AdminAction;
 import org.example.presentation.console.in.ConsoleInHelper;
@@ -10,17 +10,17 @@ import org.example.presentation.console.out.ConsoleOutHelper;
 import java.util.List;
 
 /**
- * Обработчик действий администратора.
+ * РћР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёР№ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°.
  */
 public class AdminActionHandler {
     private final ConsoleUserController userController;
     private final ActionManager actionManager;
 
     /**
-     * Конструктор AdminActionHandler.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ AdminActionHandler.
      *
-     * @param userController контроллер для работы с пользователями
-     * @param actionManager  менеджер действий
+     * @param userController РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё
+     * @param actionManager  РјРµРЅРµРґР¶РµСЂ РґРµР№СЃС‚РІРёР№
      */
     public AdminActionHandler(ConsoleUserController userController, ActionManager actionManager) {
         this.userController = userController;
@@ -28,11 +28,11 @@ public class AdminActionHandler {
     }
 
     /**
-     * Обрабатывает действие администратора.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёРµ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°.
      *
-     * @param user   администратор, выполняющий действие
-     * @param action действие администратора
-     * @return флаг выхода
+     * @param user   Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РґРµР№СЃС‚РІРёРµ
+     * @param action РґРµР№СЃС‚РІРёРµ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
+     * @return С„Р»Р°Рі РІС‹С…РѕРґР°
      */
     public boolean handleAdminAction(User user, AdminAction action) {
         switch (action) {

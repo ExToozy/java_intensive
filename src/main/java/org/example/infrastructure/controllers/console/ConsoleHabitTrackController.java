@@ -1,4 +1,4 @@
-package org.example.infastructure.controllers.console;
+package org.example.infrastructure.controllers.console;
 
 import org.example.core.models.Habit;
 import org.example.core.models.HabitTrack;
@@ -6,7 +6,6 @@ import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrac
 import org.example.core.services.HabitTrackService;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ConsoleHabitTrackController {
     private final HabitTrackService habitTrackService;
@@ -19,7 +18,7 @@ public class ConsoleHabitTrackController {
         habitTrackService.completeHabit(dto);
     }
 
-    public List<HabitTrack> getHabitTracks(UUID habitId) {
+    public List<HabitTrack> getHabitTracks(int habitId) {
         return habitTrackService.getHabitTracks(habitId);
     }
 

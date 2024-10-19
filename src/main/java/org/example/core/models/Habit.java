@@ -2,37 +2,36 @@ package org.example.core.models;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
- * Класс {@code Habit} представляет привычку, созданную пользователем.
- * Содержит:
- * иденфитикатор привычки,
- * иденфитикатор пользователя,
- * название привычки,
- * описание привычки,
- * частота выполнения,
- * дату создания,
+ * РљР»Р°СЃСЃ {@code Habit} РїСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РїСЂРёРІС‹С‡РєСѓ, СЃРѕР·РґР°РЅРЅСѓСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј.
+ * РЎРѕРґРµСЂР¶РёС‚:
+ * РёРґРµРЅС„РёС‚РёРєР°С‚РѕСЂ РїСЂРёРІС‹С‡РєРё,
+ * РёРґРµРЅС„РёС‚РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ,
+ * РЅР°Р·РІР°РЅРёРµ РїСЂРёРІС‹С‡РєРё,
+ * РѕРїРёСЃР°РЅРёРµ РїСЂРёРІС‹С‡РєРё,
+ * С‡Р°СЃС‚РѕС‚Р° РІС‹РїРѕР»РЅРµРЅРёСЏ,
+ * РґР°С‚Сѓ СЃРѕР·РґР°РЅРёСЏ,
  */
 public class Habit {
-    private final UUID id;
-    private final UUID userId;
+    private final int id;
+    private final int userId;
     private final String name;
     private final String description;
     private final HabitFrequency frequency;
     private final LocalDate dayOfCreation;
 
     /**
-     * Конструктор для создания объекта {@code Habit}.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р° {@code Habit}.
      *
-     * @param id            иденфитикатор привычки
-     * @param userId        иденфитикатор пользователя
-     * @param name          название привычки
-     * @param description   описание привычки
-     * @param frequency     частота выполнения
-     * @param dayOfCreation дата создания
+     * @param id            РёРґРµРЅС„РёС‚РёРєР°С‚РѕСЂ РїСЂРёРІС‹С‡РєРё
+     * @param userId        РёРґРµРЅС„РёС‚РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @param name          РЅР°Р·РІР°РЅРёРµ РїСЂРёРІС‹С‡РєРё
+     * @param description   РѕРїРёСЃР°РЅРёРµ РїСЂРёРІС‹С‡РєРё
+     * @param frequency     С‡Р°СЃС‚РѕС‚Р° РІС‹РїРѕР»РЅРµРЅРёСЏ
+     * @param dayOfCreation РґР°С‚Р° СЃРѕР·РґР°РЅРёСЏ
      */
-    public Habit(UUID id, UUID userId, String name, String description, HabitFrequency frequency, LocalDate dayOfCreation) {
+    public Habit(int id, int userId, String name, String description, HabitFrequency frequency, LocalDate dayOfCreation) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -59,7 +58,7 @@ public class Habit {
                 && Objects.equals(dayOfCreation, habit.dayOfCreation);
     }
 
-    public UUID getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -67,7 +66,7 @@ public class Habit {
         return dayOfCreation;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

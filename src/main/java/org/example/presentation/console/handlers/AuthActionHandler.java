@@ -5,34 +5,34 @@ import org.example.core.exceptions.UserAlreadyExistException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.user_repository.dtos.CreateUserDto;
-import org.example.infastructure.controllers.console.ConsoleAuthController;
+import org.example.infrastructure.controllers.console.ConsoleAuthController;
 import org.example.presentation.console.actions.AuthAction;
 import org.example.presentation.console.in.ConsoleInHelper;
 
 /**
- * Обработчик действий аутентификации.
- * Обрабатывает действия входа и регистрации пользователей.
+ * РћР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёР№ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё.
+ * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ РІС…РѕРґР° Рё СЂРµРіРёСЃС‚СЂР°С†РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
  */
 public class AuthActionHandler {
     private final ConsoleAuthController authController;
 
     /**
-     * Конструктор AuthActionHandler.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ AuthActionHandler.
      *
-     * @param authController контроллер для работы с аутентификацией
+     * @param authController РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРµР№
      */
     public AuthActionHandler(ConsoleAuthController authController) {
         this.authController = authController;
     }
 
     /**
-     * Обрабатывает действия аутентификации пользователя.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param action действие аутентификации
-     * @return аутентифицированный пользователь
-     * @throws UserNotFoundException     если пользователь не найден
-     * @throws UserAlreadyExistException если пользователь уже существует
-     * @throws InvalidEmailException     если email недействителен
+     * @param action РґРµР№СЃС‚РІРёРµ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё
+     * @return Р°СѓС‚РµРЅС‚РёС„РёС†РёСЂРѕРІР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+     * @throws UserNotFoundException     РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
+     * @throws UserAlreadyExistException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+     * @throws InvalidEmailException     РµСЃР»Рё email РЅРµРґРµР№СЃС‚РІРёС‚РµР»РµРЅ
      */
     public User handleAuthUserAction(AuthAction action) throws UserNotFoundException, UserAlreadyExistException, InvalidEmailException {
         CreateUserDto dto = ConsoleInHelper.getCreateUserDtoFromInput();

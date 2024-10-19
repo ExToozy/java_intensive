@@ -1,7 +1,7 @@
 package org.example.core.exceptions;
 
 /**
- * Исключение обозначающие что email некорректный
+ * РСЃРєР»СЋС‡РµРЅРёРµ РѕР±РѕР·РЅР°С‡Р°СЋС‰РёРµ С‡С‚Рѕ email РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№
  */
 public class InvalidEmailException extends Exception {
 }

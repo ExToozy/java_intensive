@@ -6,10 +6,10 @@ import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.user_repository.dtos.CreateUserDto;
 import org.example.core.util.PasswordManager;
-import org.example.infastructure.data.models.UserEntity;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
+import org.example.infrastructure.data.models.UserEntity;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,13 +31,13 @@ class AuthServiceTest {
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         var users = new ArrayList<>(Arrays.asList(
                 new UserEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                        0,
                         "ex@mail.ru",
                         PasswordManager.getPasswordHash("123"),
                         false
                 ),
                 new UserEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
+                        1,
                         "admin",
                         PasswordManager.getPasswordHash("admin"),
                         true
@@ -61,7 +60,7 @@ class AuthServiceTest {
     @Test
     void login_shouldGetUser_whenCredentialsIsCorrect() throws UserNotFoundException {
         User user = authService.login(new CreateUserDto("ex@mail.ru", "123"));
-        assertThat(user.getId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        assertThat(user.getId()).isEqualTo(0);
     }
 
     @DisplayName("Check login with invalid credentials")

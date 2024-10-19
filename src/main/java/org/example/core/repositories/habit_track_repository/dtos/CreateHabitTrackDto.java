@@ -1,15 +1,14 @@
 package org.example.core.repositories.habit_track_repository.dtos;
 
-import java.util.UUID;
 
 public class CreateHabitTrackDto {
-    private final UUID habitId;
+    private final int habitId;
 
-    public CreateHabitTrackDto(UUID habitId) {
+    public CreateHabitTrackDto(int habitId) {
         this.habitId = habitId;
     }
 
-    public UUID getHabitId() {
+    public int getHabitId() {
         return habitId;
     }
 }

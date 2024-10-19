@@ -1,21 +1,20 @@
-package org.example.infastructure.data.models;
+package org.example.infrastructure.data.models;
 
-import java.util.UUID;
 
 public class UserEntity {
-    private UUID id;
+    private int id;
     private boolean isAdmin;
     private String email;
     private String password;
 
-    public UserEntity(UUID id, String email, String password, boolean isAdmin) {
+    public UserEntity(int id, String email, String password, boolean isAdmin) {
         this.isAdmin = isAdmin;
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

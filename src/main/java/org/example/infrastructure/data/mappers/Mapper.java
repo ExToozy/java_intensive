@@ -1,4 +1,4 @@
-package org.example.infastructure.data.mappers;
+package org.example.infrastructure.data.mappers;
 
 public interface Mapper<D, E> {
     D toDomain(E e);

@@ -2,15 +2,13 @@ package org.example.core.repositories.habit_repository.dtos;
 
 import org.example.core.models.HabitFrequency;
 
-import java.util.UUID;
-
 public class CreateHabitDto {
-    private UUID userId;
+    private int userId;
     private String name;
     private String description;
     private HabitFrequency frequency;
 
-    public CreateHabitDto(UUID userId, String name, String description, HabitFrequency frequency) {
+    public CreateHabitDto(int userId, String name, String description, HabitFrequency frequency) {
         this.userId = userId;
         this.name = name;
         this.description = description;
@@ -18,7 +16,7 @@ public class CreateHabitDto {
     }
 
 
-    public UUID getUserId() {
+    public int getUserId() {
         return userId;
     }
 

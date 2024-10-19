@@ -1,24 +1,23 @@
-package org.example.infastructure.data.models;
+package org.example.infrastructure.data.models;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class HabitTrackEntity {
-    private UUID id;
-    private UUID habitId;
+    private int id;
+    private int habitId;
     private LocalDate completeDate;
 
-    public HabitTrackEntity(UUID id, UUID habitId, LocalDate completeDate) {
+    public HabitTrackEntity(int id, int habitId, LocalDate completeDate) {
         this.id = id;
         this.habitId = habitId;
         this.completeDate = completeDate;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public UUID getHabitId() {
+    public int getHabitId() {
         return habitId;
     }
 

@@ -5,18 +5,18 @@ import org.example.core.exceptions.UserAlreadyExistException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.Habit;
 import org.example.core.models.User;
-import org.example.infastructure.controllers.console.ConsoleAuthController;
-import org.example.infastructure.controllers.console.ConsoleHabitController;
-import org.example.infastructure.controllers.console.ConsoleHabitTrackController;
-import org.example.infastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.controllers.console.ConsoleAuthController;
+import org.example.infrastructure.controllers.console.ConsoleHabitController;
+import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.actions.*;
 import org.example.presentation.console.handlers.*;
 import org.example.presentation.console.in.ConsoleInHelper;
 import org.example.presentation.console.out.ConsoleOutHelper;
 
 /**
- * Менеджер действий, управляющий взаимодействием между различными контроллерами.
- * Обрабатывает действия пользователей.
+ * РњРµРЅРµРґР¶РµСЂ РґРµР№СЃС‚РІРёР№, СѓРїСЂР°РІР»СЏСЋС‰РёР№ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёРµРј РјРµР¶РґСѓ СЂР°Р·Р»РёС‡РЅС‹РјРё РєРѕРЅС‚СЂРѕР»Р»РµСЂР°РјРё.
+ * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
  */
 public class ActionManager {
     private final ConsoleUserController userController;
@@ -25,12 +25,12 @@ public class ActionManager {
     private final ConsoleHabitTrackController habitTrackController;
 
     /**
-     * Конструктор {@link ActionManager}.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ {@link ActionManager}.
      *
-     * @param userController       контроллер для работы с пользователями
-     * @param authController       контроллер для работы с аутентификацией
-     * @param habitController      контроллер для работы с привычками
-     * @param habitTrackController контроллер для работы с отметками привычки
+     * @param userController       РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё
+     * @param authController       РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРµР№
+     * @param habitController      РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїСЂРёРІС‹С‡РєР°РјРё
+     * @param habitTrackController РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕС‚РјРµС‚РєР°РјРё РїСЂРёРІС‹С‡РєРё
      */
     public ActionManager(
             ConsoleUserController userController,
@@ -45,12 +45,12 @@ public class ActionManager {
     }
 
     /**
-     * Управляет действиями аутентификации для пользователей.
+     * РЈРїСЂР°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёСЏРјРё Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
      *
-     * @return аутентифицированный пользователь
-     * @throws UserNotFoundException     если пользователь не найден
-     * @throws UserAlreadyExistException если пользователь уже существует
-     * @throws InvalidEmailException     если email недействителен
+     * @return Р°СѓС‚РµРЅС‚РёС„РёС†РёСЂРѕРІР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+     * @throws UserNotFoundException     РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
+     * @throws UserAlreadyExistException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+     * @throws InvalidEmailException     РµСЃР»Рё email РЅРµРґРµР№СЃС‚РІРёС‚РµР»РµРЅ
      */
     public User manageAuthAction() throws UserNotFoundException, UserAlreadyExistException, InvalidEmailException {
         AuthActionHandler handler = new AuthActionHandler(authController);
@@ -59,10 +59,10 @@ public class ActionManager {
     }
 
     /**
-     * Управляет действиями администратора.
+     * РЈРїСЂР°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёСЏРјРё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°.
      *
-     * @param user пользователь, выполняющий действия администратора
-     * @return флаг выхода из менеджера действий
+     * @param user РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РґРµР№СЃС‚РІРёСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
+     * @return С„Р»Р°Рі РІС‹С…РѕРґР° РёР· РјРµРЅРµРґР¶РµСЂР° РґРµР№СЃС‚РІРёР№
      */
     public boolean manageAdminAction(User user) {
         boolean exitFlag;
@@ -73,11 +73,11 @@ public class ActionManager {
     }
 
     /**
-     * Управляет действиями администратора по отношению к пользователям.
+     * РЈРїСЂР°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёСЏРјРё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° РїРѕ РѕС‚РЅРѕС€РµРЅРёСЋ Рє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј.
      *
-     * @param openedUser  открытый пользователь
-     * @param currentUser текущий пользователь(Администратор)
-     * @return флаг выхода из менеджера действий
+     * @param openedUser  РѕС‚РєСЂС‹С‚С‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+     * @param currentUser С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ(РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ)
+     * @return С„Р»Р°Рі РІС‹С…РѕРґР° РёР· РјРµРЅРµРґР¶РµСЂР° РґРµР№СЃС‚РІРёР№
      */
     public boolean manageAdminActionOnUser(User openedUser, User currentUser) {
         AdminActionOnUserHandler handler = new AdminActionOnUserHandler(userController, this);
@@ -86,10 +86,10 @@ public class ActionManager {
     }
 
     /**
-     * Управляет действиями пользователей.
+     * РЈРїСЂР°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёСЏРјРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
      *
-     * @param user пользователь, выполняющий действия
-     * @return флаг выхода из менеджера действий
+     * @param user РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РґРµР№СЃС‚РІРёСЏ
+     * @return С„Р»Р°Рі РІС‹С…РѕРґР° РёР· РјРµРЅРµРґР¶РµСЂР° РґРµР№СЃС‚РІРёР№
      */
     public boolean manageUserAction(User user) {
         UserActionHandler handler = new UserActionHandler(
@@ -103,10 +103,10 @@ public class ActionManager {
     }
 
     /**
-     * Управляет действиями для обновлением пользователя.
+     * РЈРїСЂР°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёСЏРјРё РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param user пользователь для обновления
-     * @return флаг успешного обновления
+     * @param user РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
+     * @return С„Р»Р°Рі СѓСЃРїРµС€РЅРѕРіРѕ РѕР±РЅРѕРІР»РµРЅРёСЏ
      */
     public boolean manageUpdateUserAction(User user) {
         UpdateUserHandler handler = new UpdateUserHandler(userController);
@@ -115,9 +115,9 @@ public class ActionManager {
     }
 
     /**
-     * Управляет действиями с привычкой.
+     * РЈРїСЂР°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёСЏРјРё СЃ РїСЂРёРІС‹С‡РєРѕР№.
      *
-     * @param habit привычка для выполнения действия
+     * @param habit РїСЂРёРІС‹С‡РєР° РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР№СЃС‚РІРёСЏ
      */
     public void manageHabitAction(Habit habit) {
         HabitActionHandler handler = new HabitActionHandler(habitTrackController, habitController, this);
@@ -128,9 +128,9 @@ public class ActionManager {
     }
 
     /**
-     * Управляет действиями для обновлением привычки.
+     * РЈРїСЂР°РІР»СЏРµС‚ РґРµР№СЃС‚РІРёСЏРјРё РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёРµРј РїСЂРёРІС‹С‡РєРё.
      *
-     * @param habit привычка для обновления
+     * @param habit РїСЂРёРІС‹С‡РєР° РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
      */
     public void manageUpdateHabitAction(Habit habit) {
         UpdateHabitActionHandler handler = new UpdateHabitActionHandler(habitController);

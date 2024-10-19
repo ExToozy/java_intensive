@@ -6,10 +6,10 @@ import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
 import org.example.core.repositories.user_repository.dtos.CreateUserDto;
 import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 import org.example.core.util.PasswordManager;
-import org.example.infastructure.data.models.UserEntity;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
+import org.example.infrastructure.data.models.UserEntity;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,13 +30,13 @@ class UserServiceTest {
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         var users = new ArrayList<>(Arrays.asList(
                 new UserEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                        0,
                         "ex@mail.ru",
                         PasswordManager.getPasswordHash("123"),
                         false
                 ),
                 new UserEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
+                        1,
                         "admin",
                         PasswordManager.getPasswordHash("admin"),
                         true
@@ -92,18 +91,18 @@ class UserServiceTest {
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(2)
-                .allMatch(user -> user.getId() != null && user.getEmail() != null && user.getPassword() != null);
+                .allMatch(user -> user.getEmail() != null && user.getPassword() != null);
     }
 
     @DisplayName("Check update user working is correct")
     @Test
     void update_shouldUpdateUser_whenEmailIsCorrectAndUserExist() throws UserNotFoundException, InvalidEmailException {
-        userService.update(new UpdateUserDto(UUID.fromString("00000000-0000-0000-0000-000000000000"), "new@mail.ru", "1234"));
+        userService.update(new UpdateUserDto(0, "new@mail.ru", "1234"));
 
         assertThatThrownBy(() -> userService.getUserByEmail("ex@mail.ru")).isInstanceOf(UserNotFoundException.class);
 
         var user = userService.getUserByEmail("new@mail.ru");
-        assertThat(user.getId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        assertThat(user.getId()).isEqualTo(0);
         assertThat(user.getEmail()).isEqualTo("new@mail.ru");
         assertThat(user.getPassword()).isEqualTo(PasswordManager.getPasswordHash("1234"));
     }
@@ -119,14 +118,14 @@ class UserServiceTest {
     @DisplayName("Check remove user working is correct")
     @Test
     void remove_shouldRemoveUserAndTheirHabitsAndTracks() {
-        userService.remove(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        userService.remove(0);
         assertThatThrownBy(() -> userService.getUserByEmail("ex@mail.ru")).isInstanceOf(UserNotFoundException.class);
     }
 
     @DisplayName("Check that changeUserAdminStatus change admin to true if provide true")
     @Test
     void changeUserAdminStatus_shouldChangeStatusToTrue_whenProvideTrue() throws UserNotFoundException {
-        userService.changeUserAdminStatus(new ChangeAdminStatusDto(UUID.fromString("00000000-0000-0000-0000-000000000000"), true));
+        userService.changeUserAdminStatus(new ChangeAdminStatusDto(0, true));
         var user = userService.getUserByEmail("ex@mail.ru");
         assertThat(user.isAdmin()).isTrue();
     }
@@ -134,7 +133,7 @@ class UserServiceTest {
     @DisplayName("Check that changeUserAdminStatus change admin to false if provide false")
     @Test
     void changeUserAdminStatus_shouldChangeStatusToFalse_whenProvideFalse() throws UserNotFoundException {
-        userService.changeUserAdminStatus(new ChangeAdminStatusDto(UUID.fromString("00000000-0000-0000-0000-000000000001"), false));
+        userService.changeUserAdminStatus(new ChangeAdminStatusDto(1, false));
         var user = userService.getUserByEmail("admin");
         assertThat(user.isAdmin()).isFalse();
     }

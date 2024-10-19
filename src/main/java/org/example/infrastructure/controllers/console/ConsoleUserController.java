@@ -1,4 +1,4 @@
-package org.example.infastructure.controllers.console;
+package org.example.infrastructure.controllers.console;
 
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
@@ -8,7 +8,6 @@ import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 import org.example.core.services.UserService;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ConsoleUserController {
     private final UserService userService;
@@ -31,7 +30,7 @@ public class ConsoleUserController {
 
     }
 
-    public void deleteUser(UUID userId) {
+    public void deleteUser(int userId) {
         userService.remove(userId);
     }
 

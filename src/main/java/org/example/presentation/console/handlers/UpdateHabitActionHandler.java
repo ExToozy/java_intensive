@@ -3,7 +3,7 @@ package org.example.presentation.console.handlers;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
 import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
-import org.example.infastructure.controllers.console.ConsoleHabitController;
+import org.example.infrastructure.controllers.console.ConsoleHabitController;
 import org.example.presentation.console.actions.HabitUpdateAction;
 import org.example.presentation.console.in.ConsoleInHelper;
 import org.example.presentation.console.out.ConsoleOutHelper;

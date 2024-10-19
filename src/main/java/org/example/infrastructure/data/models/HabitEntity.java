@@ -1,19 +1,18 @@
-package org.example.infastructure.data.models;
+package org.example.infrastructure.data.models;
 
 import org.example.core.models.HabitFrequency;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class HabitEntity {
-    private final UUID id;
-    private final UUID userID;
+    private final int id;
+    private final int userID;
     private final LocalDate dayOfCreation;
     private String name;
     private String description;
     private HabitFrequency frequency;
 
-    public HabitEntity(UUID id, UUID userID, String name, String description, HabitFrequency frequency, LocalDate dayOfCreation) {
+    public HabitEntity(int id, int userID, String name, String description, HabitFrequency frequency, LocalDate dayOfCreation) {
         this.id = id;
         this.userID = userID;
         this.name = name;
@@ -22,11 +21,11 @@ public class HabitEntity {
         this.dayOfCreation = dayOfCreation;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public UUID getUserID() {
+    public int getUserID() {
         return userID;
     }
 

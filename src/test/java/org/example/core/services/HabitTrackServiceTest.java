@@ -3,8 +3,8 @@ package org.example.core.services;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
 import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
-import org.example.infastructure.data.models.HabitTrackEntity;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
+import org.example.infrastructure.data.models.HabitTrackEntity;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,28 +24,28 @@ class HabitTrackServiceTest {
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         var tracks = new ArrayList<>(Arrays.asList(
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                        0,
+                        0,
                         LocalDate.now()
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        1,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(0).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        2,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(1).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000003"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        3,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(2).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000004"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000010"),
+                        4,
+                        10,
                         LocalDate.now().minusDays(1)
                 )
         )
@@ -61,12 +60,12 @@ class HabitTrackServiceTest {
     @DisplayName("Check after completeHabit execute HabitTrack was created")
     @Test
     void completeHabit_shouldCreateHabitTrackInMemory_whenExecuteCompleteHabitMethod() {
-        habitTrackService.completeHabit(new CreateHabitTrackDto(UUID.fromString("00000000-0000-0000-0000-000000000004")));
+        habitTrackService.completeHabit(new CreateHabitTrackDto(4));
 
-        var tracks = habitTrackService.getHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000004"));
+        var tracks = habitTrackService.getHabitTracks(4);
         assertThat(tracks).hasSize(1);
         var track = tracks.get(0);
-        assertThat(track.getHabitId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000004"));
+        assertThat(track.getHabitId()).isEqualTo(4);
         assertThat(track.getCompleteDate()).isEqualTo(LocalDate.now());
     }
 
@@ -74,8 +73,8 @@ class HabitTrackServiceTest {
     @Test
     void isCompleteHabit_shouldReturnTrue_whenHabitIsComplete() {
         Habit habit = new Habit(
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                0,
+                0,
                 "testUser1HabitName",
                 "testUser1HabitDescription",
                 HabitFrequency.DAILY,
@@ -88,8 +87,8 @@ class HabitTrackServiceTest {
     @Test
     void isCompleteHabit_shouldReturnFalse_whenHabitNotCompleted() {
         Habit habit = new Habit(
-                UUID.fromString("00000000-0000-0000-0000-000000000010"),
-                UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                10,
+                0,
                 "testUser1HabitName",
                 "testUser1HabitDescription",
                 HabitFrequency.DAILY,
@@ -101,21 +100,21 @@ class HabitTrackServiceTest {
     @DisplayName("Check that getHabitTracks return all habit tracks")
     @Test
     void getHabitTracks_shouldReturnAllHabitTracks() {
-        var tracks = habitTrackService.getHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        var tracks = habitTrackService.getHabitTracks(2);
 
         assertThat(tracks)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(3)
-                .allMatch(habitTrack -> habitTrack.getHabitId().equals(UUID.fromString("00000000-0000-0000-0000-000000000002")));
+                .allMatch(habitTrack -> habitTrack.getHabitId() == 2);
     }
 
     @DisplayName("Check that removeHabitTracks remove all habit tracks")
     @Test
     void removeHabitTracks_shouldRemoveHabitFromMemory() {
-        habitTrackService.removeHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        habitTrackService.removeHabitTracks(2);
 
-        var tracks = habitTrackService.getHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        var tracks = habitTrackService.getHabitTracks(2);
         assertThat(tracks)
                 .isNotNull()
                 .isEmpty();

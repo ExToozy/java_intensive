@@ -1,13 +1,12 @@
 package org.example.core.repositories.user_repository.dtos;
 
-import java.util.UUID;
 
 public class UpdateUserDto {
-    private final UUID userId;
+    private final int userId;
     private final String email;
     private String password;
 
-    public UpdateUserDto(UUID userId, String email, String password) {
+    public UpdateUserDto(int userId, String email, String password) {
         this.userId = userId;
         this.email = email;
         this.password = password;
@@ -25,7 +24,7 @@ public class UpdateUserDto {
         this.password = password;
     }
 
-    public UUID getUserId() {
+    public int getUserId() {
         return userId;
     }
 }

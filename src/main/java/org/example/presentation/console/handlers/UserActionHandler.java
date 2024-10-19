@@ -3,9 +3,9 @@ package org.example.presentation.console.handlers;
 import org.example.core.models.Habit;
 import org.example.core.models.User;
 import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.infastructure.controllers.console.ConsoleHabitController;
-import org.example.infastructure.controllers.console.ConsoleHabitTrackController;
-import org.example.infastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.controllers.console.ConsoleHabitController;
+import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.ActionManager;
 import org.example.presentation.console.actions.UserAction;
 import org.example.presentation.console.common.HabitsShowFilter;
@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Обработчик действий пользователя.
- * Обрабатывает действия, связанные с пользователем, такие как создание привычек и отображение статистики.
+ * РћР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+ * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ, СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј, С‚Р°РєРёРµ РєР°Рє СЃРѕР·РґР°РЅРёРµ РїСЂРёРІС‹С‡РµРє Рё РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё.
  */
 public class UserActionHandler {
     private final ConsoleHabitController habitController;
@@ -28,12 +28,12 @@ public class UserActionHandler {
     private final ConsoleHabitTrackController habitTrackController;
 
     /**
-     * Конструктор UserActionHandler.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ UserActionHandler.
      *
-     * @param habitController      контроллер для работы с привычками
-     * @param actionManager        менеджер действий
-     * @param userController       контроллер для работы с пользователями
-     * @param habitTrackController контроллер для работы с отслеживанием привычек
+     * @param habitController      РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїСЂРёРІС‹С‡РєР°РјРё
+     * @param actionManager        РјРµРЅРµРґР¶РµСЂ РґРµР№СЃС‚РІРёР№
+     * @param userController       РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё
+     * @param habitTrackController РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕС‚СЃР»РµР¶РёРІР°РЅРёРµРј РїСЂРёРІС‹С‡РµРє
      */
     public UserActionHandler(
             ConsoleHabitController habitController,
@@ -48,11 +48,11 @@ public class UserActionHandler {
     }
 
     /**
-     * Обрабатывает действия пользователя.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param user       пользователь, выполняющий действия
-     * @param userAction действие пользователя
-     * @return флаг выхода
+     * @param user       РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, РІС‹РїРѕР»РЅСЏСЋС‰РёР№ РґРµР№СЃС‚РІРёСЏ
+     * @param userAction РґРµР№СЃС‚РІРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @return С„Р»Р°Рі РІС‹С…РѕРґР°
      */
     public boolean handleUserAction(User user, UserAction userAction) {
         switch (userAction) {
@@ -78,10 +78,10 @@ public class UserActionHandler {
     }
 
     /**
-     * Обрабатывает показ привычек пользователя.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РїРѕРєР°Р· РїСЂРёРІС‹С‡РµРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param user пользователь, чьи привычки будут показаны
-     * @return флаг выхода
+     * @param user РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, С‡СЊРё РїСЂРёРІС‹С‡РєРё Р±СѓРґСѓС‚ РїРѕРєР°Р·Р°РЅС‹
+     * @return С„Р»Р°Рі РІС‹С…РѕРґР°
      */
     private boolean handleUserShowHabitsAction(User user) {
         ConsoleOutHelper.printEnumWithNumbers(HabitsShowFilter.class);
@@ -98,11 +98,11 @@ public class UserActionHandler {
     }
 
     /**
-     * Получает привычки пользователя по фильтру.
+     * РџРѕР»СѓС‡Р°РµС‚ РїСЂРёРІС‹С‡РєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ С„РёР»СЊС‚СЂСѓ.
      *
-     * @param user   пользователь, чьи привычки будут получены
-     * @param filter фильтр для получения привычек
-     * @return список привычек пользователя
+     * @param user   РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, С‡СЊРё РїСЂРёРІС‹С‡РєРё Р±СѓРґСѓС‚ РїРѕР»СѓС‡РµРЅС‹
+     * @param filter С„РёР»СЊС‚СЂ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРёРІС‹С‡РµРє
+     * @return СЃРїРёСЃРѕРє РїСЂРёРІС‹С‡РµРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
      */
     private List<Habit> getUserHabitsByFilter(User user, HabitsShowFilter filter) {
         List<Habit> habits = new ArrayList<>();
@@ -115,9 +115,9 @@ public class UserActionHandler {
     }
 
     /**
-     * Печатает привычки.
+     * РџРµС‡Р°С‚Р°РµС‚ РїСЂРёРІС‹С‡РєРё.
      *
-     * @param habits список привычек для печати
+     * @param habits СЃРїРёСЃРѕРє РїСЂРёРІС‹С‡РµРє РґР»СЏ РїРµС‡Р°С‚Рё
      */
     private void printHabits(List<Habit> habits) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

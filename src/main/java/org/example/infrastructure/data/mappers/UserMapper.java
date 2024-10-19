@@ -1,7 +1,7 @@
-package org.example.infastructure.data.mappers;
+package org.example.infrastructure.data.mappers;
 
 import org.example.core.models.User;
-import org.example.infastructure.data.models.UserEntity;
+import org.example.infrastructure.data.models.UserEntity;
 
 public class UserMapper implements Mapper<User, UserEntity> {
     @Override

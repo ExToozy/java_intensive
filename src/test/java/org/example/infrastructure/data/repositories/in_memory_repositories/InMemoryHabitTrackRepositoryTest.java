@@ -1,7 +1,7 @@
-package org.example.infastructure.data.repositories.in_memory_repositories;
+package org.example.infrastructure.data.repositories.in_memory_repositories;
 
 import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
-import org.example.infastructure.data.models.HabitTrackEntity;
+import org.example.infrastructure.data.models.HabitTrackEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,23 +21,23 @@ class InMemoryHabitTrackRepositoryTest {
     void setUp() throws NoSuchFieldException, IllegalAccessException {
         var tracks = new ArrayList<>(Arrays.asList(
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                        0,
+                        0,
                         LocalDate.now()
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000001"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        1,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(0).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        2,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(1).getDays())
                 ),
                 new HabitTrackEntity(
-                        UUID.fromString("00000000-0000-0000-0000-000000000003"),
-                        UUID.fromString("00000000-0000-0000-0000-000000000002"),
+                        3,
+                        2,
                         LocalDate.now().minusDays(Period.ofWeeks(2).getDays())
                 )
         )
@@ -52,33 +51,33 @@ class InMemoryHabitTrackRepositoryTest {
     @DisplayName("Check that create habit working correctly")
     @Test
     void create_shouldCreateHabitTrackInMemory() {
-        habitTrackRepository.create(new CreateHabitTrackDto(UUID.fromString("00000000-0000-0000-0000-000000000004")));
+        habitTrackRepository.create(new CreateHabitTrackDto(4));
 
-        var tracks = habitTrackRepository.getHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000004"));
+        var tracks = habitTrackRepository.getHabitTracks(4);
         assertThat(tracks).hasSize(1);
         var track = tracks.get(0);
-        assertThat(track.getHabitId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000004"));
+        assertThat(track.getHabitId()).isEqualTo(4);
         assertThat(track.getCompleteDate()).isEqualTo(LocalDate.now());
     }
 
     @DisplayName("Check that getHabitTracks return all habits tracks")
     @Test
     void getHabitTracks_shouldReturnAllHabitTracks() {
-        var tracks = habitTrackRepository.getHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        var tracks = habitTrackRepository.getHabitTracks(2);
 
         assertThat(tracks)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(3)
-                .allMatch(habitTrack -> habitTrack.getHabitId().equals(UUID.fromString("00000000-0000-0000-0000-000000000002")));
+                .allMatch(habitTrack -> habitTrack.getHabitId() == 2);
     }
 
     @DisplayName("Check that remove habit working correctly")
     @Test
     void removeByHabitId_shouldRemoveHabitFromMemory() {
-        habitTrackRepository.removeByHabitId(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        habitTrackRepository.removeByHabitId(2);
 
-        var tracks = habitTrackRepository.getHabitTracks(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        var tracks = habitTrackRepository.getHabitTracks(2);
         assertThat(tracks)
                 .isNotNull()
                 .isEmpty();

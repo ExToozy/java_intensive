@@ -2,8 +2,8 @@ package org.example.presentation.console.handlers;
 
 import org.example.core.models.Habit;
 import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
-import org.example.infastructure.controllers.console.ConsoleHabitController;
-import org.example.infastructure.controllers.console.ConsoleHabitTrackController;
+import org.example.infrastructure.controllers.console.ConsoleHabitController;
+import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
 import org.example.presentation.console.ActionManager;
 import org.example.presentation.console.actions.HabitAction;
 import org.example.presentation.console.in.ConsoleInHelper;
@@ -12,8 +12,8 @@ import org.example.presentation.console.out.ConsoleOutHelper;
 import java.time.Period;
 
 /**
- * Обработчик действий с привычками.
- * Обрабатывает действия, связанные с привычками, такие как завершение, обновление, удаление и отображение статистики.
+ * РћР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёР№ СЃ РїСЂРёРІС‹С‡РєР°РјРё.
+ * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ, СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ РїСЂРёРІС‹С‡РєР°РјРё, С‚Р°РєРёРµ РєР°Рє Р·Р°РІРµСЂС€РµРЅРёРµ, РѕР±РЅРѕРІР»РµРЅРёРµ, СѓРґР°Р»РµРЅРёРµ Рё РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё.
  */
 public class HabitActionHandler {
     private final ConsoleHabitTrackController habitTrackController;
@@ -21,11 +21,11 @@ public class HabitActionHandler {
     private final ActionManager actionManager;
 
     /**
-     * Конструктор HabitActionHandler.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ HabitActionHandler.
      *
-     * @param habitTrackController контроллер для работы с отслеживанием привычек
-     * @param habitController      контроллер для работы с привычками
-     * @param actionManager        менеджер действий
+     * @param habitTrackController РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕС‚СЃР»РµР¶РёРІР°РЅРёРµРј РїСЂРёРІС‹С‡РµРє
+     * @param habitController      РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїСЂРёРІС‹С‡РєР°РјРё
+     * @param actionManager        РјРµРЅРµРґР¶РµСЂ РґРµР№СЃС‚РІРёР№
      */
     public HabitActionHandler(
             ConsoleHabitTrackController habitTrackController,
@@ -38,10 +38,10 @@ public class HabitActionHandler {
     }
 
     /**
-     * Обрабатывает действие с привычкой.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёРµ СЃ РїСЂРёРІС‹С‡РєРѕР№.
      *
-     * @param action действие с привычкой
-     * @param habit  привычка для выполнения действия
+     * @param action РґРµР№СЃС‚РІРёРµ СЃ РїСЂРёРІС‹С‡РєРѕР№
+     * @param habit  РїСЂРёРІС‹С‡РєР° РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР№СЃС‚РІРёСЏ
      */
     public void handleHabitAction(HabitAction action, Habit habit) {
         switch (action) {

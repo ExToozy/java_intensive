@@ -1,4 +1,4 @@
-package org.example.infastructure.controllers.console;
+package org.example.infrastructure.controllers.console;
 
 import org.example.core.models.Habit;
 import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ConsoleHabitController {
     private final HabitService habitService;
@@ -22,7 +21,7 @@ public class ConsoleHabitController {
         habitService.createHabit(dto);
     }
 
-    public List<Habit> getUserHabits(UUID userId) {
+    public List<Habit> getUserHabits(int userId) {
         return habitService.getUserHabits(userId);
     }
 
@@ -30,7 +29,7 @@ public class ConsoleHabitController {
         habitService.updateHabit(dto);
     }
 
-    public void removeHabitAndTracks(UUID habitId) {
+    public void removeHabitAndTracks(int habitId) {
         habitService.removeHabitAndTracks(habitId);
     }
 
@@ -38,11 +37,11 @@ public class ConsoleHabitController {
         return habitService.getHabitExecutionCountByPeriod(habit, period);
     }
 
-    public Map<Habit, Map<String, Integer>> getHabitStatistics(UUID userId) {
+    public Map<Habit, Map<String, Integer>> getHabitStatistics(int userId) {
         return habitService.getHabitStatistics(userId);
     }
 
-    public List<Habit> getUserHabitsByCompleteStatus(UUID userId, boolean isComplete) {
+    public List<Habit> getUserHabitsByCompleteStatus(int userId, boolean isComplete) {
         return habitService.getUserHabitsByCompleteStatus(userId, isComplete);
     }
 

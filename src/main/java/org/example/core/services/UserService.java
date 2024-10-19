@@ -10,11 +10,10 @@ import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 import org.example.core.util.RegexUtil;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Сервис для работы с пользователями.
- * Предоставляет методы для создания, удаления, обновления и получения пользователей, а также для проверки существования email.
+ * РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё.
+ * РџСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ РјРµС‚РѕРґС‹ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ, СѓРґР°Р»РµРЅРёСЏ, РѕР±РЅРѕРІР»РµРЅРёСЏ Рё РїРѕР»СѓС‡РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, Р° С‚Р°РєР¶Рµ РґР»СЏ РїСЂРѕРІРµСЂРєРё СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ email.
  */
 public class UserService {
 
@@ -23,10 +22,10 @@ public class UserService {
     private final HabitService habitService;
 
     /**
-     * Конструктор {@link UserService}.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ {@link UserService}.
      *
-     * @param userRepository {@link IUserRepository} репозиторий для работы с пользователями
-     * @param habitService   {@link HabitService} сервис для работы с привычками
+     * @param userRepository {@link IUserRepository} СЂРµРїРѕР·РёС‚РѕСЂРёР№ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё
+     * @param habitService   {@link HabitService} СЃРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїСЂРёРІС‹С‡РєР°РјРё
      */
     public UserService(IUserRepository userRepository, HabitService habitService) {
         this.userRepository = userRepository;
@@ -34,41 +33,41 @@ public class UserService {
     }
 
     /**
-     * Создаёт нового пользователя.
+     * РЎРѕР·РґР°С‘С‚ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param dto данные для создания пользователя
-     * @return созданный пользователь
+     * @param dto РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @return СЃРѕР·РґР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
      */
     public User create(CreateUserDto dto) {
         return userRepository.create(dto);
     }
 
     /**
-     * Удаляет пользователя и все его привычки и отметки о выполнении.
+     * РЈРґР°Р»СЏРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РІСЃРµ РµРіРѕ РїСЂРёРІС‹С‡РєРё Рё РѕС‚РјРµС‚РєРё Рѕ РІС‹РїРѕР»РЅРµРЅРёРё.
      *
-     * @param id идентификатор пользователя
+     * @param id РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
      */
-    public void remove(UUID id) {
-        userRepository.remove(id);
+    public void remove(int id) {
         habitService.removeAllUserHabitsAndTracks(id);
+        userRepository.remove(id);
     }
 
     /**
-     * Возвращает пользователя по его email.
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РµРіРѕ email.
      *
-     * @param email email пользователя
-     * @return пользователь
-     * @throws UserNotFoundException если пользователь не найден
+     * @param email email РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @return РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
      */
     public User getUserByEmail(String email) throws UserNotFoundException {
         return userRepository.getByEmail(email);
     }
 
     /**
-     * Проверяет, существует ли пользователь с указанным email.
+     * РџСЂРѕРІРµСЂСЏРµС‚, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј email.
      *
-     * @param email email для проверки
-     * @return true, если пользователь существует, иначе false
+     * @param email email РґР»СЏ РїСЂРѕРІРµСЂРєРё
+     * @return true, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃСѓС‰РµСЃС‚РІСѓРµС‚, РёРЅР°С‡Рµ false
      */
     public boolean checkEmailExist(String email) {
         try {
@@ -80,30 +79,30 @@ public class UserService {
     }
 
     /**
-     * Возвращает всех пользователей.
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
      *
-     * @return список всех пользователей
+     * @return СЃРїРёСЃРѕРє РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
      */
     public List<User> getAll() {
         return userRepository.getAll();
     }
 
     /**
-     * Изменяет статус администратора пользователя.
+     * РР·РјРµРЅСЏРµС‚ СЃС‚Р°С‚СѓСЃ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param dto данные для изменения статуса
-     * @throws UserNotFoundException если пользователь не найден
+     * @param dto РґР°РЅРЅС‹Рµ РґР»СЏ РёР·РјРµРЅРµРЅРёСЏ СЃС‚Р°С‚СѓСЃР°
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
      */
     public void changeUserAdminStatus(ChangeAdminStatusDto dto) throws UserNotFoundException {
         userRepository.changeUserAdminStatus(dto);
     }
 
     /**
-     * Обновляет данные пользователя.
+     * РћР±РЅРѕРІР»СЏРµС‚ РґР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param dto данные для обновления пользователя
-     * @throws UserNotFoundException если пользователь не найден
-     * @throws InvalidEmailException если email некорректный
+     * @param dto РґР°РЅРЅС‹Рµ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
+     * @throws InvalidEmailException РµСЃР»Рё email РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№
      */
     public void update(UpdateUserDto dto) throws UserNotFoundException, InvalidEmailException {
         if (RegexUtil.isInvalidEmail(dto.getEmail())) {

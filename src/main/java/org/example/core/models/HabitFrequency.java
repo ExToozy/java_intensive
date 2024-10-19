@@ -3,22 +3,22 @@ package org.example.core.models;
 import java.time.Period;
 
 /**
- * Перечисление, представляющее частоту выполнения привычки.
- * Содержит два значения: DAILY и WEEKLY
+ * РџРµСЂРµС‡РёСЃР»РµРЅРёРµ, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РµРµ С‡Р°СЃС‚РѕС‚Сѓ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРёРІС‹С‡РєРё.
+ * РЎРѕРґРµСЂР¶РёС‚ РґРІР° Р·РЅР°С‡РµРЅРёСЏ: DAILY Рё WEEKLY
  */
 public enum HabitFrequency {
-    DAILY("Ежедневно", Period.ofDays(1)),
-    WEEKLY("Еженедельно", Period.ofWeeks(1));
+    DAILY("Daily", Period.ofDays(1)),
+    WEEKLY("Weekly", Period.ofWeeks(1));
 
     private final String str;
 
     private final Period period;
 
     /**
-     * Конструктор для создания объекта {@code HabitFrequency}.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р° {@code HabitFrequency}.
      *
-     * @param str    строковое представление частоты выполнения привычки
-     * @param period {@link Period}, является длительностью между повторениями привычки
+     * @param str    СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С‡Р°СЃС‚РѕС‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРёРІС‹С‡РєРё
+     * @param period {@link Period}, СЏРІР»СЏРµС‚СЃСЏ РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊСЋ РјРµР¶РґСѓ РїРѕРІС‚РѕСЂРµРЅРёСЏРјРё РїСЂРёРІС‹С‡РєРё
      */
     HabitFrequency(String str, Period period) {
         this.str = str;
@@ -26,21 +26,22 @@ public enum HabitFrequency {
     }
 
     /**
-     * Возвращает строковое представление частоты.
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєРѕРІРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С‡Р°СЃС‚РѕС‚С‹.
      *
-     * @return строковое описание
+     * @return СЃС‚СЂРѕРєРѕРІРѕРµ РѕРїРёСЃР°РЅРёРµ
      */
-    @Override
-    public String toString() {
+    public String toStringRepresentation() {
         return str;
     }
 
     /**
-     * Возвращает период, связанный с частотой выполнения привычки.
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРёРѕРґ, СЃРІСЏР·Р°РЅРЅС‹Р№ СЃ С‡Р°СЃС‚РѕС‚РѕР№ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРёРІС‹С‡РєРё.
      *
-     * @return {@link Period} частоты выполнения привычки
+     * @return {@link Period} С‡Р°СЃС‚РѕС‚С‹ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРёРІС‹С‡РєРё
      */
     public Period toPeriod() {
         return period;
     }
+
+
 }

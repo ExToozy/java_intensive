@@ -1,17 +1,16 @@
 package org.example.core.repositories.user_repository.dtos;
 
-import java.util.UUID;
 
 public class ChangeAdminStatusDto {
-    private UUID userId;
+    private int userId;
     private boolean isAdmin;
 
-    public ChangeAdminStatusDto(UUID userId, boolean isAdmin) {
+    public ChangeAdminStatusDto(int userId, boolean isAdmin) {
         this.userId = userId;
         this.isAdmin = isAdmin;
     }
 
-    public UUID getUserId() {
+    public int getUserId() {
         return userId;
     }
 

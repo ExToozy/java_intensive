@@ -9,29 +9,29 @@ import org.example.core.util.PasswordManager;
 import org.example.core.util.RegexUtil;
 
 /**
- * Класс для управления аутентификацией пользователей.
- * Содержит методы для входа и регистрации новых пользователей.
+ * РљР»Р°СЃСЃ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРµР№ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
+ * РЎРѕРґРµСЂР¶РёС‚ РјРµС‚РѕРґС‹ РґР»СЏ РІС…РѕРґР° Рё СЂРµРіРёСЃС‚СЂР°С†РёРё РЅРѕРІС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
  */
 public class AuthService {
 
-    // Сервис для работы с пользователями.
+    // РЎРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё.
     private final UserService userService;
 
     /**
-     * Конструктор для {@link AuthService}.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ {@link AuthService}.
      *
-     * @param userService объект {@link UserService}, сервис для работы с пользователями
+     * @param userService РѕР±СЉРµРєС‚ {@link UserService}, СЃРµСЂРІРёСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё
      */
     public AuthService(UserService userService) {
         this.userService = userService;
     }
 
     /**
-     * Выполняет вход пользователя по email и паролю.
+     * Р’С‹РїРѕР»РЅСЏРµС‚ РІС…РѕРґ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ email Рё РїР°СЂРѕР»СЋ.
      *
-     * @param dto {@link CreateUserDto} данные для входа, включающие email и пароль
-     * @return объект {@link User}, если аутентификация успешна
-     * @throws UserNotFoundException если пользователь не найден или пароль неверен
+     * @param dto {@link CreateUserDto} РґР°РЅРЅС‹Рµ РґР»СЏ РІС…РѕРґР°, РІРєР»СЋС‡Р°СЋС‰РёРµ email Рё РїР°СЂРѕР»СЊ
+     * @return РѕР±СЉРµРєС‚ {@link User}, РµСЃР»Рё Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ СѓСЃРїРµС€РЅР°
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ РёР»Рё РїР°СЂРѕР»СЊ РЅРµРІРµСЂРµРЅ
      */
     public User login(CreateUserDto dto) throws UserNotFoundException {
         User user = userService.getUserByEmail(dto.getEmail());
@@ -42,13 +42,13 @@ public class AuthService {
     }
 
     /**
-     * Регистрирует нового пользователя.
+     * Р РµРіРёСЃС‚СЂРёСЂСѓРµС‚ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param dto данные для регистрации, включающие email и пароль
-     * @return {@link User}, созданный пользователь
-     * @throws SecurityException         если произошла ошибка при генерации хэша пароля
-     * @throws UserAlreadyExistException если пользователь с таким email уже существует
-     * @throws InvalidEmailException     если формат email некорректен
+     * @param dto РґР°РЅРЅС‹Рµ РґР»СЏ СЂРµРіРёСЃС‚СЂР°С†РёРё, РІРєР»СЋС‡Р°СЋС‰РёРµ email Рё РїР°СЂРѕР»СЊ
+     * @return {@link User}, СЃРѕР·РґР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+     * @throws SecurityException         РµСЃР»Рё РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё РіРµРЅРµСЂР°С†РёРё С…СЌС€Р° РїР°СЂРѕР»СЏ
+     * @throws UserAlreadyExistException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј email СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+     * @throws InvalidEmailException     РµСЃР»Рё С„РѕСЂРјР°С‚ email РЅРµРєРѕСЂСЂРµРєС‚РµРЅ
      */
     public User register(CreateUserDto dto) throws SecurityException, UserAlreadyExistException, InvalidEmailException {
         if (RegexUtil.isInvalidEmail(dto.getEmail())) {

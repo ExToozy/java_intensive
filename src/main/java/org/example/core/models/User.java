@@ -1,33 +1,31 @@
 package org.example.core.models;
 
-import java.util.UUID;
-
 /**
- * Класс, представляющий пользователя.
- * Содержит: идентификатор пользователя, email, пароль и поле, определяющие являеться ли пользователь администатором.
+ * РљР»Р°СЃСЃ, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+ * РЎРѕРґРµСЂР¶РёС‚: РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, email, РїР°СЂРѕР»СЊ Рё РїРѕР»Рµ, РѕРїСЂРµРґРµР»СЏСЋС‰РёРµ СЏРІР»СЏРµС‚СЊСЃСЏ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°РґРјРёРЅРёСЃС‚Р°С‚РѕСЂРѕРј.
  */
 public class User {
-    private UUID id;
+    private int id;
     private String email;
     private String password;
     private boolean isAdmin;
 
     /**
-     * Создаёт нового пользователя.
+     * РЎРѕР·РґР°С‘С‚ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param id       уникальный идентификатор пользователя
-     * @param email    электронная почта пользователя
-     * @param password пароль пользователя
-     * @param isAdmin  поле, определяющие является ли пользователь администатором
+     * @param id       СѓРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @param email    СЌР»РµРєС‚СЂРѕРЅРЅР°СЏ РїРѕС‡С‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @param password РїР°СЂРѕР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @param isAdmin  РїРѕР»Рµ, РѕРїСЂРµРґРµР»СЏСЋС‰РёРµ СЏРІР»СЏРµС‚СЃСЏ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°РґРјРёРЅРёСЃС‚Р°С‚РѕСЂРѕРј
      */
-    public User(UUID id, String email, String password, boolean isAdmin) {
+    public User(int id, String email, String password, boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.isAdmin = isAdmin;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 

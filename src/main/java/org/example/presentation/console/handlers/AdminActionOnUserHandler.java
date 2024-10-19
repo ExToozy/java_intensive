@@ -3,24 +3,24 @@ package org.example.presentation.console.handlers;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
-import org.example.infastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.ActionManager;
 import org.example.presentation.console.actions.AdminActionOnUser;
 import org.example.presentation.console.out.ConsoleOutHelper;
 
 /**
- * Îáğàáîò÷èê äåéñòâèé àäìèíèñòğàòîğà â îòíîøåíèè ïîëüçîâàòåëÿ.
- * Îáğàáàòûâàåò äåéñòâèÿ, òàêèå êàê îòêğûòèå ïğèâû÷åê ïîëüçîâàòåëÿ, èçìåíåíèå ñòàòóñà ïîëüçîâàòåëÿ è óäàëåíèå ïîëüçîâàòåëÿ.
+ * ĞĞ±Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‡Ğ¸Ğº Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ğ¹ Ğ°Ğ´Ğ¼Ğ¸Ğ½Ğ¸ÑÑ‚Ñ€Ğ°Ñ‚Ğ¾Ñ€Ğ° Ğ² Ğ¾Ñ‚Ğ½Ğ¾ÑˆĞµĞ½Ğ¸Ğ¸ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ.
+ * ĞĞ±Ñ€Ğ°Ğ±Ğ°Ñ‚Ñ‹Ğ²Ğ°ĞµÑ‚ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ñ, Ñ‚Ğ°ĞºĞ¸Ğµ ĞºĞ°Ğº Ğ¾Ñ‚ĞºÑ€Ñ‹Ñ‚Ğ¸Ğµ Ğ¿Ñ€Ğ¸Ğ²Ñ‹Ñ‡ĞµĞº Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ, Ğ¸Ğ·Ğ¼ĞµĞ½ĞµĞ½Ğ¸Ğµ ÑÑ‚Ğ°Ñ‚ÑƒÑĞ° Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ Ğ¸ ÑƒĞ´Ğ°Ğ»ĞµĞ½Ğ¸Ğµ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ.
  */
 public class AdminActionOnUserHandler {
     private final ConsoleUserController userController;
     private final ActionManager actionManager;
 
     /**
-     * Êîíñòğóêòîğ AdminActionOnUserHandler.
+     * ĞšĞ¾Ğ½ÑÑ‚Ñ€ÑƒĞºÑ‚Ğ¾Ñ€ AdminActionOnUserHandler.
      *
-     * @param userController êîíòğîëëåğ äëÿ ğàáîòû ñ ïîëüçîâàòåëÿìè
-     * @param actionManager  ìåíåäæåğ äåéñòâèé
+     * @param userController ĞºĞ¾Ğ½Ñ‚Ñ€Ğ¾Ğ»Ğ»ĞµÑ€ Ğ´Ğ»Ñ Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‹ Ñ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑĞ¼Ğ¸
+     * @param actionManager  Ğ¼ĞµĞ½ĞµĞ´Ğ¶ĞµÑ€ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ğ¹
      */
     public AdminActionOnUserHandler(ConsoleUserController userController, ActionManager actionManager) {
         this.userController = userController;
@@ -28,12 +28,12 @@ public class AdminActionOnUserHandler {
     }
 
     /**
-     * Îáğàáàòûâàåò äåéñòâèÿ àäìèíèñòğàòîğà â îòíîøåíèè ïîëüçîâàòåëÿ.
+     * ĞĞ±Ñ€Ğ°Ğ±Ğ°Ñ‚Ñ‹Ğ²Ğ°ĞµÑ‚ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ñ Ğ°Ğ´Ğ¼Ğ¸Ğ½Ğ¸ÑÑ‚Ñ€Ğ°Ñ‚Ğ¾Ñ€Ğ° Ğ² Ğ¾Ñ‚Ğ½Ğ¾ÑˆĞµĞ½Ğ¸Ğ¸ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ.
      *
-     * @param openedUser  ïîëüçîâàòåëü, ê êîòîğîìó ïğèìåíÿåòñÿ äåéñòâèå
-     * @param action      äåéñòâèå àäìèíèñòğàòîğà
-     * @param currentUser òåêóùèé ïîëüçîâàòåëü(àäìèíèñòğàòîğ), âûïîëíÿşùèé äåéñòâèå
-     * @return true, åñëè òğåáóåòñÿ âûõîä, èíà÷å false
+     * @param openedUser  Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ, Ğº ĞºĞ¾Ñ‚Ğ¾Ñ€Ğ¾Ğ¼Ñƒ Ğ¿Ñ€Ğ¸Ğ¼ĞµĞ½ÑĞµÑ‚ÑÑ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ğµ
+     * @param action      Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ğµ Ğ°Ğ´Ğ¼Ğ¸Ğ½Ğ¸ÑÑ‚Ñ€Ğ°Ñ‚Ğ¾Ñ€Ğ°
+     * @param currentUser Ñ‚ĞµĞºÑƒÑ‰Ğ¸Ğ¹ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ(Ğ°Ğ´Ğ¼Ğ¸Ğ½Ğ¸ÑÑ‚Ñ€Ğ°Ñ‚Ğ¾Ñ€), Ğ²Ñ‹Ğ¿Ğ¾Ğ»Ğ½ÑÑÑ‰Ğ¸Ğ¹ Ğ´ĞµĞ¹ÑÑ‚Ğ²Ğ¸Ğµ
+     * @return true, ĞµÑĞ»Ğ¸ Ñ‚Ñ€ĞµĞ±ÑƒĞµÑ‚ÑÑ Ğ²Ñ‹Ñ…Ğ¾Ğ´, Ğ¸Ğ½Ğ°Ñ‡Ğµ false
      */
     public boolean handleAdminActionOnUser(User openedUser, AdminActionOnUser action, User currentUser) {
         switch (action) {
@@ -41,14 +41,14 @@ public class AdminActionOnUserHandler {
             case CHANGE_ADMIN_STATUS -> {
                 try {
                     userController.changeUserAdminStatus(new ChangeAdminStatusDto(openedUser.getId(), !openedUser.isAdmin()));
-                    return openedUser.getId().equals(currentUser.getId());
+                    return openedUser.getId() == currentUser.getId();
                 } catch (UserNotFoundException e) {
                     ConsoleOutHelper.printMessage("An error occurred while changing the status. The user may have already been deleted");
                 }
             }
             case DELETE -> {
                 userController.deleteUser(openedUser.getId());
-                return openedUser.getId().equals(currentUser.getId());
+                return openedUser.getId() == currentUser.getId();
             }
             case EXIT -> {
                 return true;

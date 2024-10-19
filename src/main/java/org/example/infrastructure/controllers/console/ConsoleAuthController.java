@@ -1,4 +1,4 @@
-package org.example.infastructure.controllers.console;
+package org.example.infrastructure.controllers.console;
 
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserAlreadyExistException;

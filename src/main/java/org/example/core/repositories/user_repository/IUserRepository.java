@@ -7,54 +7,53 @@ import org.example.core.repositories.user_repository.dtos.CreateUserDto;
 import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface IUserRepository {
 
     /**
-     * Создаёт нового пользователя.
+     * РЎРѕР·РґР°С‘С‚ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param dto {@link CreateUserDto}, данные для создания пользователя
-     * @return созданный пользователь
+     * @param dto {@link CreateUserDto}, РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @return СЃРѕР·РґР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
      */
     User create(CreateUserDto dto);
 
     /**
-     * Возвращает пользователя по его email.
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РµРіРѕ email.
      *
-     * @param email электронная почта пользователя
-     * @return {@link User} найденный пользователь
-     * @throws UserNotFoundException если пользователь не найден
+     * @param email СЌР»РµРєС‚СЂРѕРЅРЅР°СЏ РїРѕС‡С‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @return {@link User} РЅР°Р№РґРµРЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
      */
     User getByEmail(String email) throws UserNotFoundException;
 
     /**
-     * Возвращает список всех пользователей.
+     * Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№.
      *
-     * @return {@code List<User>}, список всех пользователей
+     * @return {@code List<User>}, СЃРїРёСЃРѕРє РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
      */
     List<User> getAll();
 
     /**
-     * Обновляет данные пользователя.
+     * РћР±РЅРѕРІР»СЏРµС‚ РґР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param dto {@link CreateUserDto}, данные для обновления пользователя
-     * @throws UserNotFoundException если пользователь не найден
+     * @param dto {@link CreateUserDto}, РґР°РЅРЅС‹Рµ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
      */
     void update(UpdateUserDto dto) throws UserNotFoundException;
 
     /**
-     * Удаляет пользователя по его идентификатору.
+     * РЈРґР°Р»СЏРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ.
      *
-     * @param id идентификатор пользователя
+     * @param id РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
      */
-    void remove(UUID id);
+    void remove(int id);
 
     /**
-     * Меняет статус администратора пользователя.
+     * РњРµРЅСЏРµС‚ СЃС‚Р°С‚СѓСЃ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param dto данные для изменения статуса администратора
-     * @throws UserNotFoundException если пользователь не найден
+     * @param dto РґР°РЅРЅС‹Рµ РґР»СЏ РёР·РјРµРЅРµРЅРёСЏ СЃС‚Р°С‚СѓСЃР° Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
      */
     void changeUserAdminStatus(ChangeAdminStatusDto dto) throws UserNotFoundException;
 }

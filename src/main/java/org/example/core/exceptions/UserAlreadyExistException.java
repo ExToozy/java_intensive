@@ -1,7 +1,7 @@
 package org.example.core.exceptions;
 
 /**
- * Исключение обозначающие что пользователь уже существует
+ * РСЃРєР»СЋС‡РµРЅРёРµ РѕР±РѕР·РЅР°С‡Р°СЋС‰РёРµ С‡С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
  */
 public class UserAlreadyExistException extends Exception {
     public UserAlreadyExistException(String message) {

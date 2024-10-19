@@ -1,7 +1,7 @@
-package org.example.infastructure.data.mappers;
+package org.example.infrastructure.data.mappers;
 
 import org.example.core.models.HabitTrack;
-import org.example.infastructure.data.models.HabitTrackEntity;
+import org.example.infrastructure.data.models.HabitTrackEntity;
 
 public class HabitTrackMapper implements Mapper<HabitTrack, HabitTrackEntity> {
     @Override

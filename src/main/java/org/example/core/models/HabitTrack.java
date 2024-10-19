@@ -1,35 +1,34 @@
 package org.example.core.models;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 /**
- * Класс, представляющий запись отметку о выполнении привычки.
- * Содержит: идентификатор, идентификатор привычки и дату выполнения привычки.
+ * РљР»Р°СЃСЃ, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёР№ Р·Р°РїРёСЃСЊ РѕС‚РјРµС‚РєСѓ Рѕ РІС‹РїРѕР»РЅРµРЅРёРё РїСЂРёРІС‹С‡РєРё.
+ * РЎРѕРґРµСЂР¶РёС‚: РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ, РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРёРІС‹С‡РєРё Рё РґР°С‚Сѓ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРёРІС‹С‡РєРё.
  */
 public class HabitTrack {
-    private UUID id;
-    private UUID habitId;
+    private int id;
+    private int habitId;
     private LocalDate completeDate;
 
     /**
-     * Создаёт новую отметку о выполнении привычки.
+     * РЎРѕР·РґР°С‘С‚ РЅРѕРІСѓСЋ РѕС‚РјРµС‚РєСѓ Рѕ РІС‹РїРѕР»РЅРµРЅРёРё РїСЂРёРІС‹С‡РєРё.
      *
-     * @param id           идентификатор отметки
-     * @param habitId      идентификатор привычки
-     * @param completeDate дата выполнения привычки
+     * @param id           РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕС‚РјРµС‚РєРё
+     * @param habitId      РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїСЂРёРІС‹С‡РєРё
+     * @param completeDate РґР°С‚Р° РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРёРІС‹С‡РєРё
      */
-    public HabitTrack(UUID id, UUID habitId, LocalDate completeDate) {
+    public HabitTrack(int id, int habitId, LocalDate completeDate) {
         this.id = id;
         this.habitId = habitId;
         this.completeDate = completeDate;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public UUID getHabitId() {
+    public int getHabitId() {
         return habitId;
     }
 

@@ -51,7 +51,7 @@ public class ConsoleOutHelper {
     public static void printHabitInfo(Habit habit, int habitStreak) {
         ConsoleOutHelper.printMessage(String.format("Name: %s", habit.getName()));
         ConsoleOutHelper.printMessage(String.format("Description: %s", habit.getDescription()));
-        ConsoleOutHelper.printMessage(String.format("It need to do: %s", habit.getFrequency()));
+        ConsoleOutHelper.printMessage(String.format("It need to do: %s", habit.getFrequency().toStringRepresentation()));
         ConsoleOutHelper.printMessage(String.format("Current streak: %s", habitStreak));
     }
 

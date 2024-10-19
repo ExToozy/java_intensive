@@ -4,33 +4,33 @@ import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
-import org.example.infastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.actions.UpdateUserAction;
 import org.example.presentation.console.in.ConsoleInHelper;
 import org.example.presentation.console.out.ConsoleOutHelper;
 
 /**
- * Обработчик действий обновления пользователя.
- * Обрабатывает обновление информации о пользователе.
+ * РћР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёР№ РѕР±РЅРѕРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+ * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РѕР±РЅРѕРІР»РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»Рµ.
  */
 public class UpdateUserHandler {
     private final ConsoleUserController userController;
 
     /**
-     * Конструктор UpdateUserHandler.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ UpdateUserHandler.
      *
-     * @param userController контроллер для работы с пользователями
+     * @param userController РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРјРё
      */
     public UpdateUserHandler(ConsoleUserController userController) {
         this.userController = userController;
     }
 
     /**
-     * Обрабатывает действия обновления пользователя.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param action действие обновления пользователя
-     * @param user   пользователь для обновления
-     * @return флаг успешного обновления
+     * @param action РґРµР№СЃС‚РІРёРµ РѕР±РЅРѕРІР»РµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+     * @param user   РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
+     * @return С„Р»Р°Рі СѓСЃРїРµС€РЅРѕРіРѕ РѕР±РЅРѕРІР»РµРЅРёСЏ
      */
     public boolean handleUpdateUserAction(UpdateUserAction action, User user) {
         try {
@@ -54,11 +54,11 @@ public class UpdateUserHandler {
     }
 
     /**
-     * Обрабатывает обновление email пользователя.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РѕР±РЅРѕРІР»РµРЅРёРµ email РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param user пользователь для обновления
-     * @throws UserNotFoundException если пользователь не найден
-     * @throws InvalidEmailException если пользователь ввёл некорректный email
+     * @param user РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
+     * @throws InvalidEmailException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІРІС‘Р» РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ email
      */
     private void handleUpdateUserEmailAction(User user) throws UserNotFoundException, InvalidEmailException {
         String email = ConsoleOutHelper.getUserEmailFromInput();
@@ -66,11 +66,11 @@ public class UpdateUserHandler {
     }
 
     /**
-     * Обрабатывает обновление пароля пользователя.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РѕР±РЅРѕРІР»РµРЅРёРµ РїР°СЂРѕР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
      *
-     * @param user пользователь для обновления
-     * @throws UserNotFoundException если пользователь не найден
-     * @throws InvalidEmailException если пользователь ввёл некорректный email
+     * @param user РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
+     * @throws UserNotFoundException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РЅР°Р№РґРµРЅ
+     * @throws InvalidEmailException РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІРІС‘Р» РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ email
      */
     private void handleUpdateUserPasswordAction(User user) throws UserNotFoundException, InvalidEmailException {
         String password = ConsoleInHelper.getUserPasswordFromInput();

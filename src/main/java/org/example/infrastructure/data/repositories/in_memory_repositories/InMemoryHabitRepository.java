@@ -1,47 +1,45 @@
-package org.example.infastructure.data.repositories.in_memory_repositories;
+package org.example.infrastructure.data.repositories.in_memory_repositories;
 
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
 import org.example.core.repositories.habit_repository.IHabitRepository;
 import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
 import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
-import org.example.infastructure.data.mappers.HabitMapper;
-import org.example.infastructure.data.mappers.Mapper;
-import org.example.infastructure.data.models.HabitEntity;
+import org.example.infrastructure.data.mappers.HabitMapper;
+import org.example.infrastructure.data.mappers.Mapper;
+import org.example.infrastructure.data.models.HabitEntity;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class InMemoryHabitRepository implements IHabitRepository {
     private final List<HabitEntity> habits = new ArrayList<>();
     private final Mapper<Habit, HabitEntity> mapper = new HabitMapper();
 
     public InMemoryHabitRepository() {
-        UUID userId = UUID.fromString("00000000-0000-0000-0000-000000000000");
         habits.addAll(Arrays.asList(
                         new HabitEntity(
-                                UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                                userId,
+                                1,
+                                1,
                                 "Drink water",
                                 "Need to drink 2 liters of water every day",
                                 HabitFrequency.DAILY,
                                 LocalDate.now()
                         ),
                         new HabitEntity(
-                                UUID.fromString("00000000-0000-0000-0000-000000000001"),
-                                userId,
+                                2,
+                                1,
                                 "Walk 10000 steps",
                                 "Need to walk at least 10000 steps every day",
                                 HabitFrequency.DAILY,
                                 LocalDate.now()
                         ),
                         new HabitEntity(
-                                UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                                userId,
+                                3,
+                                1,
                                 "Training",
                                 "Go to the gym once a week",
                                 HabitFrequency.WEEKLY,
@@ -53,8 +51,9 @@ public class InMemoryHabitRepository implements IHabitRepository {
 
     @Override
     public void create(CreateHabitDto dto) {
+        int nextIndex = habits.stream().mapToInt(HabitEntity::getId).max().orElse(1);
         HabitEntity habit = new HabitEntity(
-                UUID.randomUUID(),
+                nextIndex,
                 dto.getUserId(),
                 dto.getName(),
                 dto.getDescription(),
@@ -66,16 +65,16 @@ public class InMemoryHabitRepository implements IHabitRepository {
 
 
     @Override
-    public List<Habit> getAllHabitsByUserId(UUID userId) {
+    public List<Habit> getAllHabitsByUserId(int userId) {
         return habits.stream()
-                .filter(habit -> habit.getUserID().equals(userId)).map(mapper::toDomain)
+                .filter(habit -> habit.getUserID() == userId).map(mapper::toDomain)
                 .toList();
     }
 
     @Override
     public void update(UpdateHabitDto dto) {
         for (var habit : habits) {
-            if (habit.getId().equals(dto.getId())) {
+            if (habit.getId() == dto.getId()) {
                 habit.setDescription(dto.getDescription());
                 habit.setFrequency(dto.getFrequency());
                 habit.setName(dto.getName());
@@ -85,7 +84,7 @@ public class InMemoryHabitRepository implements IHabitRepository {
     }
 
     @Override
-    public void remove(UUID id) {
-        habits.removeIf(habitEntity -> habitEntity.getId().equals(id));
+    public void remove(int id) {
+        habits.removeIf(habitEntity -> habitEntity.getId() == id);
     }
 }

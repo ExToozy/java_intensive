@@ -4,10 +4,10 @@ import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserAlreadyExistException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.infastructure.controllers.console.ConsoleAuthController;
-import org.example.infastructure.controllers.console.ConsoleHabitController;
-import org.example.infastructure.controllers.console.ConsoleHabitTrackController;
-import org.example.infastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.controllers.console.ConsoleAuthController;
+import org.example.infrastructure.controllers.console.ConsoleHabitController;
+import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.in.ConsoleInHelper;
 import org.example.presentation.console.out.ConsoleOutHelper;
 
