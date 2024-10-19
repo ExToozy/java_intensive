@@ -7,20 +7,20 @@ import org.example.core.services.AuthService;
 import org.example.core.services.HabitService;
 import org.example.core.services.HabitTrackService;
 import org.example.core.services.UserService;
-import org.example.infastructure.controllers.console.ConsoleAuthController;
-import org.example.infastructure.controllers.console.ConsoleHabitController;
-import org.example.infastructure.controllers.console.ConsoleHabitTrackController;
-import org.example.infastructure.controllers.console.ConsoleUserController;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
+import org.example.infrastructure.controllers.console.ConsoleAuthController;
+import org.example.infrastructure.controllers.console.ConsoleHabitController;
+import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.data.repositories.jdbc_repositories.JdbcHabitRepository;
+import org.example.infrastructure.data.repositories.jdbc_repositories.JdbcHabitTrackRepository;
+import org.example.infrastructure.data.repositories.jdbc_repositories.JdbcUserRepository;
 
 public class HabitTrackerRunner {
     public void run() {
         try {
-            IUserRepository userRepository = new InMemoryUserRepository();
-            IHabitRepository habitRepository = new InMemoryHabitRepository();
-            IHabitTrackRepository habitTrackRepository = new InMemoryHabitTrackRepository();
+            IUserRepository userRepository = new JdbcUserRepository();
+            IHabitRepository habitRepository = new JdbcHabitRepository();
+            IHabitTrackRepository habitTrackRepository = new JdbcHabitTrackRepository();
 
             HabitTrackService habitTrackService = new HabitTrackService(habitTrackRepository);
             HabitService habitService = new HabitService(habitRepository, habitTrackService);

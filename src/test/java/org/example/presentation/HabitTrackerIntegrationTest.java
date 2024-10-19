@@ -9,13 +9,13 @@ import org.example.core.services.AuthService;
 import org.example.core.services.HabitService;
 import org.example.core.services.HabitTrackService;
 import org.example.core.services.UserService;
-import org.example.infastructure.controllers.console.ConsoleAuthController;
-import org.example.infastructure.controllers.console.ConsoleHabitController;
-import org.example.infastructure.controllers.console.ConsoleHabitTrackController;
-import org.example.infastructure.controllers.console.ConsoleUserController;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
-import org.example.infastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
+import org.example.infrastructure.controllers.console.ConsoleAuthController;
+import org.example.infrastructure.controllers.console.ConsoleHabitController;
+import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
+import org.example.infrastructure.controllers.console.ConsoleUserController;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
 import org.example.presentation.console.HabitTracker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +28,8 @@ import java.io.InputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HabitTrackerIntegrationTest {
-    HabitTracker habitTracker;
     InputStream systemIn = System.in;
+    HabitTracker habitTracker;
     ByteArrayInputStream testIn;
     IUserRepository userRepository;
     IHabitRepository habitRepository;
@@ -59,7 +59,7 @@ class HabitTrackerIntegrationTest {
         habitTracker = new HabitTracker(userController, authController, habitController, habitTrackController);
     }
 
-    @DisplayName("Check that habitTracker can create habit after auth user ")
+    @DisplayName("Check that habitTracker can create habit after auth user")
     @Test
     void run_shouldCreateHabit() throws UserNotFoundException {
         String inputData = """
