@@ -22,7 +22,8 @@ public class MigrationTool {
 
     public static void runMigrate() throws IOException {
         DbConfig dbConfig = new DbConfig();
-        try (Connection connection = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword())) {
+        try (Connection connection = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(),
+                dbConfig.getPassword())) {
             createSchemas(connection, dbConfig);
             migrateDatabase(connection, dbConfig);
         } catch (SQLException | LiquibaseException e) {
@@ -38,19 +39,12 @@ public class MigrationTool {
     }
 
     private static void migrateDatabase(Connection connection, DbConfig dbConfig) throws LiquibaseException {
-        Database database = DatabaseFactory
-                .getInstance()
+        Database database = DatabaseFactory.getInstance()
                 .findCorrectDatabaseImplementation(new JdbcConnection(connection));
-        Liquibase liquibase = new Liquibase(
-                dbConfig.getChangeLogFile(),
-                new ClassLoaderResourceAccessor(),
-                database
-        );
+        Liquibase liquibase = new Liquibase(dbConfig.getChangeLogFile(), new ClassLoaderResourceAccessor(), database);
         database.setLiquibaseSchemaName(dbConfig.getLiquibaseSchemaName());
         database.setDefaultSchemaName(dbConfig.getDefaultSchemaName());
         liquibase.update();
+        liquibase.close();
     }
 }
-
-
-

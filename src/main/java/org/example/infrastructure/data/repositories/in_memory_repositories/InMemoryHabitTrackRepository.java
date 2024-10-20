@@ -18,8 +18,6 @@ public class InMemoryHabitTrackRepository implements IHabitTrackRepository {
     private final Mapper<HabitTrack, HabitTrackEntity> mapper = new HabitTrackMapper();
 
     public InMemoryHabitTrackRepository() {
-        String habitId1 = "00000000-0000-0000-0000-000000000000";
-        String habitId2 = "00000000-0000-0000-0000-000000000002";
         tracks.addAll(Arrays.asList(
                         new HabitTrackEntity(
                                 1,
