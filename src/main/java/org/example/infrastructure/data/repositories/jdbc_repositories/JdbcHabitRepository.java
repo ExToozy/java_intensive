@@ -17,20 +17,17 @@ public class JdbcHabitRepository implements IHabitRepository {
     private final String url;
     private final String username;
     private final String password;
-    private final String schemaName;
 
     public JdbcHabitRepository() throws IOException {
         DbConfig dbConfig = new DbConfig();
         url = dbConfig.getUrl();
         username = dbConfig.getUsername();
         password = dbConfig.getPassword();
-        schemaName = dbConfig.getDefaultSchemaName();
     }
 
     @Override
     public void create(CreateHabitDto dto) {
         String createSql = "INSERT INTO habit_tracker_schema.habits (user_id, name, description, frequency) VALUES (?, ?, ?, ?)";
-        System.out.println(String.format("%s %s %s", url, username, password));
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
 
