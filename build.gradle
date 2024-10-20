@@ -16,7 +16,7 @@ var runMigrationTool = tasks.register('runMigrationTool', JavaExec) {
     mainClass = 'org.example.infrastructure.migration.MigrationTool'
 }
 
-var dockerComposeUp = tasks.register('rockerComposeUp', Exec) {
+var dockerComposeUp = tasks.register('dockerComposeUp', Exec) {
     description = "Start docker compose"
     commandLine 'docker-compose', 'up', '-d'
 }

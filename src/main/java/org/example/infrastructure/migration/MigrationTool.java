@@ -22,7 +22,6 @@ public class MigrationTool {
 
     public static void runMigrate() throws IOException {
         DbConfig dbConfig = new DbConfig();
-        System.out.println(String.format("%s %s %s", dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword()));
         try (Connection connection = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword())) {
             createSchemas(connection, dbConfig);
             migrateDatabase(connection, dbConfig);

@@ -56,17 +56,17 @@ class JdbcHabitRepositoryTest {
     void update() {
         habitRepository.update(new UpdateHabitDto(1, "newName", "newDesc", HabitFrequency.WEEKLY));
 
-        var updated_habit = habitRepository
+        var updatedHabit = habitRepository
                 .getAllHabitsByUserId(1)
                 .stream()
                 .filter(habit -> habit.getId() == 1)
                 .findFirst()
                 .orElse(null);
 
-        assertThat(updated_habit).isNotNull();
-        assertThat(updated_habit.getName()).isEqualTo("newName");
-        assertThat(updated_habit.getDescription()).isEqualTo("newDesc");
-        assertThat(updated_habit.getFrequency()).isEqualTo(HabitFrequency.WEEKLY);
+        assertThat(updatedHabit).isNotNull();
+        assertThat(updatedHabit.getName()).isEqualTo("newName");
+        assertThat(updatedHabit.getDescription()).isEqualTo("newDesc");
+        assertThat(updatedHabit.getFrequency()).isEqualTo(HabitFrequency.WEEKLY);
     }
 
     @Test
