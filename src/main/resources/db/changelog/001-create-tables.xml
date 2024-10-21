@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        logicalFilePath="db/changelog.xml">
+    <changeSet id="001-create-table" author="ExToozy">
+        <createTable tableName="users">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" foreignKeyName="pk_users"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_admin" type="boolean" defaultValueBoolean="false"/>
+        </createTable>
+        <createTable tableName="habits">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" foreignKeyName="pk_habits"/>
+            </column>
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false" references="users(id)" foreignKeyName="pk_habits_users"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="day_of_creation" type="DATE" defaultValueComputed="CURRENT_DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="habit_tracks">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" foreignKeyName="pk_habit_tracks"/>
+            </column>
+            <column name="habit_id" type="INTEGER">
+                <constraints nullable="false" references="habits(id)"
+                             foreignKeyName="pk_habit_tracks_habit"/>
+            </column>
+            <column name="complete_date" type="DATE" defaultValueComputed="CURRENT_DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

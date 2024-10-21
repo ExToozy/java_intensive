@@ -3,7 +3,6 @@ package org.example.infrastructure.data.repositories.in_memory_repositories;
 import org.example.core.models.HabitFrequency;
 import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
 import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
-import org.example.infrastructure.configs.DbConfig;
 import org.example.infrastructure.data.models.HabitEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,7 +69,6 @@ class InMemoryHabitRepositoryTest {
     @DisplayName("Check that create habit add habit to memory")
     @Test
     void create_shouldAddHabitToMemory() throws IOException {
-        DbConfig dbConfig = new DbConfig();
         habitRepository.create(
                 new CreateHabitDto(
                         2,
