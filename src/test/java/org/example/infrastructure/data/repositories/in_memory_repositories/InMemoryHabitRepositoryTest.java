@@ -1,15 +1,13 @@
 package org.example.infrastructure.data.repositories.in_memory_repositories;
 
+import org.example.core.dtos.habit_dtos.CreateHabitDto;
+import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.HabitFrequency;
-import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
-import org.example.infrastructure.configs.DbConfig;
 import org.example.infrastructure.data.models.HabitEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.Period;
@@ -69,8 +67,7 @@ class InMemoryHabitRepositoryTest {
 
     @DisplayName("Check that create habit add habit to memory")
     @Test
-    void create_shouldAddHabitToMemory() throws IOException {
-        DbConfig dbConfig = new DbConfig();
+    void create_shouldAddHabitToMemory() {
         habitRepository.create(
                 new CreateHabitDto(
                         2,

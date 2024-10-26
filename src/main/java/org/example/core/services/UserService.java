@@ -1,12 +1,13 @@
 package org.example.core.services;
 
+import org.example.core.dtos.user_dtos.AuthUserDto;
+import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
+import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.core.repositories.user_repository.IUserRepository;
-import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
-import org.example.core.repositories.user_repository.dtos.CreateUserDto;
-import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
+import org.example.core.repositories.IUserRepository;
+import org.example.core.util.PasswordManager;
 import org.example.core.util.RegexUtil;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class UserService {
      * @param dto данные для создания пользователя
      * @return созданный пользователь
      */
-    public User create(CreateUserDto dto) {
+    public User create(AuthUserDto dto) {
         return userRepository.create(dto);
     }
 
@@ -105,9 +106,27 @@ public class UserService {
      * @throws InvalidEmailException если email некорректный
      */
     public void update(UpdateUserDto dto) throws UserNotFoundException, InvalidEmailException {
-        if (RegexUtil.isInvalidEmail(dto.getEmail())) {
+        if (dto.getEmail() == null && dto.getPassword() == null) {
+            return;
+        }
+        if (dto.getPassword() != null) {
+            dto.setPassword(PasswordManager.getPasswordHash(dto.getPassword()));
+        }
+        if (dto.getEmail() != null && RegexUtil.isInvalidEmail(dto.getEmail())) {
             throw new InvalidEmailException();
         }
+        User user = userRepository.getById(dto.getUserId());
+        if (dto.getPassword() == null) dto.setPassword(user.getPassword());
+        if (dto.getEmail() == null) dto.setEmail(user.getEmail());
+
         userRepository.update(dto);
+    }
+
+    public User getById(int id) {
+        try {
+            return userRepository.getById(id);
+        } catch (UserNotFoundException e) {
+            return null;
+        }
     }
 }

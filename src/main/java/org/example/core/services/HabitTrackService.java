@@ -1,12 +1,14 @@
 package org.example.core.services;
 
+import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitTrack;
-import org.example.core.repositories.habit_track_repository.IHabitTrackRepository;
-import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
+import org.example.core.repositories.IHabitRepository;
+import org.example.core.repositories.IHabitTrackRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,14 +18,16 @@ import java.util.List;
 public class HabitTrackService {
 
     private final IHabitTrackRepository habitTrackRepository;
+    private final IHabitRepository habitRepository;
 
     /**
      * Конструктор {@link HabitTrackService}.
      *
      * @param habitTrackRepository {@link IHabitTrackRepository} репозиторий для работы с отметками
      */
-    public HabitTrackService(IHabitTrackRepository habitTrackRepository) {
+    public HabitTrackService(IHabitTrackRepository habitTrackRepository, IHabitRepository habitRepository) {
         this.habitTrackRepository = habitTrackRepository;
+        this.habitRepository = habitRepository;
     }
 
     /**
@@ -63,13 +67,24 @@ public class HabitTrackService {
         return habitTrackRepository.getHabitTracks(habitId);
     }
 
+    public List<HabitTrack> getUserHabitTracks(int userId) {
+        List<HabitTrack> userHabitTracks = new ArrayList<>();
+        List<Habit> userHabits = habitRepository.getAllHabitsByUserId(userId);
+        userHabits.forEach(habit -> userHabitTracks.addAll(habitTrackRepository.getHabitTracks(habit.getId())));
+        return userHabitTracks;
+    }
+
     /**
      * Удаляет все отметки о выпонении для указанной привычки.
      *
      * @param habitId идентификатор привычки
      */
     public void removeHabitTracks(int habitId) {
-        habitTrackRepository.removeByHabitId(habitId);
+        habitTrackRepository.removeAllByHabitId(habitId);
+    }
+
+    public void remove(int trackId) {
+        habitTrackRepository.remove(trackId);
     }
 }
 

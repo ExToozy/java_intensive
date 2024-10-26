@@ -1,6 +1,6 @@
 package org.example.infrastructure.data.repositories.in_memory_repositories;
 
-import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
+import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.infrastructure.data.models.HabitTrackEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,7 +75,7 @@ class InMemoryHabitTrackRepositoryTest {
     @DisplayName("Check that remove habit working correctly")
     @Test
     void removeByHabitId_shouldRemoveHabitFromMemory() {
-        habitTrackRepository.removeByHabitId(2);
+        habitTrackRepository.removeAllByHabitId(2);
 
         var tracks = habitTrackRepository.getHabitTracks(2);
         assertThat(tracks)

@@ -1,10 +1,9 @@
 package org.example.infrastructure.data.repositories.in_memory_repositories;
 
+import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.models.HabitTrack;
-import org.example.core.repositories.habit_track_repository.IHabitTrackRepository;
-import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
+import org.example.core.repositories.IHabitTrackRepository;
 import org.example.infrastructure.data.mappers.HabitTrackMapper;
-import org.example.infrastructure.data.mappers.Mapper;
 import org.example.infrastructure.data.models.HabitTrackEntity;
 
 import java.time.LocalDate;
@@ -15,11 +14,9 @@ import java.util.List;
 
 public class InMemoryHabitTrackRepository implements IHabitTrackRepository {
     private final List<HabitTrackEntity> tracks = new ArrayList<>();
-    private final Mapper<HabitTrack, HabitTrackEntity> mapper = new HabitTrackMapper();
+    private final HabitTrackMapper mapper = HabitTrackMapper.INSTANCE;
 
     public InMemoryHabitTrackRepository() {
-        String habitId1 = "00000000-0000-0000-0000-000000000000";
-        String habitId2 = "00000000-0000-0000-0000-000000000002";
         tracks.addAll(Arrays.asList(
                         new HabitTrackEntity(
                                 1,
@@ -65,7 +62,12 @@ public class InMemoryHabitTrackRepository implements IHabitTrackRepository {
     }
 
     @Override
-    public void removeByHabitId(int habitId) {
+    public void removeAllByHabitId(int habitId) {
         tracks.removeIf(track -> track.getHabitId() == habitId);
+    }
+
+    @Override
+    public void remove(int id) {
+        tracks.removeIf(track -> track.getId() == id);
     }
 }

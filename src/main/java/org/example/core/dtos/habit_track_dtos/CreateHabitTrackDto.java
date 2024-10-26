@@ -1,4 +1,4 @@
-package org.example.core.repositories.habit_track_repository.dtos;
+package org.example.core.dtos.habit_track_dtos;
 
 
 public class CreateHabitTrackDto {

@@ -2,31 +2,31 @@ package org.example.presentation.console.handlers;
 
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
-import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
+import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.infrastructure.controllers.console.ConsoleHabitController;
 import org.example.presentation.console.actions.HabitUpdateAction;
 import org.example.presentation.console.in.ConsoleInHelper;
 import org.example.presentation.console.out.ConsoleOutHelper;
 
 /**
- * Обработчик для обновления привычки.
+ * РћР±СЂР°Р±РѕС‚С‡РёРє РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ РїСЂРёРІС‹С‡РєРё.
  */
 public class UpdateHabitActionHandler {
     private final ConsoleHabitController habitController;
 
     /**
-     * Конструктор UpdateHabitActionHandler.
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ UpdateHabitActionHandler.
      *
-     * @param habitController контроллер для работы с привычками
+     * @param habitController РєРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РїСЂРёРІС‹С‡РєР°РјРё
      */
     public UpdateHabitActionHandler(ConsoleHabitController habitController) {
         this.habitController = habitController;
     }
 
     /**
-     * Обрабатывает действие обновления привычки.
+     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РґРµР№СЃС‚РІРёРµ РѕР±РЅРѕРІР»РµРЅРёСЏ РїСЂРёРІС‹С‡РєРё.
      *
-     * @param habit привычка для обновления
+     * @param habit РїСЂРёРІС‹С‡РєР° РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ
      */
     public void handleUpdateHabitAction(Habit habit) {
         boolean exitFlag = false;

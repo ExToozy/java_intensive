@@ -1,9 +1,9 @@
 package org.example.infrastructure.data.repositories.in_memory_repositories;
 
+import org.example.core.dtos.user_dtos.AuthUserDto;
+import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
+import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.exceptions.UserNotFoundException;
-import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
-import org.example.core.repositories.user_repository.dtos.CreateUserDto;
-import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 import org.example.core.util.PasswordManager;
 import org.example.infrastructure.data.models.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ class InMemoryUserRepositoryTest {
     @DisplayName("Check create working correctly")
     @Test
     void create_shouldCreateUserInMemory() throws UserNotFoundException {
-        userRepository.create(new CreateUserDto("test@mail.ru", "123"));
+        userRepository.create(new AuthUserDto("test@mail.ru", "123"));
 
         var user = userRepository.getByEmail("test@mail.ru");
 
@@ -93,7 +93,7 @@ class InMemoryUserRepositoryTest {
         var user = userRepository.getByEmail("new@mail.ru");
         assertThat(user.getId()).isEqualTo(0);
         assertThat(user.getEmail()).isEqualTo("new@mail.ru");
-        assertThat(user.getPassword()).isEqualTo(PasswordManager.getPasswordHash("1234"));
+        assertThat(user.getPassword()).isEqualTo("1234");
     }
 
     @DisplayName("Check remove working correctly")

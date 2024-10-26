@@ -3,7 +3,7 @@ package org.example.presentation.console.handlers;
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
+import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.actions.UpdateUserAction;
 import org.example.presentation.console.in.ConsoleInHelper;

@@ -1,10 +1,10 @@
-package org.example.core.repositories.user_repository;
+package org.example.core.repositories;
 
+import org.example.core.dtos.user_dtos.AuthUserDto;
+import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
+import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
-import org.example.core.repositories.user_repository.dtos.CreateUserDto;
-import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ public interface IUserRepository {
     /**
      * Создаёт нового пользователя.
      *
-     * @param dto {@link CreateUserDto}, данные для создания пользователя
+     * @param dto {@link AuthUserDto}, данные для создания пользователя
      * @return созданный пользователь
      */
-    User create(CreateUserDto dto);
+    User create(AuthUserDto dto);
 
     /**
      * Возвращает пользователя по его email.
@@ -37,7 +37,7 @@ public interface IUserRepository {
     /**
      * Обновляет данные пользователя.
      *
-     * @param dto {@link CreateUserDto}, данные для обновления пользователя
+     * @param dto {@link AuthUserDto}, данные для обновления пользователя
      * @throws UserNotFoundException если пользователь не найден
      */
     void update(UpdateUserDto dto) throws UserNotFoundException;
@@ -56,4 +56,6 @@ public interface IUserRepository {
      * @throws UserNotFoundException если пользователь не найден
      */
     void changeUserAdminStatus(ChangeAdminStatusDto dto) throws UserNotFoundException;
+
+    User getById(int id) throws UserNotFoundException;
 }

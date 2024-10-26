@@ -1,9 +1,9 @@
 package org.example.core.services;
 
+import org.example.core.dtos.habit_dtos.CreateHabitDto;
+import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
-import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
 import org.example.infrastructure.data.models.HabitEntity;
 import org.example.infrastructure.data.models.HabitTrackEntity;
 import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
@@ -98,7 +98,7 @@ class HabitServiceTest {
         habitsField.set(habitRepository, habits);
         tracksField.setAccessible(true);
         tracksField.set(habitTrackRepository, tracks);
-        habitTrackService = new HabitTrackService(habitTrackRepository);
+        habitTrackService = new HabitTrackService(habitTrackRepository, habitRepository);
         habitService = new HabitService(habitRepository, habitTrackService);
     }
 

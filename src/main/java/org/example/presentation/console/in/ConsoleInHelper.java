@@ -1,10 +1,10 @@
 package org.example.presentation.console.in;
 
+import org.example.core.dtos.habit_dtos.CreateHabitDto;
+import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
 import org.example.core.models.User;
-import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.core.repositories.user_repository.dtos.CreateUserDto;
 import org.example.presentation.console.common.StatisticPeriod;
 import org.example.presentation.console.out.ConsoleOutHelper;
 
@@ -98,12 +98,12 @@ public class ConsoleInHelper {
         }
     }
 
-    public static CreateUserDto getCreateUserDtoFromInput() {
+    public static AuthUserDto getAuthUserDtoFromInput() {
         ConsoleOutHelper.printMessage("Enter email:");
         String login = ConsoleInHelper.readLine();
         ConsoleOutHelper.printMessage("Enter password:");
         String password = ConsoleInHelper.readLine();
-        return new CreateUserDto(login, password);
+        return new AuthUserDto(login, password);
     }
 
     public static int getUserIndexFromInput(List<User> users) {
