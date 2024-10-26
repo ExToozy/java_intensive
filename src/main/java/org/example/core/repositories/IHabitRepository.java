@@ -1,9 +1,9 @@
-package org.example.core.repositories.habit_repository;
+package org.example.core.repositories;
 
 
 import org.example.core.models.Habit;
-import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
+import org.example.core.dtos.habit_dtos.CreateHabitDto;
+import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 
 import java.util.List;
 

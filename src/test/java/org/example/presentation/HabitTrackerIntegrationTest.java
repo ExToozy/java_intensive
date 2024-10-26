@@ -2,9 +2,9 @@ package org.example.presentation;
 
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.core.repositories.habit_repository.IHabitRepository;
-import org.example.core.repositories.habit_track_repository.IHabitTrackRepository;
-import org.example.core.repositories.user_repository.IUserRepository;
+import org.example.core.repositories.IHabitRepository;
+import org.example.core.repositories.IHabitTrackRepository;
+import org.example.core.repositories.IUserRepository;
 import org.example.core.services.AuthService;
 import org.example.core.services.HabitService;
 import org.example.core.services.HabitTrackService;
@@ -46,7 +46,7 @@ class HabitTrackerIntegrationTest {
         habitRepository = new InMemoryHabitRepository();
         habitTrackRepository = new InMemoryHabitTrackRepository();
 
-        HabitTrackService habitTrackService = new HabitTrackService(habitTrackRepository);
+        HabitTrackService habitTrackService = new HabitTrackService(habitTrackRepository, habitRepository);
         HabitService habitService = new HabitService(habitRepository, habitTrackService);
         UserService userService = new UserService(userRepository, habitService);
         AuthService authService = new AuthService(userService);

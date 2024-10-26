@@ -1,9 +1,10 @@
 package org.example.core.services;
 
+import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
-import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
 import org.example.infrastructure.data.models.HabitTrackEntity;
+import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
 import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,10 +52,12 @@ class HabitTrackServiceTest {
         )
         );
         InMemoryHabitTrackRepository habitTrackRepository = new InMemoryHabitTrackRepository();
+        InMemoryHabitRepository habitRepository = new InMemoryHabitRepository();
         Field field = InMemoryHabitTrackRepository.class.getDeclaredField("tracks");
         field.setAccessible(true);
         field.set(habitTrackRepository, tracks);
-        habitTrackService = new HabitTrackService(habitTrackRepository);
+
+        habitTrackService = new HabitTrackService(habitTrackRepository, habitRepository);
     }
 
     @DisplayName("Check after completeHabit execute HabitTrack was created")

@@ -1,11 +1,10 @@
-package org.example.core.repositories.user_repository.dtos;
+package org.example.core.dtos.user_dtos;
 
 
 public class UpdateUserDto {
     private final int userId;
-    private final String email;
+    private String email;
     private String password;
-
     public UpdateUserDto(int userId, String email, String password) {
         this.userId = userId;
         this.email = email;
@@ -14,6 +13,10 @@ public class UpdateUserDto {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

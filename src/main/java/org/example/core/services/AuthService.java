@@ -1,10 +1,10 @@
 package org.example.core.services;
 
+import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserAlreadyExistException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.core.repositories.user_repository.dtos.CreateUserDto;
 import org.example.core.util.PasswordManager;
 import org.example.core.util.RegexUtil;
 
@@ -29,11 +29,11 @@ public class AuthService {
     /**
      * Выполняет вход пользователя по email и паролю.
      *
-     * @param dto {@link CreateUserDto} данные для входа, включающие email и пароль
+     * @param dto {@link AuthUserDto} данные для входа, включающие email и пароль
      * @return объект {@link User}, если аутентификация успешна
      * @throws UserNotFoundException если пользователь не найден или пароль неверен
      */
-    public User login(CreateUserDto dto) throws UserNotFoundException {
+    public User login(AuthUserDto dto) throws UserNotFoundException {
         User user = userService.getUserByEmail(dto.getEmail());
         if (!PasswordManager.checkPasswordEquals(dto.getPassword(), user.getPassword())) {
             throw new UserNotFoundException();
@@ -50,7 +50,7 @@ public class AuthService {
      * @throws UserAlreadyExistException если пользователь с таким email уже существует
      * @throws InvalidEmailException     если формат email некорректен
      */
-    public User register(CreateUserDto dto) throws SecurityException, UserAlreadyExistException, InvalidEmailException {
+    public User register(AuthUserDto dto) throws SecurityException, UserAlreadyExistException, InvalidEmailException {
         if (RegexUtil.isInvalidEmail(dto.getEmail())) {
             throw new InvalidEmailException();
         }

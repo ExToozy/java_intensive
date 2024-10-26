@@ -1,9 +1,9 @@
-package org.example.core.repositories.user_repository.dtos;
+package org.example.core.dtos.user_dtos;
 
 
 public class ChangeAdminStatusDto {
-    private int userId;
-    private boolean isAdmin;
+    private final int userId;
+    private final boolean isAdmin;
 
     public ChangeAdminStatusDto(int userId, boolean isAdmin) {
         this.userId = userId;

@@ -1,10 +1,10 @@
 package org.example.core.services;
 
+import org.example.core.dtos.habit_dtos.CreateHabitDto;
+import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitTrack;
-import org.example.core.repositories.habit_repository.IHabitRepository;
-import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
+import org.example.core.repositories.IHabitRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -208,5 +208,19 @@ public class HabitService {
     public void removeHabitAndTracks(int habitId) {
         habitTrackService.removeHabitTracks(habitId);
         habitRepository.remove(habitId);
+    }
+
+    public boolean isUserHabit(int userId, int habitId) {
+        List<Habit> userHabits = habitRepository.getAllHabitsByUserId(userId);
+        return userHabits.stream().anyMatch(habit -> habit.getId() == habitId);
+    }
+
+    public boolean isUserHabitTrack(int userId, int trackId) {
+        List<Habit> userHabits = habitRepository.getAllHabitsByUserId(userId);
+        return userHabits
+                .stream()
+                .anyMatch(habit -> habitTrackService.getHabitTracks(habit.getId())
+                        .stream()
+                        .anyMatch(habitTrack -> habitTrack.getId() == trackId));
     }
 }

@@ -1,11 +1,11 @@
-package org.example.core.repositories.user_repository.dtos;
+package org.example.core.dtos.user_dtos;
 
-public class CreateUserDto {
-    private String email;
+public class AuthUserDto {
+    private final String email;
 
     private String password;
 
-    public CreateUserDto(String email, String password) {
+    public AuthUserDto(String email, String password) {
         this.email = email;
         this.password = password;
     }

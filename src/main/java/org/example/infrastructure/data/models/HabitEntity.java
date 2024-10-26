@@ -6,15 +6,15 @@ import java.time.LocalDate;
 
 public class HabitEntity {
     private final int id;
-    private final int userID;
+    private final int userId;
     private final LocalDate dayOfCreation;
     private String name;
     private String description;
     private HabitFrequency frequency;
 
-    public HabitEntity(int id, int userID, String name, String description, HabitFrequency frequency, LocalDate dayOfCreation) {
+    public HabitEntity(int id, int userId, String name, String description, HabitFrequency frequency, LocalDate dayOfCreation) {
         this.id = id;
-        this.userID = userID;
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.frequency = frequency;
@@ -25,8 +25,8 @@ public class HabitEntity {
         return id;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
     public String getName() {

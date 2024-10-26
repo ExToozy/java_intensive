@@ -1,10 +1,10 @@
 package org.example.core.services;
 
+import org.example.core.dtos.user_dtos.AuthUserDto;
+import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
+import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
-import org.example.core.repositories.user_repository.dtos.ChangeAdminStatusDto;
-import org.example.core.repositories.user_repository.dtos.CreateUserDto;
-import org.example.core.repositories.user_repository.dtos.UpdateUserDto;
 import org.example.core.util.PasswordManager;
 import org.example.infrastructure.data.models.UserEntity;
 import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
@@ -46,7 +46,7 @@ class UserServiceTest {
         InMemoryUserRepository userRepository = new InMemoryUserRepository();
         InMemoryHabitRepository habitRepository = new InMemoryHabitRepository();
         InMemoryHabitTrackRepository habitTrackRepository = new InMemoryHabitTrackRepository();
-        HabitTrackService habitTrackService = new HabitTrackService(habitTrackRepository);
+        HabitTrackService habitTrackService = new HabitTrackService(habitTrackRepository, habitRepository);
         HabitService habitService = new HabitService(habitRepository, habitTrackService);
         Field field = InMemoryUserRepository.class.getDeclaredField("users");
         field.setAccessible(true);
@@ -57,7 +57,7 @@ class UserServiceTest {
     @DisplayName("Check that create successfully create user")
     @Test
     void create_shouldCreateUser() throws UserNotFoundException {
-        userService.create(new CreateUserDto("test@mail.ru", "123"));
+        userService.create(new AuthUserDto("test@mail.ru", "123"));
 
         var user = userService.getUserByEmail("test@mail.ru");
 

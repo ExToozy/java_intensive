@@ -15,6 +15,10 @@
             <column name="password" value="oI3PdKpcZHtWcMfpPwXw0w=="/>
             <column name="is_admin" valueBoolean="true"/>
         </insert>
+        <insert tableName="users">
+            <column name="email" value="test"/>
+            <column name="password" value="oI3PdKpcZHtWcMfpPwXw0w=="/>
+        </insert>
         <insert tableName="habits">
             <column name="user_id" valueNumeric="1"/>
             <column name="name" value="Drink water"/>

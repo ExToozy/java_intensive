@@ -1,8 +1,8 @@
 package org.example.infrastructure.controllers.console;
 
+import org.example.core.dtos.habit_dtos.CreateHabitDto;
+import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
-import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
 import org.example.core.services.HabitService;
 
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
-package org.example.core.repositories.habit_track_repository;
+package org.example.core.repositories;
 
+import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.models.HabitTrack;
-import org.example.core.repositories.habit_track_repository.dtos.CreateHabitTrackDto;
 
 import java.util.List;
 
@@ -26,10 +26,18 @@ public interface IHabitTrackRepository {
      */
     List<HabitTrack> getHabitTracks(int habitId);
 
+
     /**
      * Удаляет все отметки о выполнении для указанной привычки.
      *
-     * @param id идентификатор привычки
+     * @param habitId идентификатор привычки
      */
-    void removeByHabitId(int id);
+    void removeAllByHabitId(int habitId);
+
+    /**
+     * Удаляет отметку о выполнении.
+     *
+     * @param id идентификатор отметки
+     */
+    void remove(int id);
 }

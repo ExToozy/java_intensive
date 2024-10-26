@@ -1,12 +1,11 @@
 package org.example.infrastructure.data.repositories.in_memory_repositories;
 
+import org.example.core.dtos.habit_dtos.CreateHabitDto;
+import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
-import org.example.core.repositories.habit_repository.IHabitRepository;
-import org.example.core.repositories.habit_repository.dtos.CreateHabitDto;
-import org.example.core.repositories.habit_repository.dtos.UpdateHabitDto;
+import org.example.core.repositories.IHabitRepository;
 import org.example.infrastructure.data.mappers.HabitMapper;
-import org.example.infrastructure.data.mappers.Mapper;
 import org.example.infrastructure.data.models.HabitEntity;
 
 import java.time.LocalDate;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class InMemoryHabitRepository implements IHabitRepository {
     private final List<HabitEntity> habits = new ArrayList<>();
-    private final Mapper<Habit, HabitEntity> mapper = new HabitMapper();
+    private final HabitMapper mapper = HabitMapper.INSTANCE;
 
     public InMemoryHabitRepository() {
         habits.addAll(Arrays.asList(
@@ -54,10 +53,10 @@ public class InMemoryHabitRepository implements IHabitRepository {
         int nextIndex = habits.stream().mapToInt(HabitEntity::getId).max().orElse(1);
         HabitEntity habit = new HabitEntity(
                 nextIndex,
-                dto.getUserId(),
-                dto.getName(),
-                dto.getDescription(),
-                dto.getFrequency(),
+                dto.userId(),
+                dto.name(),
+                dto.description(),
+                dto.frequency(),
                 LocalDate.now()
         );
         habits.add(habit);
@@ -67,17 +66,17 @@ public class InMemoryHabitRepository implements IHabitRepository {
     @Override
     public List<Habit> getAllHabitsByUserId(int userId) {
         return habits.stream()
-                .filter(habit -> habit.getUserID() == userId).map(mapper::toDomain)
+                .filter(habit -> habit.getUserId() == userId).map(mapper::toDomain)
                 .toList();
     }
 
     @Override
     public void update(UpdateHabitDto dto) {
         for (var habit : habits) {
-            if (habit.getId() == dto.getId()) {
-                habit.setDescription(dto.getDescription());
-                habit.setFrequency(dto.getFrequency());
-                habit.setName(dto.getName());
+            if (habit.getId() == dto.id()) {
+                habit.setDescription(dto.description());
+                habit.setFrequency(dto.frequency());
+                habit.setName(dto.name());
                 break;
             }
         }
