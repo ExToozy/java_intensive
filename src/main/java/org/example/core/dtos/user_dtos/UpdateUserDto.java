@@ -5,6 +5,7 @@ public class UpdateUserDto {
     private final int userId;
     private String email;
     private String password;
+
     public UpdateUserDto(int userId, String email, String password) {
         this.userId = userId;
         this.email = email;

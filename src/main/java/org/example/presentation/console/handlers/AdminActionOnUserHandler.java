@@ -1,8 +1,8 @@
 package org.example.presentation.console.handlers;
 
+import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.infrastructure.controllers.console.ConsoleUserController;
 import org.example.presentation.console.ActionManager;
 import org.example.presentation.console.actions.AdminActionOnUser;

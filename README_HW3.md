@@ -1,6 +1,6 @@
 # Описание:
 
-Консольное приложения для отслеживания привычек.
+RestAPI приложения для отслеживания привычек.
 
 ## Стек:
 
@@ -12,6 +12,7 @@ Java 17, JUnit, AssertJ, Mockito, Gradle, Jdbc, TestContainers, PostgreSQL, Serv
 git clone https://github.com/ExToozy/java_intensive.git
 cd java_intensive
 git checkout homework3
+gradle build
 gradle war
 cp build\habit_tracker-1.0-SNAPSHOT.war path\to\tomcat\webapps\
 path\to\tomcat\bin\startup.bat

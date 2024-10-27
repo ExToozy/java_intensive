@@ -7,9 +7,9 @@ import java.time.LocalDate;
  * Содержит: идентификатор, идентификатор привычки и дату выполнения привычки.
  */
 public class HabitTrack {
-    private int id;
-    private int habitId;
-    private LocalDate completeDate;
+    private final int id;
+    private final int habitId;
+    private final LocalDate completeDate;
 
     /**
      * Создаёт новую отметку о выполнении привычки.

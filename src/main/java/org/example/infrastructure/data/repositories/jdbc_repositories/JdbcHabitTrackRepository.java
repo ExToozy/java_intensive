@@ -3,6 +3,7 @@ package org.example.infrastructure.data.repositories.jdbc_repositories;
 import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.models.HabitTrack;
 import org.example.core.repositories.IHabitTrackRepository;
+import org.example.infrastructure.constants.SqlConstants;
 import org.example.infrastructure.util.ConnectionManager;
 
 import java.sql.Connection;
@@ -14,12 +15,11 @@ import java.util.List;
 
 public class JdbcHabitTrackRepository implements IHabitTrackRepository {
 
+
     @Override
     public void create(CreateHabitTrackDto dto) {
-        String createSql = "INSERT INTO habit_tracker_schema.habit_tracks (habit_id) VALUES (?)";
-
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.CREATE_HABIT_TRACK_SQL)) {
 
             preparedStatement.setInt(1, dto.getHabitId());
             preparedStatement.executeUpdate();
@@ -32,9 +32,8 @@ public class JdbcHabitTrackRepository implements IHabitTrackRepository {
     @Override
     public List<HabitTrack> getHabitTracks(int habitId) {
         List<HabitTrack> tracks = new ArrayList<>();
-        String createSql = "SELECT * FROM habit_tracker_schema.habit_tracks where habit_id = ?";
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.GET_HABIT_TRACKS_SQL)) {
 
             preparedStatement.setInt(1, habitId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -55,10 +54,8 @@ public class JdbcHabitTrackRepository implements IHabitTrackRepository {
 
     @Override
     public void removeAllByHabitId(int habitId) {
-        String createSql = "DELETE FROM habit_tracker_schema.habit_tracks WHERE habit_id = ?";
-
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.REMOVE_ALL_HABIT_TRACK_SQL)) {
 
             preparedStatement.setInt(1, habitId);
             preparedStatement.executeUpdate();
@@ -70,10 +67,8 @@ public class JdbcHabitTrackRepository implements IHabitTrackRepository {
 
     @Override
     public void remove(int id) {
-        String createSql = "DELETE FROM habit_tracker_schema.habit_tracks WHERE id = ?";
-
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.REMOVE_HABIT_TRACK_SQL)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

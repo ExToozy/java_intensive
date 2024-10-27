@@ -1,8 +1,8 @@
 package org.example.infrastructure.controllers.console;
 
+import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitTrack;
-import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.services.HabitTrackService;
 
 import java.util.List;

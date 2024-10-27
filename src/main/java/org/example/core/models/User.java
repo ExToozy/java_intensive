@@ -5,10 +5,10 @@ package org.example.core.models;
  * Содержит: идентификатор пользователя, email, пароль и поле, определяющие являеться ли пользователь администатором.
  */
 public class User {
-    private int id;
-    private String email;
-    private String password;
-    private boolean isAdmin;
+    private final int id;
+    private final String email;
+    private final String password;
+    private final boolean isAdmin;
 
     /**
      * Создаёт нового пользователя.
