@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.habit_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.infrastructure.constants.ErrorMessageConstants;
 import org.example.infrastructure.data.validators.ValidationResult;
 import org.example.infrastructure.data.validators.json_validators.JsonHabitValidator;
@@ -19,6 +20,7 @@ import java.util.Map;
  * Реализует интерфейс {@link HttpServletRequestHandler} и отвечает за
  * удаление привычки пользователя.
  */
+@Auditable
 public class HabitDeleteRequestHandler implements HttpServletRequestHandler {
     public static final HabitDeleteRequestHandler INSTANCE = new HabitDeleteRequestHandler();
 

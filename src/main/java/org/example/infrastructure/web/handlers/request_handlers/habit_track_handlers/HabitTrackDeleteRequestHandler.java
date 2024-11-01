@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.habit_track_han
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.infrastructure.constants.ErrorMessageConstants;
 import org.example.infrastructure.data.validators.ValidationResult;
 import org.example.infrastructure.data.validators.json_validators.JsonHabitTrackValidator;
@@ -19,6 +20,7 @@ import java.util.Map;
  * запросы для удаления отслеживаемых привычек, связанных с пользователем,
  * идентификатор которого извлекается из токена авторизации.
  */
+@Auditable
 public class HabitTrackDeleteRequestHandler implements HttpServletRequestHandler {
     public final static HabitTrackDeleteRequestHandler INSTANCE = new HabitTrackDeleteRequestHandler();
 

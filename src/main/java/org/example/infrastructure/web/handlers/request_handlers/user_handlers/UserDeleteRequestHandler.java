@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.user_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.models.User;
 import org.example.infrastructure.constants.ErrorMessageConstants;
 import org.example.infrastructure.data.validators.ValidationResult;
@@ -20,6 +21,7 @@ import java.util.Map;
  * Предназначен для обработки HTTP-запросов на удаление пользователя и создания JSON-ответа.
  * Запрос доступен только для администратора или для самого пользователя.
  */
+@Auditable
 public class UserDeleteRequestHandler implements HttpServletRequestHandler {
     public final static UserDeleteRequestHandler INSTANCE = new UserDeleteRequestHandler();
 

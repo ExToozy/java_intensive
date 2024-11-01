@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.habit_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.models.Habit;
 import org.example.infrastructure.util.JsonResponse;
 import org.example.infrastructure.util.ServiceHelper;
@@ -16,6 +17,7 @@ import java.util.List;
  * Реализует интерфейс {@link HttpServletRequestHandler} и отвечает за
  * получение списка привычек для текущего пользователя.
  */
+@Auditable
 public class HabitsGetRequestHandler implements HttpServletRequestHandler {
 
     public static final HabitsGetRequestHandler INSTANCE = new HabitsGetRequestHandler();

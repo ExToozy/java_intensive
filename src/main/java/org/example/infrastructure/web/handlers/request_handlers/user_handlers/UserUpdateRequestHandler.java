@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.user_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.models.User;
@@ -22,6 +23,7 @@ import java.util.Map;
  * Предназначен для обработки HTTP-запроса с JSON-данными и обновления информации о пользователе
  * в соответствии с переданными данными.
  */
+@Auditable
 public class UserUpdateRequestHandler implements HttpServletRequestHandler {
     public final static UserUpdateRequestHandler INSTANCE = new UserUpdateRequestHandler();
 

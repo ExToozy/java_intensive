@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.habit_track_han
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.models.HabitTrack;
 import org.example.infrastructure.util.JsonResponse;
 import org.example.infrastructure.util.ServiceHelper;
@@ -16,6 +17,7 @@ import java.util.List;
  * запросы для получения отслеживаемых привычек, связанных с пользователем,
  * идентификатор которого извлекается из токена авторизации.
  */
+@Auditable
 public class HabitTracksGetRequestHandler implements HttpServletRequestHandler {
     public final static HabitTracksGetRequestHandler INSTANCE = new HabitTracksGetRequestHandler();
 

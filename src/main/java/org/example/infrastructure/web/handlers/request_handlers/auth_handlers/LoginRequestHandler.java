@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.auth_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.infrastructure.constants.ErrorMessageConstants;
@@ -18,6 +19,7 @@ import org.example.infrastructure.web.handlers.request_handlers.HttpServletReque
  * Реализует интерфейс {@link HttpServletRequestHandler} и отвечает за
  * аутентификацию пользователей.
  */
+@Auditable
 public class LoginRequestHandler implements HttpServletRequestHandler {
     public final static LoginRequestHandler INSTANCE = new LoginRequestHandler();
 

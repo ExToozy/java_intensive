@@ -1,6 +1,7 @@
 package org.example.infrastructure.web.handlers.request_handlers.user_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.example.annotations.Auditable;
 import org.example.core.models.User;
 import org.example.infrastructure.data.mappers.UserMapper;
 import org.example.infrastructure.util.JsonResponse;
@@ -16,6 +17,7 @@ import java.util.List;
  * Предназначен для обработки HTTP-запросов и возврата списка пользователей в формате JSON.
  * Доступен только для пользователей с правами администратора.
  */
+@Auditable
 public class UsersGetRequestHandler implements HttpServletRequestHandler {
     public final static UsersGetRequestHandler INSTANCE = new UsersGetRequestHandler();
 

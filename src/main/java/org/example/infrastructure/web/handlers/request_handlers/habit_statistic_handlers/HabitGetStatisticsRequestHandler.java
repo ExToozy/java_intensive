@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.habit_statistic
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.models.Habit;
 import org.example.infrastructure.data.mappers.HabitMapper;
 import org.example.infrastructure.util.JsonResponse;
@@ -17,6 +18,7 @@ import java.util.Map;
  * запросы для получения статистики привычек пользователя, идентификатор которого
  * извлекается из токена авторизации.
  */
+@Auditable
 public class HabitGetStatisticsRequestHandler implements HttpServletRequestHandler {
     public final static HabitGetStatisticsRequestHandler INSTANCE = new HabitGetStatisticsRequestHandler();
 

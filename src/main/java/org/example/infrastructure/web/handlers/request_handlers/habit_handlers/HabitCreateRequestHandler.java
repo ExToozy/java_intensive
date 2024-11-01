@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.habit_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.infrastructure.data.mappers.HabitMapper;
 import org.example.infrastructure.data.validators.ValidationResult;
@@ -19,6 +20,7 @@ import java.util.Map;
  * Реализует интерфейс {@link HttpServletRequestHandler} и отвечает за
  * создание новой привычки для пользователя.
  */
+@Auditable
 public class HabitCreateRequestHandler implements HttpServletRequestHandler {
     public static final HabitCreateRequestHandler INSTANCE = new HabitCreateRequestHandler();
 

@@ -2,6 +2,7 @@ package org.example.infrastructure.web.handlers.request_handlers.user_handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.annotations.Auditable;
 import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.core.models.User;
 import org.example.infrastructure.data.mappers.UserMapper;
@@ -23,6 +24,7 @@ import java.util.Map;
  * Предназначен для обработки HTTP-запросов на изменение прав администратора.
  * Доступ к запросу имеет только администратор.
  */
+@Auditable
 public class UserChangeAdminStatusRequestHandler implements HttpServletRequestHandler {
     public final static UserChangeAdminStatusRequestHandler INSTANCE = new UserChangeAdminStatusRequestHandler();
 
