@@ -9,10 +9,22 @@ import org.example.infrastructure.controllers.console.ConsoleAuthController;
 import org.example.infrastructure.controllers.console.ConsoleHabitController;
 import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
 import org.example.infrastructure.controllers.console.ConsoleUserController;
-import org.example.presentation.console.actions.*;
-import org.example.presentation.console.handlers.*;
+import org.example.presentation.console.actions.AdminAction;
+import org.example.presentation.console.actions.AdminActionOnUser;
+import org.example.presentation.console.actions.AuthAction;
+import org.example.presentation.console.actions.HabitAction;
+import org.example.presentation.console.actions.UpdateUserAction;
+import org.example.presentation.console.actions.UserAction;
+import org.example.presentation.console.handlers.AdminActionHandler;
+import org.example.presentation.console.handlers.AdminActionOnUserHandler;
+import org.example.presentation.console.handlers.AuthActionHandler;
+import org.example.presentation.console.handlers.HabitActionHandler;
+import org.example.presentation.console.handlers.UpdateHabitActionHandler;
+import org.example.presentation.console.handlers.UpdateUserHandler;
+import org.example.presentation.console.handlers.UserActionHandler;
 import org.example.presentation.console.in.ConsoleInHelper;
 import org.example.presentation.console.out.ConsoleOutHelper;
+
 
 /**
  * Менеджер действий, управляющий взаимодействием между различными контроллерами.

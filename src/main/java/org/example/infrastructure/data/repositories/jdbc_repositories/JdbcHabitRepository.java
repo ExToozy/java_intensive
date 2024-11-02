@@ -5,6 +5,7 @@ import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
 import org.example.core.repositories.IHabitRepository;
+import org.example.infrastructure.constants.SqlConstants;
 import org.example.infrastructure.util.ConnectionManager;
 
 import java.sql.Connection;
@@ -18,9 +19,8 @@ public class JdbcHabitRepository implements IHabitRepository {
 
     @Override
     public void create(CreateHabitDto dto) {
-        String createSql = "INSERT INTO habit_tracker_schema.habits (user_id, name, description, frequency) VALUES (?, ?, ?, ?)";
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.CREATE_HABIT_SQL)) {
 
             preparedStatement.setInt(1, dto.userId());
             preparedStatement.setString(2, dto.name());
@@ -36,9 +36,8 @@ public class JdbcHabitRepository implements IHabitRepository {
     @Override
     public List<Habit> getAllHabitsByUserId(int userId) {
         List<Habit> habits = new ArrayList<>();
-        String createSql = "SELECT * FROM habit_tracker_schema.habits where user_id = ?";
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.GET_HABITS_BY_USER_ID_SQL)) {
 
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,10 +61,9 @@ public class JdbcHabitRepository implements IHabitRepository {
 
     @Override
     public void update(UpdateHabitDto dto) {
-        String createSql = "UPDATE habit_tracker_schema.habits SET name = ?, description = ?, frequency = ? WHERE id = ?";
 
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.UPDATE_HABIT_SQL)) {
 
             preparedStatement.setString(1, dto.name());
             preparedStatement.setString(2, dto.description());
@@ -80,10 +78,9 @@ public class JdbcHabitRepository implements IHabitRepository {
 
     @Override
     public void remove(int id) {
-        String createSql = "DELETE FROM habit_tracker_schema.habits WHERE id = ?";
 
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.REMOVE_HABIT_SQL)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

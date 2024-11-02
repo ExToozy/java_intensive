@@ -1,7 +1,7 @@
 package org.example.presentation.console.handlers;
 
-import org.example.core.models.Habit;
 import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
+import org.example.core.models.Habit;
 import org.example.infrastructure.controllers.console.ConsoleHabitController;
 import org.example.infrastructure.controllers.console.ConsoleHabitTrackController;
 import org.example.presentation.console.ActionManager;

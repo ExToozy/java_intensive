@@ -6,9 +6,14 @@ import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.IUserRepository;
+import org.example.infrastructure.constants.SqlConstants;
 import org.example.infrastructure.util.ConnectionManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +30,9 @@ public class JdbcUserRepository implements IUserRepository {
 
     @Override
     public User create(AuthUserDto dto) {
-        String createSql = "INSERT INTO habit_tracker_schema.users (email, password) VALUES (?, ?)";
         User user = null;
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.CREATE_USER_SQL)) {
 
             preparedStatement.setString(1, dto.getEmail());
             preparedStatement.setString(2, dto.getPassword());
@@ -47,10 +51,9 @@ public class JdbcUserRepository implements IUserRepository {
         if (email == null) {
             throw new UserNotFoundException();
         }
-        String createSql = "SELECT * FROM habit_tracker_schema.users WHERE email = ?";
         User user = null;
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.GET_USER_BY_EMAIL_SQL)) {
 
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -71,11 +74,10 @@ public class JdbcUserRepository implements IUserRepository {
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
-        String createSql = "SELECT * FROM habit_tracker_schema.users";
         try (Connection connection = ConnectionManager.open();
              Statement statement = connection.createStatement()) {
 
-            ResultSet resultSet = statement.executeQuery(createSql);
+            ResultSet resultSet = statement.executeQuery(SqlConstants.GET_ALL_USERS_SQL);
 
             while (resultSet.next()) {
                 users.add(getUserFromResultSet(resultSet)
@@ -89,10 +91,8 @@ public class JdbcUserRepository implements IUserRepository {
 
     @Override
     public void update(UpdateUserDto dto) throws UserNotFoundException {
-        String createSql = "UPDATE habit_tracker_schema.users SET email = ?, password = ? WHERE id = ?";
-
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.UPDATE_USER_SQL)) {
 
             preparedStatement.setString(1, dto.getEmail());
             preparedStatement.setString(2, dto.getPassword());
@@ -106,10 +106,9 @@ public class JdbcUserRepository implements IUserRepository {
 
     @Override
     public void remove(int id) {
-        String createSql = "DELETE FROM habit_tracker_schema.users WHERE id = ?";
 
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.REMOVE_USER_SQL)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
@@ -121,10 +120,8 @@ public class JdbcUserRepository implements IUserRepository {
 
     @Override
     public void changeUserAdminStatus(ChangeAdminStatusDto dto) throws UserNotFoundException {
-        String createSql = "UPDATE habit_tracker_schema.users SET is_admin = ? WHERE id = ?";
-
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.CHANGE_USER_STATUS_SQL)) {
 
             preparedStatement.setBoolean(1, dto.isAdmin());
             preparedStatement.setInt(2, dto.getUserId());
@@ -137,10 +134,9 @@ public class JdbcUserRepository implements IUserRepository {
 
     @Override
     public User getById(int id) throws UserNotFoundException {
-        String createSql = "SELECT * FROM habit_tracker_schema.users WHERE id = ?";
         User user = null;
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatement = connection.prepareStatement(createSql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SqlConstants.GET_USER_BY_ID_SQL)) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();

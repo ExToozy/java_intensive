@@ -3,9 +3,9 @@ package org.example.infrastructure.data.models;
 import java.time.LocalDate;
 
 public class HabitTrackEntity {
-    private int id;
-    private int habitId;
-    private LocalDate completeDate;
+    private final int id;
+    private final int habitId;
+    private final LocalDate completeDate;
 
     public HabitTrackEntity(int id, int habitId, LocalDate completeDate) {
         this.id = id;

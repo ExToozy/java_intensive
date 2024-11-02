@@ -1,10 +1,10 @@
 package org.example.infrastructure.controllers.console;
 
+import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
+import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.exceptions.InvalidEmailException;
 import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
-import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
-import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.services.UserService;
 
 import java.util.List;

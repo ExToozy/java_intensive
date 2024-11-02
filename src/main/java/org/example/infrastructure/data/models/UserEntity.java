@@ -2,7 +2,7 @@ package org.example.infrastructure.data.models;
 
 
 public class UserEntity {
-    private int id;
+    private final int id;
     private boolean isAdmin;
     private String email;
     private String password;
