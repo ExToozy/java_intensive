@@ -1,54 +1,69 @@
 package org.example.aspects;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.example.infrastructure.util.JsonMapper;
-import org.example.infrastructure.util.JsonResponse;
-import org.example.infrastructure.web.handlers.request_handlers.HttpServletRequestHandler;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.example.core.dtos.user_audit_dtos.CreateUserAuditDto;
+import org.example.infrastructure.data.repositories.JdbcUserAuditRepository;
+import org.example.infrastructure.util.TokenHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 @Aspect
+@Slf4j
 public class AuditableAspect {
-    @Pointcut("within(@org.example.annotations.Auditable *) && execution(* * (..))")
+
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private JdbcUserAuditRepository jdbcUserAuditRepository;
+
+    @Autowired(required = false)
+    private HttpServletRequest request;
+
+
+    @Pointcut("@annotation(org.example.annotations.Auditable)")
     public void annotatedByAuditable() {
     }
 
     @Around("annotatedByAuditable()")
-    public Object audit(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        Object result = proceedingJoinPoint.proceed();
-        auditUserRequest(proceedingJoinPoint, (JsonResponse) result);
-        return result;
-    }
+    public Object audit(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object responseBody = joinPoint.proceed();
+        Object[] args = joinPoint.getArgs();
+        String token = null;
+        Object requestBody = null;
 
-    private boolean isRequestHandlerImpl(ProceedingJoinPoint proceedingJoinPoint) {
-        return Arrays.stream(proceedingJoinPoint
-                        .getTarget()
-                        .getClass()
-                        .getInterfaces())
-                .anyMatch(classInterface -> classInterface.getName().equals(HttpServletRequestHandler.class.getName()));
-    }
-
-    private void auditUserRequest(ProceedingJoinPoint proceedingJoinPoint, JsonResponse result) throws IOException {
-        if (isRequestHandlerImpl(proceedingJoinPoint) && proceedingJoinPoint.getSignature().getName().equals("handleRequest")) {
-            Object[] args = proceedingJoinPoint.getArgs();
-            HttpServletRequest request = (HttpServletRequest) Arrays.stream(args)
-                    .filter(o -> o instanceof HttpServletRequest)
-                    .findFirst()
-                    .orElse(null);
-            if (request != null) {
-                Map<String, Object> jsonMap = JsonMapper.getJsonMap(request.getReader());
-                String strRequestMap = StringUtils.join(jsonMap);
-
-                System.out.printf("User send request to %s with body %s and their response %s%n",
-                        request.getRequestURI(), strRequestMap, result.toJsonString());
+        for (Object arg : args) {
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            if (signature.getMethod().isAnnotationPresent(RequestHeader.class) && arg instanceof String) {
+                token = (String) arg;
+            } else if (signature.getMethod().isAnnotationPresent(RequestBody.class)) {
+                requestBody = arg;
             }
         }
+
+        if (token != null) {
+            String requestUri = request.getRequestURI();
+            int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+            String requestBodyStr = null;
+            String responseBodyStr = null;
+            if (requestBody != null) {
+                requestBodyStr = objectMapper.writeValueAsString(requestBody);
+            }
+            if (responseBody != null) {
+                responseBodyStr = objectMapper.writeValueAsString(responseBody);
+            }
+            CreateUserAuditDto dto = new CreateUserAuditDto(userIdFromToken, requestUri, requestBodyStr, responseBodyStr);
+            jdbcUserAuditRepository.create(dto);
+        }
+
+        return responseBody;
     }
 }

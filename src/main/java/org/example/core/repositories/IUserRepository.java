@@ -3,8 +3,8 @@ package org.example.core.repositories;
 import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.core.dtos.user_dtos.UpdateUserDto;
-import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
+import org.example.exceptions.UserNotFoundException;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public interface IUserRepository {
      * @param dto {@link AuthUserDto}, данные для обновления пользователя
      * @throws UserNotFoundException если пользователь не найден
      */
-    void update(UpdateUserDto dto) throws UserNotFoundException;
+    void update(int userId, UpdateUserDto dto) throws UserNotFoundException;
 
     /**
      * Удаляет пользователя по его идентификатору.
@@ -52,10 +52,11 @@ public interface IUserRepository {
     /**
      * Меняет статус администратора пользователя.
      *
-     * @param dto данные для изменения статуса администратора
+     * @param userId идентификатор пользователя
+     * @param dto    данные для изменения статуса администратора
      * @throws UserNotFoundException если пользователь не найден
      */
-    void changeUserAdminStatus(ChangeAdminStatusDto dto) throws UserNotFoundException;
+    void changeUserAdminStatus(int userId, ChangeAdminStatusDto dto) throws UserNotFoundException;
 
     User getById(int id) throws UserNotFoundException;
 }

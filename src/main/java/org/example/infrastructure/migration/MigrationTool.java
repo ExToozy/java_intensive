@@ -6,39 +6,40 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import org.example.core.exceptions.ConfigException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.infrastructure.configs.DbConfig;
+import org.example.infrastructure.util.ConnectionManager;
+import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@Component
+@RequiredArgsConstructor
+@Slf4j
 public class MigrationTool {
-    public static void main(String[] args) throws ConfigException {
-        runMigrate();
-    }
+    private final DbConfig dbConfig;
+    private final ConnectionManager connectionManager;
 
-    public static void runMigrate() throws ConfigException {
-        DbConfig dbConfig = new DbConfig();
-        try (Connection connection = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(),
-                dbConfig.getPassword())) {
+    public void runMigrate() {
+        try (Connection connection = connectionManager.open()) {
             createSchemas(connection, dbConfig);
             migrateDatabase(connection, dbConfig);
         } catch (SQLException | LiquibaseException e) {
-            System.out.println(new String(e.getMessage().getBytes(StandardCharsets.UTF_8)));
+            log.error("Error occurred while trying migrate database", e);
         }
     }
 
-    private static void createSchemas(Connection connection, DbConfig dbConfig) throws SQLException {
+    private void createSchemas(Connection connection, DbConfig dbConfig) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + dbConfig.getLiquibaseSchemaName());
             statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + dbConfig.getDefaultSchemaName());
         }
     }
 
-    private static void migrateDatabase(Connection connection, DbConfig dbConfig) throws LiquibaseException {
+    private void migrateDatabase(Connection connection, DbConfig dbConfig) throws LiquibaseException {
         Database database = DatabaseFactory.getInstance()
                 .findCorrectDatabaseImplementation(new JdbcConnection(connection));
         Liquibase liquibase = new Liquibase(dbConfig.getChangeLogFile(), new ClassLoaderResourceAccessor(), database);

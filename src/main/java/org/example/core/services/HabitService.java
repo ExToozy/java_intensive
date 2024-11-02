@@ -1,13 +1,17 @@
 package org.example.core.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitTrack;
 import org.example.core.repositories.IHabitRepository;
+import org.example.exceptions.HabitNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,22 +20,16 @@ import java.util.Map;
  * Сервис для работы с привычками.
  * Предоставляет методы для создания, обновления, получения и удаления привычек, а также для работы с записями отслеживания привычек.
  */
+@Service
+@RequiredArgsConstructor
 public class HabitService {
 
     private final IHabitRepository habitRepository;
 
     private final HabitTrackService habitTrackService;
 
-    /**
-     * Конструктор для {@link HabitService}.
-     *
-     * @param habitRepository   {@link IHabitRepository}, репозиторий для работы с привычками
-     * @param habitTrackService {@link HabitTrackService}, сервис для работы с записями отслеживания привычек
-     */
-    public HabitService(IHabitRepository habitRepository, HabitTrackService habitTrackService) {
-        this.habitRepository = habitRepository;
-        this.habitTrackService = habitTrackService;
-    }
+    private final UserService userService;
+
 
     /**
      * Создаёт новую привычку.
@@ -60,62 +58,71 @@ public class HabitService {
     /**
      * Проверяет, выполнена ли привычка.
      *
-     * @param habit привычка для проверки
+     * @param userId  идентификатор пользователя
+     * @param habitId идентификатор привычки для проверки
      * @return true, если привычка выполнена, иначе false
      */
-    public boolean isCompleteHabit(Habit habit) {
+    public boolean isCompleteUserHabit(int userId, int habitId) throws HabitNotFoundException {
+        Habit habit = getUserHabit(userId, habitId);
+        return isCompleteHabit(habit);
+    }
+
+    private boolean isCompleteHabit(Habit habit) {
         List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
-        Period period = habit.getFrequency().toPeriod();
+        Period period = habit.getFrequency().getPeriod();
         return tracks.stream()
                 .anyMatch(habitTrack -> habitTrack.getCompleteDate().isAfter(LocalDate.now().minusDays(period.getDays())));
     }
 
     /**
-     * Возвращает количество выполнений привычки за указанный период.
+     * Возвращает статистику по всем привычкам пользователя.
      *
-     * @param habit  привычка
-     * @param period период для подсчёта
-     * @return количество выполнений привычки за указанный период
+     * @param userId идентификатор пользователя
+     * @return список {@code List<Map<String, Object>>} статистик по каждой привычке
      */
-    public int getHabitExecutionCountByPeriod(Habit habit, Period period) {
-        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
-        int executionsCount = 0;
-        for (var track : tracks) {
-            if (track.getCompleteDate().isAfter(LocalDate.now().minusDays(period.getDays()))) {
-                executionsCount++;
-            }
-        }
-        return executionsCount;
+    public List<Map<String, Object>> getStatisticsOfAllUserHabits(int userId) {
+        List<Map<String, Object>> habitStatistics = new ArrayList<>();
+        List<Habit> habits = habitRepository.getAllHabitsByUserId(userId);
+        habits.forEach(habit -> habitStatistics.add(getHabitStats(habit)));
+        return habitStatistics;
     }
 
     /**
-     * Возвращает статистику по привычкам пользователя.
+     * Возвращает статистику по привычке пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @return список {@code List<Map<String, Object>>} статистик по каждой привычке
+     * @throws HabitNotFoundException если пользователь не администратор, но пытается получить статистику не для своей привычки
+     */
+    public Map<String, Object> getStatisticsOfOneUserHabit(int userId, int habitId) throws HabitNotFoundException {
+        Habit habit = getUserHabit(userId, habitId);
+        return getHabitStats(habit);
+    }
+
+    /**
+     * Возвращает статистику по привычке.
      * Статистика включает в себя:
      * track_count - общее количество выполнений,
      * completion_percent - процент успешного выполнения привычки с момента её создания,
      * current_streak - текущая серия выполнений
      *
-     * @param userId идентификатор пользователя
-     * @return словарь, где ключ — привычка {@link Habit}, а значение — статистика по привычке {@code Map<String, Integer>}
+     * @param habit {@link Habit} идентификатор пользователя
+     * @return словарь {@code Map<String, Object>} статистика по привычке
      */
-    public Map<Habit, Map<String, Integer>> getHabitStatistics(int userId) {
-        Map<Habit, Map<String, Integer>> habitStatistics = new HashMap<>();
-        List<Habit> habits = habitRepository.getAllHabitsByUserId(userId);
-        for (var habit : habits) {
-            List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
-            Map<String, Integer> statistic = new HashMap<>();
+    private Map<String, Object> getHabitStats(Habit habit) {
+        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
+        Map<String, Object> statistic = new HashMap<>();
 
-            int trackCount = tracks.size();
-            int daysSinceCreationHabit = habit.getDayOfCreation().until(LocalDate.now()).getDays();
-            int maxTrackCount = (daysSinceCreationHabit / habit.getFrequency().toPeriod().getDays()) + 1;
+        int trackCount = tracks.size();
+        int daysSinceCreationHabit = habit.getDayOfCreation().until(LocalDate.now()).getDays();
+        int maxTrackCount = (daysSinceCreationHabit / habit.getFrequency().getPeriod().getDays()) + 1;
 
-            statistic.put("track_count", tracks.size());
-            statistic.put("completion_percent", (trackCount * 100) / maxTrackCount);
-            statistic.put("current_streak", getHabitStreak(habit));
-
-            habitStatistics.put(habit, statistic);
-        }
-        return habitStatistics;
+        statistic.put("habit_id", habit.getId());
+        statistic.put("completion_status", isCompleteHabit(habit));
+        statistic.put("track_count", tracks.size());
+        statistic.put("completion_percent", (trackCount * 100) / maxTrackCount);
+        statistic.put("current_streak", getHabitStreak(habit));
+        return statistic;
     }
 
     /**
@@ -126,7 +133,7 @@ public class HabitService {
      * @param habit привычка
      * @return текущую серию выполнений
      */
-    public int getHabitStreak(Habit habit) {
+    private int getHabitStreak(Habit habit) {
         if (!isCompleteHabit(habit)) {
             return 0;
         }
@@ -134,7 +141,7 @@ public class HabitService {
         tracks.sort((o1, o2) -> o2.getCompleteDate().compareTo(o1.getCompleteDate()));
         int streak = 1;
         for (int i = 0; i < tracks.size() - 1; i++) {
-            int habitFrequencyInDays = habit.getFrequency().toPeriod().getDays();
+            int habitFrequencyInDays = habit.getFrequency().getPeriod().getDays();
             boolean isCompleteHabitInTime = tracks.get(i)
                     .getCompleteDate()
                     .isBefore(tracks.get(i + 1).getCompleteDate().plusDays(habitFrequencyInDays));
@@ -155,18 +162,23 @@ public class HabitService {
      *
      * @param dto {@link UpdateHabitDto} данные для обновления привычки
      */
-    public void updateHabit(UpdateHabitDto dto) {
-        habitRepository.update(dto);
+    public void updateUserHabit(int userId, int habitId, UpdateHabitDto dto) throws HabitNotFoundException {
+        if (isUserHabitOrUserIsAdmin(userId, habitId)) {
+            habitRepository.update(habitId, dto);
+        } else {
+            throw new HabitNotFoundException();
+        }
     }
 
     /**
      * Возвращает дату до которой привычку нужно выполнить.
      *
-     * @param habit {@link Habit} привычка
+     * @param habitId идентификатор привычки
      * @return дату до которой привычку нужно выполнить
      */
-    public LocalDate getHabitDeadlineDay(Habit habit) {
-        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
+    public LocalDate getHabitDeadlineDay(int userId, int habitId) throws HabitNotFoundException {
+        Habit habit = getUserHabit(userId, habitId);
+        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habitId);
         LocalDate lastCompleteDay;
         if (tracks.isEmpty()) {
             lastCompleteDay = habit.getDayOfCreation();
@@ -178,16 +190,7 @@ public class HabitService {
                 }
             }
         }
-        return lastCompleteDay.plusDays(habit.getFrequency().toPeriod().getDays());
-    }
-
-    /**
-     * Удаляет все привычки и отмеки о выполнении пользователя.
-     *
-     * @param id идентификатор пользователя
-     */
-    public void removeAllUserHabitsAndTracks(int id) {
-        getUserHabits(id).forEach(habit -> removeHabitAndTracks(habit.getId()));
+        return lastCompleteDay.plusDays(habit.getFrequency().getPeriod().getDays());
     }
 
     /**
@@ -200,22 +203,39 @@ public class HabitService {
         return habitRepository.getAllHabitsByUserId(userId);
     }
 
+
+    public Habit getUserHabit(int userId, int habitId) throws HabitNotFoundException {
+        if (isUserHabitOrUserIsAdmin(userId, habitId)) {
+            return habitRepository.getHabitById(habitId);
+        }
+        throw new HabitNotFoundException();
+    }
+
     /**
      * Удаляет привычку и все её отметки.
      *
      * @param habitId идентификатор привычки
      */
-    public void removeHabitAndTracks(int habitId) {
-        habitTrackService.removeHabitTracks(habitId);
-        habitRepository.remove(habitId);
+    public void removeUserHabit(int userId, int habitId) throws HabitNotFoundException {
+        if (isUserHabitOrUserIsAdmin(userId, habitId)) {
+            habitRepository.remove(habitId);
+        } else {
+            throw new HabitNotFoundException();
+        }
     }
 
-    public boolean isUserHabit(int userId, int habitId) {
+    public boolean isUserHabitOrUserIsAdmin(int userId, int habitId) {
+        if (userService.isUserAdmin(userId)) {
+            return true;
+        }
         List<Habit> userHabits = habitRepository.getAllHabitsByUserId(userId);
         return userHabits.stream().anyMatch(habit -> habit.getId() == habitId);
     }
 
-    public boolean isUserHabitTrack(int userId, int trackId) {
+    public boolean isUserHabitTrackOrUserIsAdmin(int userId, int trackId) {
+        if (userService.isUserAdmin(userId)) {
+            return true;
+        }
         List<Habit> userHabits = habitRepository.getAllHabitsByUserId(userId);
         return userHabits
                 .stream()

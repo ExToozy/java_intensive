@@ -1,34 +1,22 @@
 package org.example.core.dtos.user_dtos;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateUserDto {
-    private final int userId;
+
+    @NotBlank(message = "Must not be blank")
     private String email;
+
+    @NotBlank(message = "Must not be blank")
+    @Size(min = 3, max = 255, message = "Must be between 3 and 255 characters")
     private String password;
-
-    public UpdateUserDto(int userId, String email, String password) {
-        this.userId = userId;
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
 }

@@ -1,30 +1,25 @@
 package org.example.core.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.core.dtos.user_dtos.AuthUserDto;
-import org.example.core.exceptions.InvalidEmailException;
-import org.example.core.exceptions.UserAlreadyExistException;
-import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.util.PasswordManager;
 import org.example.core.util.RegexUtil;
+import org.example.exceptions.InvalidEmailException;
+import org.example.exceptions.UserAlreadyExistException;
+import org.example.exceptions.UserNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
  * Класс для управления аутентификацией пользователей.
  * Содержит методы для входа и регистрации новых пользователей.
  */
+@Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    // Сервис для работы с пользователями.
     private final UserService userService;
 
-    /**
-     * Конструктор для {@link AuthService}.
-     *
-     * @param userService объект {@link UserService}, сервис для работы с пользователями
-     */
-    public AuthService(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Выполняет вход пользователя по email и паролю.

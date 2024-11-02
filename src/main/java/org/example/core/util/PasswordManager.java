@@ -1,5 +1,8 @@
 package org.example.core.util;
 
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
@@ -7,12 +10,11 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
+@NoArgsConstructor
+@Slf4j
 public class PasswordManager {
     private static final String SALT = "mpDhaJZfpFZBEOovhD6z2g==";
 
-
-    private PasswordManager() {
-    }
 
     public static boolean checkPasswordEquals(String password, String userPassword) {
         String passwordHash = getPasswordHash(password);
@@ -27,7 +29,7 @@ public class PasswordManager {
             byte[] hash = factory.generateSecret(spec).getEncoded();
             passwordHash = Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace(System.err);
+            log.error("Error occurred while trying hash password", e);
         }
         return passwordHash;
     }

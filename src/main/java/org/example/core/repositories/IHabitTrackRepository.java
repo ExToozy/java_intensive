@@ -1,6 +1,5 @@
 package org.example.core.repositories;
 
-import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
 import org.example.core.models.HabitTrack;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public interface IHabitTrackRepository {
      *
      * @param dto данные для создания записи отслеживания привычки
      */
-    void create(CreateHabitTrackDto dto);
+    void create(int dto);
 
     /**
      * Возвращает список всех отметок о выполнении для указанной привычки.
