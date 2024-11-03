@@ -9,5 +9,6 @@ public class ErrorMessageConstants {
     public final static String HABIT_TRACK_NOT_FOUND = "Habit track not found";
     public final static String METHOD_NOT_ALLOWED = "Method not allowed";
     public final static String UNKNOWN_ENDPOINT = "Endpoint not found";
+    public final static String ACCESS_DENIED = "Access denied";
     public static final String INTERVAL_SERVER_ERROR = "Internal server error. Try later";
 }

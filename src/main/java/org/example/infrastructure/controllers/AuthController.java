@@ -34,6 +34,11 @@ public class AuthController {
     private final AuthService authService;
     private final AuthMapper authMapper;
 
+    @ApiOperation(value = "User login", notes = "Authenticates a user with email and password")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User authenticated successfully"),
+            @ApiResponse(code = 400, message = "User not found or validation error or missing fields in JSON request"),
+    })
     @PostMapping("/login")
     public AuthDto login(@RequestBody @Valid AuthUserDto authUserDto) throws UserNotFoundException {
         User user = authService.login(authUserDto);
@@ -43,7 +48,7 @@ public class AuthController {
     @ApiOperation(value = "User registration", notes = "Registers a new user")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "User registered successfully"),
-            @ApiResponse(code = 400, message = "Invalid email"),
+            @ApiResponse(code = 400, message = "Invalid email or errors in json request"),
             @ApiResponse(code = 409, message = "User already exists")
     })
     @PostMapping("/register")

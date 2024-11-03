@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public Map<String, String> handleAccessDeniedException(AccessDeniedException ex) {
         return Map.of("error", ex.getMessage());
     }
