@@ -55,6 +55,7 @@ public class AuditableAspect {
             RequestHeader authorizationHeader = arg.getAnnotation(RequestHeader.class);
             if (authorizationHeader != null && authorizationHeader.value().equals("Authorization")) {
                 token = (String) args[i];
+                continue;
             }
             RequestBody requestBodyAnnotation = arg.getAnnotation(RequestBody.class);
             if (requestBodyAnnotation != null) {
