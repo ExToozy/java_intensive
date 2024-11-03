@@ -1,7 +1,7 @@
 package org.example.infrastructure.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.annotations.Loggable;
+import org.example.annotations.Auditable;
 import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.dtos.user_dtos.UserDto;
@@ -27,7 +27,6 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 
-@Loggable
 @RestController
 @RequestMapping("/api/v2/users")
 @RequiredArgsConstructor
@@ -35,6 +34,7 @@ public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
 
+    @Auditable
     @GetMapping
     public List<UserDto> getUsers(
             @RequestHeader("Authorization") String token
@@ -44,6 +44,7 @@ public class UserController {
         return userMapper.toUserDtoList(userService.getAll());
     }
 
+    @Auditable
     @GetMapping(value = "/{id}")
     public UserDto getUser(
             @RequestHeader("Authorization") String token,
@@ -55,6 +56,7 @@ public class UserController {
 
     }
 
+    @Auditable
     @DeleteMapping(value = "/{id}")
     public void deleteUser(
             @RequestHeader("Authorization") String token,
@@ -66,6 +68,7 @@ public class UserController {
 
     }
 
+    @Auditable
     @PutMapping(value = "/{id}")
     public void updateUser(
             @RequestHeader("Authorization") String token,
@@ -78,6 +81,7 @@ public class UserController {
 
     }
 
+    @Auditable
     @PostMapping(value = "/{id}/change-admin-status")
     public void updateUserStatus(
             @RequestHeader("Authorization") String token,
@@ -90,12 +94,6 @@ public class UserController {
 
     }
 
-    private void throwAccessDeniedIfUserNotHasAccess(boolean accessExp) throws AccessDeniedException {
-        if (accessExp) {
-            throw new AccessDeniedException(ErrorMessageConstants.UNKNOWN_ENDPOINT);
-        }
-    }
-
     private void throwAccessDeniedIfUserNotAdmin(int userIdFromToken) throws AccessDeniedException {
         throwAccessDeniedIfUserNotHasAccess(!userService.isUserAdmin(userIdFromToken));
     }
@@ -105,5 +103,11 @@ public class UserController {
                 !userService.isUserAdmin(userIdFromToken) &&
                         userIdFromToken != userId
         );
+    }
+
+    private void throwAccessDeniedIfUserNotHasAccess(boolean accessExp) throws AccessDeniedException {
+        if (accessExp) {
+            throw new AccessDeniedException(ErrorMessageConstants.UNKNOWN_ENDPOINT);
+        }
     }
 }

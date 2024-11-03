@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.example.annotations.Loggable;
 import org.example.core.dtos.auth_dtos.AuthDto;
 import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.models.User;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 
+@Loggable
 @RestController
 @RequestMapping("/api/v2/auth")
 @RequiredArgsConstructor

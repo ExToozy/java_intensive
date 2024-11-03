@@ -1,6 +1,5 @@
-package org.example.infrastructure.configs;
+package org.example.infrastructure.migration;
 
-import org.example.infrastructure.migration.MigrationTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

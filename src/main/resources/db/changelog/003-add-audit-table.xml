@@ -10,7 +10,7 @@
             <column name="id" type="SERIAL">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="user_id" type="VARCHAR(255)">
+            <column name="user_id" type="INTEGER">
                 <constraints unique="true" nullable="false" references="users(id)"
                              foreignKeyName="pk_user_audit_user"
                              deleteCascade="true"/>
@@ -18,8 +18,9 @@
             <column name="request_uri" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="requestBody" type="TEXT"/>
-            <column name="responseBody" type="TEXT"/>
+            <column name="request_body" type="TEXT"/>
+            <column name="response_body" type="TEXT"/>
+            <column name="timestamp" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

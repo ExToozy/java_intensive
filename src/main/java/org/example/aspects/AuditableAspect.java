@@ -1,13 +1,16 @@
 package org.example.aspects;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.NoArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.example.core.dtos.user_audit_dtos.CreateUserAuditDto;
+import org.example.exceptions.InvalidTokenException;
 import org.example.infrastructure.data.repositories.JdbcUserAuditRepository;
 import org.example.infrastructure.util.TokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +18,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Parameter;
 
 @Aspect
-@Slf4j
+@NoArgsConstructor
 public class AuditableAspect {
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    private final static ObjectMapper OBJECT_MAPPER;
+
+    static {
+        OBJECT_MAPPER = new ObjectMapper();
+        OBJECT_MAPPER.registerModule(new JavaTimeModule());
+    }
 
     @Autowired
-    private JdbcUserAuditRepository jdbcUserAuditRepository;
+    JdbcUserAuditRepository jdbcUserAuditRepository;
 
     @Autowired(required = false)
-    private HttpServletRequest request;
+    HttpServletRequest request;
 
 
     @Pointcut("@annotation(org.example.annotations.Auditable)")
@@ -37,33 +46,42 @@ public class AuditableAspect {
     public Object audit(ProceedingJoinPoint joinPoint) throws Throwable {
         Object responseBody = joinPoint.proceed();
         Object[] args = joinPoint.getArgs();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Parameter[] parameters = signature.getMethod().getParameters();
         String token = null;
         Object requestBody = null;
-
-        for (Object arg : args) {
-            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-            if (signature.getMethod().isAnnotationPresent(RequestHeader.class) && arg instanceof String) {
-                token = (String) arg;
-            } else if (signature.getMethod().isAnnotationPresent(RequestBody.class)) {
-                requestBody = arg;
+        for (int i = 0; i < parameters.length; i++) {
+            Parameter arg = parameters[i];
+            RequestHeader authorizationHeader = arg.getAnnotation(RequestHeader.class);
+            if (authorizationHeader != null && authorizationHeader.value().equals("Authorization")) {
+                token = (String) args[i];
+            }
+            RequestBody requestBodyAnnotation = arg.getAnnotation(RequestBody.class);
+            if (requestBodyAnnotation != null) {
+                requestBody = args[i];
             }
         }
+        createUserAudit(token, requestBody, responseBody);
 
-        if (token != null) {
+        return responseBody;
+    }
+
+    private void createUserAudit(String token, Object requestBody, Object responseBody) throws InvalidTokenException, JsonProcessingException {
+        if (token != null && request != null) {
             String requestUri = request.getRequestURI();
+            System.out.println(requestUri);
             int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+            System.out.println(userIdFromToken);
             String requestBodyStr = null;
             String responseBodyStr = null;
             if (requestBody != null) {
-                requestBodyStr = objectMapper.writeValueAsString(requestBody);
+                requestBodyStr = OBJECT_MAPPER.writeValueAsString(requestBody);
             }
             if (responseBody != null) {
-                responseBodyStr = objectMapper.writeValueAsString(responseBody);
+                responseBodyStr = OBJECT_MAPPER.writeValueAsString(responseBody);
             }
             CreateUserAuditDto dto = new CreateUserAuditDto(userIdFromToken, requestUri, requestBodyStr, responseBodyStr);
             jdbcUserAuditRepository.create(dto);
         }
-
-        return responseBody;
     }
 }

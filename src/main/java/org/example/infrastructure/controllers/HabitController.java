@@ -2,6 +2,7 @@ package org.example.infrastructure.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.annotations.Auditable;
+import org.example.annotations.Loggable;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
@@ -24,12 +25,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-
+@Loggable
 @RestController
 @RequestMapping("api/v2/habits")
 @RequiredArgsConstructor
 public class HabitController {
     private final HabitService habitService;
+
 
     @Auditable
     @GetMapping
@@ -65,7 +67,7 @@ public class HabitController {
     public void updateUserHabit(
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId,
-            @RequestBody UpdateHabitDto updateHabitDto
+            @RequestBody @Valid UpdateHabitDto updateHabitDto
     ) throws HabitNotFoundException, InvalidTokenException {
         int userId = TokenHelper.getUserIdFromToken(token);
         habitService.updateUserHabit(userId, habitId, updateHabitDto);
