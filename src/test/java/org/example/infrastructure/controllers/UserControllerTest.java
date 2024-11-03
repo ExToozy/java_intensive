@@ -118,14 +118,14 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Delete user successfully when user is not admin")
-    void testDeleteUser_whenUserIsNotAdmin_thenUserIsDeleted() throws Exception {
+    void testDeleteUser_whenUserIsHimself_thenUserIsDeleted() throws Exception {
         when(userService.isUserAdmin(1)).thenReturn(false);
 
         mockMvc.perform(delete("/api/v2/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("Authorization", "Bearer 1"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(userService).remove(1);
         verify(userService).isUserAdmin(1);
@@ -133,7 +133,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Update user successfully when user is not admin")
-    void testUpdateUser_whenUserIsNotAdmin_thenUserIsUpdated() throws Exception {
+    void testUpdateUser_whenUserIsHimself_thenUserIsUpdated() throws Exception {
         UpdateUserDto updateUserDto = new UpdateUserDto("test", "test");
         when(userService.isUserAdmin(1)).thenReturn(false);
 

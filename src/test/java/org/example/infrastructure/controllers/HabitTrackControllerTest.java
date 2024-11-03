@@ -101,7 +101,7 @@ class HabitTrackControllerTest {
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(habitService).isUserHabitOrUserIsAdmin(1, 1);
     }
@@ -116,7 +116,7 @@ class HabitTrackControllerTest {
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(habitService).isUserHabitTrackOrUserIsAdmin(1, 1);
     }

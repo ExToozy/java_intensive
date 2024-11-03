@@ -122,7 +122,7 @@ class HabitControllerTest {
                         .content(objectMapper.writeValueAsString(dto))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(habitService).createHabit(dto);
     }
