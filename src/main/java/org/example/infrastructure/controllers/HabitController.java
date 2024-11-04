@@ -33,7 +33,7 @@ import java.util.Map;
 
 @Loggable
 @RestController
-@RequestMapping("api/v2/habits")
+@RequestMapping("api/v1/habits")
 @RequiredArgsConstructor
 @Api(tags = "Habits", description = "Operations for managing user habits")
 public class HabitController {

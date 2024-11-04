@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/tracks")
+@RequestMapping("/api/v1/tracks")
 @RequiredArgsConstructor
 @Api(tags = "Habit Tracks", description = "Operations for managing habit tracking")
 public class HabitTrackController {

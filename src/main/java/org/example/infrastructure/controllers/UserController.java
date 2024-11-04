@@ -33,7 +33,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Api(tags = "User Management", description = "Operations for managing users")
 public class UserController {
