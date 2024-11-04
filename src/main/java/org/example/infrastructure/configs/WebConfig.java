@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 @ComponentScan(basePackages = {"org.example"})
 public class WebConfig implements WebMvcConfigurer {
 
