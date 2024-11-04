@@ -79,7 +79,7 @@ class HabitTrackControllerTest {
         when(habitService.isUserHabitOrUserIsAdmin(1, 1)).thenReturn(true);
         when(habitTrackService.getHabitTracks(1)).thenReturn(tracks);
 
-        mockMvc.perform(get("/api/v2/tracks/by-habit-id/1")
+        mockMvc.perform(get("/api/v1/tracks/by-habit-id/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -96,7 +96,7 @@ class HabitTrackControllerTest {
     void removeHabitTracks_whenUserIsAuthorized_thenRemoveHabitTracks() throws Exception {
         when(habitService.isUserHabitOrUserIsAdmin(1, 1)).thenReturn(true);
 
-        mockMvc.perform(delete("/api/v2/tracks/by-habit-id/1")
+        mockMvc.perform(delete("/api/v1/tracks/by-habit-id/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -111,7 +111,7 @@ class HabitTrackControllerTest {
     void removeTrack_whenUserIsAuthorized_thenRemoveHabitTrack() throws Exception {
         when(habitService.isUserHabitTrackOrUserIsAdmin(1, 1)).thenReturn(true);
 
-        mockMvc.perform(delete("/api/v2/tracks/1")
+        mockMvc.perform(delete("/api/v1/tracks/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -126,7 +126,7 @@ class HabitTrackControllerTest {
     void completeHabit_whenUserIsAuthorized_thenCompleteHabit() throws Exception {
         when(habitService.isUserHabitOrUserIsAdmin(1, 1)).thenReturn(true);
 
-        mockMvc.perform(post("/api/v2/tracks/complete-habit/1")
+        mockMvc.perform(post("/api/v1/tracks/complete-habit/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -141,7 +141,7 @@ class HabitTrackControllerTest {
     void getHabitTracks_whenUserIsNotAuthorized_thenReturnBadRequest() throws Exception {
         when(habitService.isUserHabitOrUserIsAdmin(1, 1)).thenReturn(false);
 
-        mockMvc.perform(get("/api/v2/tracks/by-habit-id/1")
+        mockMvc.perform(get("/api/v1/tracks/by-habit-id/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -157,7 +157,7 @@ class HabitTrackControllerTest {
     void removeHabitTracks_whenUserIsNotAuthorized_thenReturnBadRequest() throws Exception {
         when(habitService.isUserHabitOrUserIsAdmin(1, 1)).thenReturn(false);
 
-        mockMvc.perform(delete("/api/v2/tracks/by-habit-id/1")
+        mockMvc.perform(delete("/api/v1/tracks/by-habit-id/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -173,7 +173,7 @@ class HabitTrackControllerTest {
     void removeTrack_whenUserIsNotAuthorized_thenReturnBadRequest() throws Exception {
         when(habitService.isUserHabitTrackOrUserIsAdmin(1, 1)).thenReturn(false);
 
-        mockMvc.perform(delete("/api/v2/tracks/1")
+        mockMvc.perform(delete("/api/v1/tracks/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -189,7 +189,7 @@ class HabitTrackControllerTest {
     void completeHabit_whenUserIsNotAuthorized_thenReturnBadRequest() throws Exception {
         when(habitService.isUserHabitOrUserIsAdmin(1, 1)).thenReturn(false);
 
-        mockMvc.perform(post("/api/v2/tracks/complete-habit/1")
+        mockMvc.perform(post("/api/v1/tracks/complete-habit/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))

@@ -87,7 +87,7 @@ class HabitControllerTest {
                 """;
         when(habitService.getUserHabits(1)).thenReturn(habits);
 
-        mockMvc.perform(get("/api/v2/habits")
+        mockMvc.perform(get("/api/v1/habits")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -102,7 +102,7 @@ class HabitControllerTest {
     @ValueSource(strings = {"Bearer", "Bearer lalala", "Bearer ", ""})
     @DisplayName("Should return unauthorized status when the token is invalid")
     void getUserHabits_shouldReturnUnauthorized_whenTokenIsInvalid(String token) throws Exception {
-        mockMvc.perform(get("/api/v2/habits")
+        mockMvc.perform(get("/api/v1/habits")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", token)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -116,7 +116,7 @@ class HabitControllerTest {
     void createUserHabit_shouldCreateHabit_whenUserIsAuthorized() throws Exception {
         CreateHabitDto dto = new CreateHabitDto(1, "name1", "description1", "DAILY");
 
-        mockMvc.perform(post("/api/v2/habits")
+        mockMvc.perform(post("/api/v1/habits")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .content(objectMapper.writeValueAsString(dto))
@@ -147,7 +147,7 @@ class HabitControllerTest {
                 """;
         when(habitService.getUserHabit(1, 1)).thenReturn(habit);
 
-        mockMvc.perform(get("/api/v2/habits/1")
+        mockMvc.perform(get("/api/v1/habits/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -163,7 +163,7 @@ class HabitControllerTest {
     void updateUserHabit_shouldUpdateHabit_whenUserIsAuthorized() throws Exception {
         UpdateHabitDto habit = new UpdateHabitDto("name1", "description1", "DAILY");
 
-        mockMvc.perform(put("/api/v2/habits/1")
+        mockMvc.perform(put("/api/v1/habits/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .content(objectMapper.writeValueAsString(habit))
@@ -178,7 +178,7 @@ class HabitControllerTest {
     @DisplayName("Should return the deadline of a habit when the user is authorized")
     void getHabitDeadlineDay_shouldReturnDeadline_whenUserIsAuthorized() throws Exception {
         when(habitService.getHabitDeadlineDay(1, 1)).thenReturn(LocalDate.of(2024, 11, 2));
-        mockMvc.perform(get("/api/v2/habits/1/deadline")
+        mockMvc.perform(get("/api/v1/habits/1/deadline")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -193,7 +193,7 @@ class HabitControllerTest {
     @DisplayName("Should return the completion status of a habit when the user is authorized")
     void getHabitCompletionStatus_shouldReturnCompletionStatus_whenUserIsAuthorized() throws Exception {
         when(habitService.isCompleteUserHabit(1, 1)).thenReturn(true);
-        mockMvc.perform(get("/api/v2/habits/1/completion-status")
+        mockMvc.perform(get("/api/v1/habits/1/completion-status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -244,7 +244,7 @@ class HabitControllerTest {
                   }
                 ]
                 """;
-        mockMvc.perform(get("/api/v2/habits/statistics")
+        mockMvc.perform(get("/api/v1/habits/statistics")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
                         .characterEncoding(StandardCharsets.UTF_8))

@@ -77,7 +77,7 @@ class UserControllerTest {
         when(userService.getAll()).thenReturn(users);
         when(userMapper.toUserDtoList(users)).thenReturn(userDtos);
 
-        mockMvc.perform(get("/api/v2/users")
+        mockMvc.perform(get("/api/v1/users")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("Authorization", "Bearer 1"))
                 .andDo(print())
@@ -104,7 +104,7 @@ class UserControllerTest {
         when(userService.getById(1)).thenReturn(user);
         when(userMapper.toUserDto(user)).thenReturn(userDto);
 
-        mockMvc.perform(get("/api/v2/users/1")
+        mockMvc.perform(get("/api/v1/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("Authorization", "Bearer 1"))
                 .andDo(print())
@@ -121,7 +121,7 @@ class UserControllerTest {
     void testDeleteUser_whenUserIsHimself_thenUserIsDeleted() throws Exception {
         when(userService.isUserAdmin(1)).thenReturn(false);
 
-        mockMvc.perform(delete("/api/v2/users/1")
+        mockMvc.perform(delete("/api/v1/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .header("Authorization", "Bearer 1"))
                 .andDo(print())
@@ -137,7 +137,7 @@ class UserControllerTest {
         UpdateUserDto updateUserDto = new UpdateUserDto("test", "test");
         when(userService.isUserAdmin(1)).thenReturn(false);
 
-        mockMvc.perform(put("/api/v2/users/1")
+        mockMvc.perform(put("/api/v1/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")
@@ -155,7 +155,7 @@ class UserControllerTest {
         ChangeAdminStatusDto changeAdminStatusDto = new ChangeAdminStatusDto(true);
         when(userService.isUserAdmin(1)).thenReturn(true);
 
-        mockMvc.perform(post("/api/v2/users/1/change-admin-status")
+        mockMvc.perform(post("/api/v1/users/1/change-admin-status")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 1")

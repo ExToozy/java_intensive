@@ -69,7 +69,7 @@ class AuthControllerTest {
         when(authService.login(authUserDto)).thenReturn(user);
         when(authMapper.toAuthDtoMap(user)).thenReturn(authDto);
 
-        mockMvc.perform(post("/api/v2/auth/login")
+        mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authUserDto))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -87,7 +87,7 @@ class AuthControllerTest {
 
         when(authService.login(authUserDto)).thenThrow(UserNotFoundException.class);
 
-        mockMvc.perform(post("/api/v2/auth/login")
+        mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authUserDto))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -107,7 +107,7 @@ class AuthControllerTest {
         when(authService.register(authUserDto)).thenReturn(user);
         when(authMapper.toAuthDtoMap(user)).thenReturn(authDto);
 
-        mockMvc.perform(post("/api/v2/auth/register")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authUserDto))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -125,7 +125,7 @@ class AuthControllerTest {
 
         when(authService.register(authUserDto)).thenThrow(InvalidEmailException.class);
 
-        mockMvc.perform(post("/api/v2/auth/register")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authUserDto))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -142,7 +142,7 @@ class AuthControllerTest {
 
         when(authService.register(authUserDto)).thenThrow(UserAlreadyExistException.class);
 
-        mockMvc.perform(post("/api/v2/auth/register")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authUserDto))
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -167,7 +167,7 @@ class AuthControllerTest {
                   ]
                 }
                 """;
-        mockMvc.perform(post("/api/v2/auth/register")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authUserDto))
                         .characterEncoding(StandardCharsets.UTF_8))

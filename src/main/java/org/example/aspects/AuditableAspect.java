@@ -70,9 +70,7 @@ public class AuditableAspect {
     private void createUserAudit(String token, Object requestBody, Object responseBody) throws InvalidTokenException, JsonProcessingException {
         if (token != null && request != null) {
             String requestUri = request.getRequestURI();
-            System.out.println(requestUri);
             int userIdFromToken = TokenHelper.getUserIdFromToken(token);
-            System.out.println(userIdFromToken);
             String requestBodyStr = null;
             String responseBodyStr = null;
             if (requestBody != null) {

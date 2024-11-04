@@ -41,7 +41,7 @@ class AuditableAspectTest {
     }
 
     @Test
-    void testAudit_ValidToken_CreatesUserAudit() throws Throwable {
+    void testAudit_whenAllDataExisted_thenCreateUserAudit() throws Throwable {
         String token = "Bearer 123";
         String requestUri = "/test/uri";
         String requestBody = "test";
@@ -74,13 +74,10 @@ class AuditableAspectTest {
             Object result = auditableAspect.audit(joinPoint);
 
             verify(jdbcUserAuditRepository, times(1))
-                    .create(argThat(argument -> {
-                        System.out.println(argument);
-                        return argument.getUserId() == 123 &&
-                                argument.getRequestBody() != null &&
-                                argument.getRequestUri().equals(requestUri) &&
-                                argument.getResponseBody() != null;
-                    }));
+                    .create(argThat(argument -> argument.getUserId() == 123 &&
+                            argument.getRequestBody() != null &&
+                            argument.getRequestUri().equals(requestUri) &&
+                            argument.getResponseBody() != null));
 
             assertThat(result).isEqualTo(responseBody);
         }
