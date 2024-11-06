@@ -1,6 +1,6 @@
 package org.example.infrastructure.util;
 
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
 import org.example.infrastructure.configs.DbConfig;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +14,11 @@ import java.sql.SQLException;
  * соединения и управление соединением с базой данных.
  */
 @Component
+@RequiredArgsConstructor
 public class ConnectionManager implements AutoCloseable {
 
     private final DbConfig dbConfig;
     private Connection connection;
-
-
-    @SneakyThrows
-    public ConnectionManager(DbConfig dbConfig) {
-        Class.forName(dbConfig.getDriver());
-        this.dbConfig = dbConfig;
-    }
 
 
     /**

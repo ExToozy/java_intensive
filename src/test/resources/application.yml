@@ -3,10 +3,10 @@ spring:
     name: habit_tracker
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/habit_tracker_db
-    driver-class-name: org.postgresql.Driver
-    username: habit_tracker_admin
-    password: admin
+    url: jdbc:tc:postgresql:latest:///habit_tracker_test_db
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: test
+    password: test
 
   liquibase:
     change-log: db/changelog/changelog.xml

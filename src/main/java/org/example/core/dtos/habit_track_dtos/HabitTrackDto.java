@@ -1,16 +1,16 @@
 package org.example.core.dtos.habit_track_dtos;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
 public class HabitTrackDto {
-    @ApiModelProperty(value = "habit id", example = "1", required = true)
+    @Schema(name = "habit id", example = "1")
     private int id;
 
-    @ApiModelProperty(value = "habit id", example = "1", required = true)
+    @Schema(name = "habit id", example = "1")
     private int habitId;
 
-    @ApiModelProperty(value = "Habit completion day", example = "[2024, 10, 30]", required = true)
+    @Schema(name = "Habit completion day", example = "[2024, 10, 30]")
     private String completeDate;
 }

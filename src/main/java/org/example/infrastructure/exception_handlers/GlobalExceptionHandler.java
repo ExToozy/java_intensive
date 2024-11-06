@@ -13,7 +13,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
@@ -46,9 +46,9 @@ public class GlobalExceptionHandler {
         return Map.of("error", ErrorMessageConstants.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
+    @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFoundException(NoHandlerFoundException ex) {
+    public Map<String, String> handleNotFoundException(NoResourceFoundException ex) {
         return Map.of("error", ErrorMessageConstants.UNKNOWN_ENDPOINT);
     }
 

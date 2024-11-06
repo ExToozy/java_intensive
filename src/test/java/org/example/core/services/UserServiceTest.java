@@ -7,57 +7,28 @@ import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.util.PasswordManager;
 import org.example.exceptions.InvalidEmailException;
 import org.example.exceptions.UserNotFoundException;
-import org.example.infrastructure.configs.DbConfig;
-import org.example.infrastructure.data.repositories.JdbcUserRepository;
-import org.example.infrastructure.migration.MigrationTool;
-import org.example.infrastructure.util.ConnectionManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {
-        DbConfig.class,
-        UserService.class,
-        JdbcUserRepository.class,
-        ConnectionManager.class
-})
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(value = "classpath:application.yml")
+@Sql(value = {"classpath:test_sql_scripts/remove-all-data.sql", "classpath:test_sql_scripts/insert-test-data.sql"})
 class UserServiceTest {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    DbConfig dbConfig;
-
-    private Connection connection;
-
-    @BeforeEach
-    void setUp() throws SQLException {
-        ConnectionManager connectionManager = new ConnectionManager(dbConfig);
-        connection = connectionManager.open();
-        new MigrationTool(dbConfig, connectionManager).runMigrate();
-    }
-
-    @AfterEach
-    void tearDown() throws SQLException {
-        connection.close();
-    }
 
     @DisplayName("Check that create successfully create user")
     @Test

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="004-remove-unique-constraint" author="ExToozy">
+        <sql>
+            ALTER TABLE user_audit DROP CONSTRAINT user_audit_user_id_key;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

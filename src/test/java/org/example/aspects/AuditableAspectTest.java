@@ -1,19 +1,22 @@
 package org.example.aspects;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.example.infrastructure.data.repositories.JdbcUserAuditRepository;
 import org.example.infrastructure.util.TokenHelper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -22,12 +25,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuditableAspectTest {
+    @Mock
+    ObjectMapper mapper;
 
     @Mock
     private JdbcUserAuditRepository jdbcUserAuditRepository;
-
-    @Mock
-    private HttpServletRequest request;
 
     @Mock
     private ProceedingJoinPoint joinPoint;
@@ -35,18 +37,13 @@ class AuditableAspectTest {
     @InjectMocks
     private AuditableAspect auditableAspect;
 
-    @BeforeEach
-    void setUp() {
-        auditableAspect.request = request;
-    }
-
     @Test
     void testAudit_whenAllDataExisted_thenCreateUserAudit() throws Throwable {
         String token = "Bearer 123";
         String requestUri = "/test/uri";
         String requestBody = "test";
         String responseBody = "test";
-
+        when(mapper.writeValueAsString(Mockito.anyString())).thenReturn("test");
         Method method = mock(Method.class);
 
         Parameter headerParam = mock(Parameter.class);
@@ -66,7 +63,15 @@ class AuditableAspectTest {
 
         when(joinPoint.getArgs()).thenReturn(new Object[]{token, requestBody});
         when(joinPoint.proceed()).thenReturn(responseBody);
-        when(request.getRequestURI()).thenReturn(requestUri);
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        ServletRequestAttributes mockRequestAttributes = mock(ServletRequestAttributes.class);
+
+        // Настроим поведение, чтобы RequestContextHolder возвращал наш мок
+        when(mockRequestAttributes.getRequest()).thenReturn(mockRequest);
+        RequestContextHolder.setRequestAttributes(mockRequestAttributes);
+
+        when(mockRequest.getRequestURI()).thenReturn(requestUri);
 
         try (var mockedStatic = mockStatic(TokenHelper.class)) {
             mockedStatic.when(() -> TokenHelper.getUserIdFromToken(token)).thenReturn(123);

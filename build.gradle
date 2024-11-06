@@ -1,12 +1,10 @@
 plugins {
     id 'war'
     id 'java'
-    id 'application'
-    id "io.freefair.aspectj.post-compile-weaving" version "6.4.1"
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
-war {
-    archiveFileName = 'habit_tracker.war'
-}
+
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 compileJava.options.encoding = 'UTF-8'
@@ -15,51 +13,81 @@ compileTestJava.options.encoding = 'UTF-8'
 repositories {
     mavenCentral()
 }
-
-
-var dockerComposeUp = tasks.register('dockerComposeUp', Exec) {
-    description = "Start docker compose"
-    commandLine 'docker-compose', 'up', '-d'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
-build {
-    dependsOn dockerComposeUp
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
+//var dockerComposeUp = tasks.register('dockerComposeUp', Exec) {
+//    description = "Start docker compose"
+//    commandLine 'docker-compose', 'up', '-d'
+//}
+//
+//build {
+//    dependsOn dockerComposeUp
+//}
 dependencies {
-    implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
-    implementation 'org.postgresql:postgresql:42.7.3'
-    implementation 'org.liquibase:liquibase-core:4.29.2'
-    implementation 'org.slf4j:slf4j-log4j12:2.0.13'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-aop:3.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'net.lbruun.springboot:preliquibase-spring-boot-starter:1.5.1'
+    implementation 'org.liquibase:liquibase-core'
     implementation 'org.mapstruct:mapstruct:1.6.2'
-    implementation 'org.aspectj:aspectjrt:1.9.9'
-    implementation 'org.aspectj:aspectjweaver:1.9.9'
-    implementation 'org.springframework:spring-aop:5.3.30'
-    implementation 'org.springframework:spring-test:5.3.30'
-    implementation 'org.springframework:spring-context:5.3.30'
-    implementation 'org.springframework:spring-web:5.3.30'
-    implementation 'org.springframework:spring-webmvc:5.3.30'
-    implementation 'io.springfox:springfox-swagger2:3.0.0'
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-    implementation 'io.springfox:springfox-bean-validators:3.0.0'
-    implementation 'org.glassfish:javax.el:3.0.0'
-    compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    compileOnly 'javax.validation:validation-api:2.0.1.Final'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    runtimeOnly 'org.postgresql:postgresql:42.7.3'
+    implementation 'org.mapstruct:mapstruct:1.6.2'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'javax.servlet:javax.servlet-api:3.1.0'
-    testImplementation 'com.jayway.jsonpath:json-path:2.5.0'
-    testImplementation 'org.skyscreamer:jsonassert:1.5.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.assertj:assertj-core:3.17.0'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.mockito:mockito-core:5.14.1'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
-    testImplementation 'org.testcontainers:postgresql:1.20.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+//dependencies {
+//    implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
+//    implementation 'org.postgresql:postgresql:42.7.3'
+//    implementation 'org.liquibase:liquibase-core:4.29.2'
+//    implementation 'org.slf4j:slf4j-log4j12:2.0.13'
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
+//    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
+//    implementation 'org.mapstruct:mapstruct:1.6.2'
+//    implementation 'org.aspectj:aspectjrt:1.9.9'
+//    implementation 'org.aspectj:aspectjweaver:1.9.9'
+//    implementation 'org.springframework:spring-aop:5.3.30'
+//    implementation 'org.springframework:spring-test:5.3.30'
+//    implementation 'org.springframework:spring-context:5.3.30'
+//    implementation 'org.springframework:spring-web:5.3.30'
+//    implementation 'org.springframework:spring-webmvc:5.3.30'
+//    implementation 'io.springfox:springfox-swagger2:3.0.0'
+//    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+//    implementation 'io.springfox:springfox-bean-validators:3.0.0'
+//    implementation 'org.glassfish:javax.el:3.0.0'
+//    compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
+//    compileOnly 'org.projectlombok:lombok:1.18.34'
+//    compileOnly 'javax.validation:validation-api:2.0.1.Final'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+//    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
+//    testImplementation platform('org.junit:junit-bom:5.9.1')
+//    testImplementation 'javax.servlet:javax.servlet-api:3.1.0'
+//    testImplementation 'com.jayway.jsonpath:json-path:2.5.0'
+//    testImplementation 'org.skyscreamer:jsonassert:1.5.0'
+//    testImplementation 'org.junit.jupiter:junit-jupiter'
+//    testImplementation 'org.assertj:assertj-core:3.17.0'
+//    testImplementation 'org.mockito:mockito-core:5.14.1'
+//    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+//    testImplementation 'org.testcontainers:postgresql:1.20.0'
+//}
 
 test {
     useJUnitPlatform()

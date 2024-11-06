@@ -1,19 +1,18 @@
 package org.example.core.dtos.habit_dtos;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.annotations.InEnumValues;
 import org.example.core.models.HabitFrequency;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Data
-@ApiModel(description = "DTO for update habit")
+@Schema(description = "DTO for update habit")
 @AllArgsConstructor
 @NoArgsConstructor
 public final class UpdateHabitDto {
@@ -21,19 +20,19 @@ public final class UpdateHabitDto {
     @NotNull(message = "Must not be null")
     @NotBlank(message = "Must not be blank")
     @Size(min = 3, max = 255)
-    @ApiModelProperty(value = "habit name", example = "Walk 500 steps", required = true)
+    @Schema(name = "habit name", example = "Walk 500 steps")
     private String name;
 
     @NotNull(message = "Must not be null")
     @NotBlank(message = "Can not be blank")
     @Size(min = 3, max = 255)
-    @ApiModelProperty(value = "habit description", example = "I need do it everyday", required = true)
+    @Schema(name = "habit description", example = "I need do it everyday")
     private String description;
 
     @NotNull(message = "Must not be null")
     @NotBlank(message = "Must not be blank")
     @InEnumValues(enumClass = HabitFrequency.class)
     @Size(min = 3, max = 10, message = "Must be between 3 and 10 characters")
-    @ApiModelProperty(value = "habit frequency", example = "DAILY", required = true)
+    @Schema(name = "habit frequency", example = "DAILY")
     private String frequency;
 }

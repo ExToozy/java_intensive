@@ -5,42 +5,25 @@ import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.HabitFrequency;
 import org.example.exceptions.HabitNotFoundException;
-import org.example.infrastructure.configs.DbConfig;
-import org.example.infrastructure.data.repositories.JdbcHabitRepository;
-import org.example.infrastructure.data.repositories.JdbcHabitTrackRepository;
-import org.example.infrastructure.data.repositories.JdbcUserRepository;
-import org.example.infrastructure.migration.MigrationTool;
-import org.example.infrastructure.util.ConnectionManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {
-        DbConfig.class,
-        HabitService.class,
-        HabitTrackService.class,
-        UserService.class,
-        JdbcUserRepository.class,
-        JdbcHabitRepository.class,
-        JdbcHabitTrackRepository.class,
-        ConnectionManager.class
-})
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(value = "classpath:application.yml")
+@Sql(value = {"classpath:test_sql_scripts/remove-all-data.sql", "classpath:test_sql_scripts/insert-test-data.sql"})
 class HabitServiceTest {
 
     @Autowired
@@ -49,22 +32,6 @@ class HabitServiceTest {
     @Autowired
     HabitTrackService habitTrackService;
 
-    @Autowired
-    DbConfig dbConfig;
-
-    private Connection connection;
-
-    @BeforeEach
-    void setUp() throws SQLException {
-        ConnectionManager connectionManager = new ConnectionManager(dbConfig);
-        connection = connectionManager.open();
-        new MigrationTool(dbConfig, connectionManager).runMigrate();
-    }
-
-    @AfterEach
-    void tearDown() throws SQLException {
-        connection.close();
-    }
 
     @DisplayName("Check that getUserHabits return user habits")
     @Test

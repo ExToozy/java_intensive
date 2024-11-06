@@ -2,8 +2,8 @@ package org.example.aspects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.NoArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,28 +14,24 @@ import org.example.exceptions.InvalidTokenException;
 import org.example.infrastructure.data.repositories.JdbcUserAuditRepository;
 import org.example.infrastructure.util.TokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Parameter;
 
 @Aspect
-@NoArgsConstructor
+@Slf4j
+@Component
 public class AuditableAspect {
 
-    private final static ObjectMapper OBJECT_MAPPER;
-
-    static {
-        OBJECT_MAPPER = new ObjectMapper();
-        OBJECT_MAPPER.registerModule(new JavaTimeModule());
-    }
+    @Autowired
+    ObjectMapper mapper;
 
     @Autowired
     JdbcUserAuditRepository jdbcUserAuditRepository;
-
-    @Autowired(required = false)
-    HttpServletRequest request;
 
 
     @Pointcut("@annotation(org.example.annotations.Auditable)")
@@ -44,6 +40,7 @@ public class AuditableAspect {
 
     @Around("annotatedByAuditable()")
     public Object audit(ProceedingJoinPoint joinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Object responseBody = joinPoint.proceed();
         Object[] args = joinPoint.getArgs();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -62,22 +59,22 @@ public class AuditableAspect {
                 requestBody = args[i];
             }
         }
-        createUserAudit(token, requestBody, responseBody);
+        createUserAudit(token, requestBody, responseBody, request);
 
         return responseBody;
     }
 
-    private void createUserAudit(String token, Object requestBody, Object responseBody) throws InvalidTokenException, JsonProcessingException {
+    private void createUserAudit(String token, Object requestBody, Object responseBody, HttpServletRequest request) throws InvalidTokenException, JsonProcessingException {
         if (token != null && request != null) {
             String requestUri = request.getRequestURI();
             int userIdFromToken = TokenHelper.getUserIdFromToken(token);
             String requestBodyStr = null;
             String responseBodyStr = null;
             if (requestBody != null) {
-                requestBodyStr = OBJECT_MAPPER.writeValueAsString(requestBody);
+                requestBodyStr = mapper.writeValueAsString(requestBody);
             }
             if (responseBody != null) {
-                responseBodyStr = OBJECT_MAPPER.writeValueAsString(responseBody);
+                responseBodyStr = mapper.writeValueAsString(responseBody);
             }
             CreateUserAuditDto dto = new CreateUserAuditDto(userIdFromToken, requestUri, requestBodyStr, responseBodyStr);
             jdbcUserAuditRepository.create(dto);

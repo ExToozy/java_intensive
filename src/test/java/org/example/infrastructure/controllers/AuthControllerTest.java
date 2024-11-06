@@ -1,6 +1,9 @@
 package org.example.infrastructure.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.example.core.dtos.auth_dtos.AuthDto;
 import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.models.User;
@@ -9,7 +12,6 @@ import org.example.exceptions.InvalidEmailException;
 import org.example.exceptions.UserAlreadyExistException;
 import org.example.exceptions.UserNotFoundException;
 import org.example.infrastructure.data.mappers.AuthMapper;
-import org.example.infrastructure.data.mappers.AuthMapperImpl;
 import org.example.infrastructure.exception_handlers.GlobalExceptionHandler;
 import org.example.infrastructure.exception_handlers.UserExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.nio.charset.StandardCharsets;
 
 import static org.mockito.Mockito.*;
@@ -43,7 +42,7 @@ class AuthControllerTest {
     private AuthService authService;
 
     @Mock
-    private AuthMapper authMapper = new AuthMapperImpl();
+    private AuthMapper authMapper;
 
     @InjectMocks
     private AuthController authController;
