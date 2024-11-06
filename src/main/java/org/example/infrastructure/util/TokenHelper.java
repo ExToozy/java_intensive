@@ -1,6 +1,7 @@
 package org.example.infrastructure.util;
 
 import org.example.core.util.RegexUtil;
+import org.example.exceptions.InvalidTokenException;
 
 /**
  * Утилита для работы с токенами аутентификации.
@@ -14,7 +15,7 @@ public class TokenHelper {
      * @param token токен для проверки
      * @return true, если токен валиден; иначе false
      */
-    public static boolean isValidToken(String token) {
+    private static boolean isValidToken(String token) {
         return token != null && !token.isBlank() && !RegexUtil.isInvalidToken(token);
     }
 
@@ -24,7 +25,10 @@ public class TokenHelper {
      * @param token токен, содержащий идентификатор пользователя
      * @return идентификатор пользователя
      */
-    public static int getUserIdFromToken(String token) {
-        return Integer.parseInt(token.split(" ")[1]);
+    public static int getUserIdFromToken(String token) throws InvalidTokenException {
+        if (isValidToken(token)) {
+            return Integer.parseInt(token.split(" ")[1]);
+        }
+        throw new InvalidTokenException();
     }
 }

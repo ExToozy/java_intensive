@@ -1,20 +1,20 @@
 package org.example.core.dtos.user_dtos;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ApiModel(description = "DTO for changing the user's admin status")
 public class ChangeAdminStatusDto {
-    private final int userId;
-    private final boolean isAdmin;
 
-    public ChangeAdminStatusDto(int userId, boolean isAdmin) {
-        this.userId = userId;
-        this.isAdmin = isAdmin;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
+    @NotNull
+    @ApiModelProperty(value = "Indicates whether the user is an administrator", required = true, example = "true")
+    private boolean isAdmin;
 }

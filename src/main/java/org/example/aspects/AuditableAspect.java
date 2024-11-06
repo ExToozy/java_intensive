@@ -1,54 +1,86 @@
 package org.example.aspects;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.NoArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.example.infrastructure.util.JsonMapper;
-import org.example.infrastructure.util.JsonResponse;
-import org.example.infrastructure.web.handlers.request_handlers.HttpServletRequestHandler;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.example.core.dtos.user_audit_dtos.CreateUserAuditDto;
+import org.example.exceptions.InvalidTokenException;
+import org.example.infrastructure.data.repositories.JdbcUserAuditRepository;
+import org.example.infrastructure.util.TokenHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Parameter;
 
 @Aspect
+@NoArgsConstructor
 public class AuditableAspect {
-    @Pointcut("within(@org.example.annotations.Auditable *) && execution(* * (..))")
+
+    private final static ObjectMapper OBJECT_MAPPER;
+
+    static {
+        OBJECT_MAPPER = new ObjectMapper();
+        OBJECT_MAPPER.registerModule(new JavaTimeModule());
+    }
+
+    @Autowired
+    JdbcUserAuditRepository jdbcUserAuditRepository;
+
+    @Autowired(required = false)
+    HttpServletRequest request;
+
+
+    @Pointcut("@annotation(org.example.annotations.Auditable)")
     public void annotatedByAuditable() {
     }
 
     @Around("annotatedByAuditable()")
-    public Object audit(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        Object result = proceedingJoinPoint.proceed();
-        auditUserRequest(proceedingJoinPoint, (JsonResponse) result);
-        return result;
-    }
-
-    private boolean isRequestHandlerImpl(ProceedingJoinPoint proceedingJoinPoint) {
-        return Arrays.stream(proceedingJoinPoint
-                        .getTarget()
-                        .getClass()
-                        .getInterfaces())
-                .anyMatch(classInterface -> classInterface.getName().equals(HttpServletRequestHandler.class.getName()));
-    }
-
-    private void auditUserRequest(ProceedingJoinPoint proceedingJoinPoint, JsonResponse result) throws IOException {
-        if (isRequestHandlerImpl(proceedingJoinPoint) && proceedingJoinPoint.getSignature().getName().equals("handleRequest")) {
-            Object[] args = proceedingJoinPoint.getArgs();
-            HttpServletRequest request = (HttpServletRequest) Arrays.stream(args)
-                    .filter(o -> o instanceof HttpServletRequest)
-                    .findFirst()
-                    .orElse(null);
-            if (request != null) {
-                Map<String, Object> jsonMap = JsonMapper.getJsonMap(request.getReader());
-                String strRequestMap = StringUtils.join(jsonMap);
-
-                System.out.printf("User send request to %s with body %s and their response %s%n",
-                        request.getRequestURI(), strRequestMap, result.toJsonString());
+    public Object audit(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object responseBody = joinPoint.proceed();
+        Object[] args = joinPoint.getArgs();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Parameter[] parameters = signature.getMethod().getParameters();
+        String token = null;
+        Object requestBody = null;
+        for (int i = 0; i < parameters.length; i++) {
+            Parameter arg = parameters[i];
+            RequestHeader authorizationHeader = arg.getAnnotation(RequestHeader.class);
+            if (authorizationHeader != null && authorizationHeader.value().equals("Authorization")) {
+                token = (String) args[i];
+                continue;
             }
+            RequestBody requestBodyAnnotation = arg.getAnnotation(RequestBody.class);
+            if (requestBodyAnnotation != null) {
+                requestBody = args[i];
+            }
+        }
+        createUserAudit(token, requestBody, responseBody);
+
+        return responseBody;
+    }
+
+    private void createUserAudit(String token, Object requestBody, Object responseBody) throws InvalidTokenException, JsonProcessingException {
+        if (token != null && request != null) {
+            String requestUri = request.getRequestURI();
+            int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+            String requestBodyStr = null;
+            String responseBodyStr = null;
+            if (requestBody != null) {
+                requestBodyStr = OBJECT_MAPPER.writeValueAsString(requestBody);
+            }
+            if (responseBody != null) {
+                responseBodyStr = OBJECT_MAPPER.writeValueAsString(responseBody);
+            }
+            CreateUserAuditDto dto = new CreateUserAuditDto(userIdFromToken, requestUri, requestBodyStr, responseBodyStr);
+            jdbcUserAuditRepository.create(dto);
         }
     }
 }

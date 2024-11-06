@@ -1,43 +1,17 @@
 package org.example.core.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * Класс, представляющий пользователя.
  * Содержит: идентификатор пользователя, email, пароль и поле, определяющие являеться ли пользователь администатором.
  */
+@Getter
+@AllArgsConstructor
 public class User {
     private final int id;
     private final String email;
     private final String password;
     private final boolean isAdmin;
-
-    /**
-     * Создаёт нового пользователя.
-     *
-     * @param id       уникальный идентификатор пользователя
-     * @param email    электронная почта пользователя
-     * @param password пароль пользователя
-     * @param isAdmin  поле, определяющие является ли пользователь администатором
-     */
-    public User(int id, String email, String password, boolean isAdmin) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.isAdmin = isAdmin;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
 }

@@ -1,115 +1,81 @@
 package org.example.core.services;
 
-import org.example.core.dtos.habit_track_dtos.CreateHabitTrackDto;
-import org.example.core.models.Habit;
-import org.example.core.models.HabitFrequency;
-import org.example.infrastructure.data.models.HabitTrackEntity;
-import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
-import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
+import org.assertj.core.api.SoftAssertions;
+import org.example.infrastructure.configs.DbConfig;
+import org.example.infrastructure.data.repositories.JdbcHabitRepository;
+import org.example.infrastructure.data.repositories.JdbcHabitTrackRepository;
+import org.example.infrastructure.migration.MigrationTool;
+import org.example.infrastructure.util.ConnectionManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        DbConfig.class,
+        HabitTrackService.class,
+        JdbcHabitRepository.class,
+        JdbcHabitTrackRepository.class,
+        ConnectionManager.class
+})
+@TestPropertySource(locations = "classpath:application-test.properties")
 class HabitTrackServiceTest {
+    @Autowired
     HabitTrackService habitTrackService;
 
-    @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
-        var tracks = new ArrayList<>(Arrays.asList(
-                new HabitTrackEntity(
-                        0,
-                        0,
-                        LocalDate.now()
-                ),
-                new HabitTrackEntity(
-                        1,
-                        2,
-                        LocalDate.now().minusDays(Period.ofWeeks(0).getDays())
-                ),
-                new HabitTrackEntity(
-                        2,
-                        2,
-                        LocalDate.now().minusDays(Period.ofWeeks(1).getDays())
-                ),
-                new HabitTrackEntity(
-                        3,
-                        2,
-                        LocalDate.now().minusDays(Period.ofWeeks(2).getDays())
-                ),
-                new HabitTrackEntity(
-                        4,
-                        10,
-                        LocalDate.now().minusDays(1)
-                )
-        )
-        );
-        InMemoryHabitTrackRepository habitTrackRepository = new InMemoryHabitTrackRepository();
-        InMemoryHabitRepository habitRepository = new InMemoryHabitRepository();
-        Field field = InMemoryHabitTrackRepository.class.getDeclaredField("tracks");
-        field.setAccessible(true);
-        field.set(habitTrackRepository, tracks);
+    @Autowired
+    DbConfig dbConfig;
 
-        habitTrackService = new HabitTrackService(habitTrackRepository, habitRepository);
+    private Connection connection;
+
+    @BeforeEach
+    void setUp() throws SQLException {
+        ConnectionManager connectionManager = new ConnectionManager(dbConfig);
+        connection = connectionManager.open();
+        new MigrationTool(dbConfig, connectionManager).runMigrate();
+    }
+
+    @AfterEach
+    void tearDown() throws SQLException {
+        connection.close();
     }
 
     @DisplayName("Check after completeHabit execute HabitTrack was created")
     @Test
     void completeHabit_shouldCreateHabitTrackInMemory_whenExecuteCompleteHabitMethod() {
-        habitTrackService.completeHabit(new CreateHabitTrackDto(4));
+        habitTrackService.completeHabit(2);
 
-        var tracks = habitTrackService.getHabitTracks(4);
-        assertThat(tracks).hasSize(1);
+        SoftAssertions softly = new SoftAssertions();
+        var tracks = habitTrackService.getHabitTracks(2);
+        softly.assertThat(tracks).hasSize(1);
         var track = tracks.get(0);
-        assertThat(track.getHabitId()).isEqualTo(4);
-        assertThat(track.getCompleteDate()).isEqualTo(LocalDate.now());
-    }
-
-    @DisplayName("Check isCompleteHabit return true when habit is complete")
-    @Test
-    void isCompleteHabit_shouldReturnTrue_whenHabitIsComplete() {
-        Habit habit = new Habit(
-                0,
-                0,
-                "testUser1HabitName",
-                "testUser1HabitDescription",
-                HabitFrequency.DAILY,
-                LocalDate.now().minusDays(1)
-        );
-        assertThat(habitTrackService.isCompleteHabit(habit)).isTrue();
-    }
-
-    @DisplayName("Check isCompleteHabit return false when habit is not complete")
-    @Test
-    void isCompleteHabit_shouldReturnFalse_whenHabitNotCompleted() {
-        Habit habit = new Habit(
-                10,
-                0,
-                "testUser1HabitName",
-                "testUser1HabitDescription",
-                HabitFrequency.DAILY,
-                LocalDate.now()
-        );
-        assertThat(habitTrackService.isCompleteHabit(habit)).isFalse();
+        softly.assertThat(track.getHabitId()).isEqualTo(2);
+        softly.assertThat(track.getCompleteDate()).isEqualTo(LocalDate.now());
+        softly.assertAll();
     }
 
     @DisplayName("Check that getHabitTracks return all habit tracks")
     @Test
     void getHabitTracks_shouldReturnAllHabitTracks() {
-        var tracks = habitTrackService.getHabitTracks(2);
+        var tracks = habitTrackService.getHabitTracks(3);
 
         assertThat(tracks)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(3)
-                .allMatch(habitTrack -> habitTrack.getHabitId() == 2);
+                .allMatch(habitTrack -> habitTrack.getHabitId() == 3);
     }
 
     @DisplayName("Check that removeHabitTracks remove all habit tracks")

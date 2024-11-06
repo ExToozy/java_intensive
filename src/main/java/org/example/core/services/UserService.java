@@ -1,14 +1,16 @@
 package org.example.core.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.core.dtos.user_dtos.UpdateUserDto;
-import org.example.core.exceptions.InvalidEmailException;
-import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.models.User;
 import org.example.core.repositories.IUserRepository;
 import org.example.core.util.PasswordManager;
 import org.example.core.util.RegexUtil;
+import org.example.exceptions.InvalidEmailException;
+import org.example.exceptions.UserNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,22 +18,12 @@ import java.util.List;
  * Сервис для работы с пользователями.
  * Предоставляет методы для создания, удаления, обновления и получения пользователей, а также для проверки существования email.
  */
+@Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final IUserRepository userRepository;
 
-    private final HabitService habitService;
-
-    /**
-     * Конструктор {@link UserService}.
-     *
-     * @param userRepository {@link IUserRepository} репозиторий для работы с пользователями
-     * @param habitService   {@link HabitService} сервис для работы с привычками
-     */
-    public UserService(IUserRepository userRepository, HabitService habitService) {
-        this.userRepository = userRepository;
-        this.habitService = habitService;
-    }
 
     /**
      * Создаёт нового пользователя.
@@ -49,8 +41,20 @@ public class UserService {
      * @param id идентификатор пользователя
      */
     public void remove(int id) {
-        habitService.removeAllUserHabitsAndTracks(id);
         userRepository.remove(id);
+    }
+
+    /**
+     * Удаляет пользователя и все его привычки и отметки о выполнении.
+     *
+     * @param id идентификатор пользователя
+     */
+    public boolean isUserAdmin(int id) {
+        try {
+            return userRepository.getById(id).isAdmin();
+        } catch (UserNotFoundException e) {
+            return false;
+        }
     }
 
     /**
@@ -91,11 +95,12 @@ public class UserService {
     /**
      * Изменяет статус администратора пользователя.
      *
-     * @param dto данные для изменения статуса
+     * @param userId идентификатор пользователя
+     * @param dto    данные для изменения статуса
      * @throws UserNotFoundException если пользователь не найден
      */
-    public void changeUserAdminStatus(ChangeAdminStatusDto dto) throws UserNotFoundException {
-        userRepository.changeUserAdminStatus(dto);
+    public void changeUserAdminStatus(int userId, ChangeAdminStatusDto dto) throws UserNotFoundException {
+        userRepository.changeUserAdminStatus(userId, dto);
     }
 
     /**
@@ -105,7 +110,7 @@ public class UserService {
      * @throws UserNotFoundException если пользователь не найден
      * @throws InvalidEmailException если email некорректный
      */
-    public void update(UpdateUserDto dto) throws UserNotFoundException, InvalidEmailException {
+    public void update(int userId, UpdateUserDto dto) throws UserNotFoundException, InvalidEmailException {
         if (dto.getEmail() == null && dto.getPassword() == null) {
             return;
         }
@@ -115,18 +120,14 @@ public class UserService {
         if (dto.getEmail() != null && RegexUtil.isInvalidEmail(dto.getEmail())) {
             throw new InvalidEmailException();
         }
-        User user = userRepository.getById(dto.getUserId());
+        User user = userRepository.getById(userId);
         if (dto.getPassword() == null) dto.setPassword(user.getPassword());
         if (dto.getEmail() == null) dto.setEmail(user.getEmail());
 
-        userRepository.update(dto);
+        userRepository.update(userId, dto);
     }
 
-    public User getById(int id) {
-        try {
-            return userRepository.getById(id);
-        } catch (UserNotFoundException e) {
-            return null;
-        }
+    public User getById(int id) throws UserNotFoundException {
+        return userRepository.getById(id);
     }
 }

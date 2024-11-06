@@ -1,57 +1,62 @@
 package org.example.core.services;
 
+import org.assertj.core.api.SoftAssertions;
 import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.core.dtos.user_dtos.UpdateUserDto;
-import org.example.core.exceptions.InvalidEmailException;
-import org.example.core.exceptions.UserNotFoundException;
 import org.example.core.util.PasswordManager;
-import org.example.infrastructure.data.models.UserEntity;
-import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitRepository;
-import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryHabitTrackRepository;
-import org.example.infrastructure.data.repositories.in_memory_repositories.InMemoryUserRepository;
+import org.example.exceptions.InvalidEmailException;
+import org.example.exceptions.UserNotFoundException;
+import org.example.infrastructure.configs.DbConfig;
+import org.example.infrastructure.data.repositories.JdbcUserRepository;
+import org.example.infrastructure.migration.MigrationTool;
+import org.example.infrastructure.util.ConnectionManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        DbConfig.class,
+        UserService.class,
+        JdbcUserRepository.class,
+        ConnectionManager.class
+})
+@TestPropertySource(locations = "classpath:application-test.properties")
 class UserServiceTest {
+
+    @Autowired
     UserService userService;
 
+    @Autowired
+    DbConfig dbConfig;
+
+    private Connection connection;
+
     @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
-        var users = new ArrayList<>(Arrays.asList(
-                new UserEntity(
-                        0,
-                        "ex@mail.ru",
-                        PasswordManager.getPasswordHash("123"),
-                        false
-                ),
-                new UserEntity(
-                        1,
-                        "admin",
-                        PasswordManager.getPasswordHash("admin"),
-                        true
-                )
-        )
-        );
-        InMemoryUserRepository userRepository = new InMemoryUserRepository();
-        InMemoryHabitRepository habitRepository = new InMemoryHabitRepository();
-        InMemoryHabitTrackRepository habitTrackRepository = new InMemoryHabitTrackRepository();
-        HabitTrackService habitTrackService = new HabitTrackService(habitTrackRepository, habitRepository);
-        HabitService habitService = new HabitService(habitRepository, habitTrackService);
-        Field field = InMemoryUserRepository.class.getDeclaredField("users");
-        field.setAccessible(true);
-        field.set(userRepository, users);
-        userService = new UserService(userRepository, habitService);
+    void setUp() throws SQLException {
+        ConnectionManager connectionManager = new ConnectionManager(dbConfig);
+        connection = connectionManager.open();
+        new MigrationTool(dbConfig, connectionManager).runMigrate();
+    }
+
+    @AfterEach
+    void tearDown() throws SQLException {
+        connection.close();
     }
 
     @DisplayName("Check that create successfully create user")
@@ -61,9 +66,11 @@ class UserServiceTest {
 
         var user = userService.getUserByEmail("test@mail.ru");
 
-        assertThat(user).isNotNull();
-        assertThat(user.getPassword()).isEqualTo("123");
-        assertThat(user.getId()).isNotNull();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(user).isNotNull();
+        softly.assertThat(user.getPassword()).isEqualTo("123");
+        softly.assertThat(user.getId()).isNotNull();
+        softly.assertAll();
     }
 
     @DisplayName("Check getUserByEmail return user by email correctly")
@@ -71,9 +78,11 @@ class UserServiceTest {
     void getUserByEmail_shouldGetCorrectUser() throws UserNotFoundException {
         var user = userService.getUserByEmail("ex@mail.ru");
 
-        assertThat(user).isNotNull();
-        assertThat(user.getPassword()).isEqualTo(PasswordManager.getPasswordHash("123"));
-        assertThat(user.getId()).isNotNull();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(user).isNotNull();
+        softly.assertThat(user.getPassword()).isEqualTo(PasswordManager.getPasswordHash("123"));
+        softly.assertThat(user.getId()).isNotNull();
+        softly.assertAll();
     }
 
     @DisplayName("Check getUserByEmail throw exception when user not exist")
@@ -90,21 +99,24 @@ class UserServiceTest {
         assertThat(users)
                 .isNotNull()
                 .isNotEmpty()
-                .hasSize(2)
+                .hasSize(3)
                 .allMatch(user -> user.getEmail() != null && user.getPassword() != null);
     }
 
     @DisplayName("Check update user working is correct")
     @Test
     void update_shouldUpdateUser_whenEmailIsCorrectAndUserExist() throws UserNotFoundException, InvalidEmailException {
-        userService.update(new UpdateUserDto(0, "new@mail.ru", "1234"));
+        userService.update(1, new UpdateUserDto("new@mail.ru", "1234"));
 
         assertThatThrownBy(() -> userService.getUserByEmail("ex@mail.ru")).isInstanceOf(UserNotFoundException.class);
 
         var user = userService.getUserByEmail("new@mail.ru");
-        assertThat(user.getId()).isEqualTo(0);
-        assertThat(user.getEmail()).isEqualTo("new@mail.ru");
-        assertThat(user.getPassword()).isEqualTo(PasswordManager.getPasswordHash("1234"));
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(user.getId()).isEqualTo(1);
+        softly.assertThat(user.getEmail()).isEqualTo("new@mail.ru");
+        softly.assertThat(user.getPassword()).isEqualTo(PasswordManager.getPasswordHash("1234"));
+        softly.assertAll();
     }
 
     @DisplayName("Check that checkEmailExist return expected result witch depends on email exist")
@@ -118,14 +130,14 @@ class UserServiceTest {
     @DisplayName("Check remove user working is correct")
     @Test
     void remove_shouldRemoveUserAndTheirHabitsAndTracks() {
-        userService.remove(0);
+        userService.remove(1);
         assertThatThrownBy(() -> userService.getUserByEmail("ex@mail.ru")).isInstanceOf(UserNotFoundException.class);
     }
 
     @DisplayName("Check that changeUserAdminStatus change admin to true if provide true")
     @Test
     void changeUserAdminStatus_shouldChangeStatusToTrue_whenProvideTrue() throws UserNotFoundException {
-        userService.changeUserAdminStatus(new ChangeAdminStatusDto(0, true));
+        userService.changeUserAdminStatus(1, new ChangeAdminStatusDto(true));
         var user = userService.getUserByEmail("ex@mail.ru");
         assertThat(user.isAdmin()).isTrue();
     }
@@ -133,7 +145,7 @@ class UserServiceTest {
     @DisplayName("Check that changeUserAdminStatus change admin to false if provide false")
     @Test
     void changeUserAdminStatus_shouldChangeStatusToFalse_whenProvideFalse() throws UserNotFoundException {
-        userService.changeUserAdminStatus(new ChangeAdminStatusDto(1, false));
+        userService.changeUserAdminStatus(2, new ChangeAdminStatusDto(false));
         var user = userService.getUserByEmail("admin");
         assertThat(user.isAdmin()).isFalse();
     }

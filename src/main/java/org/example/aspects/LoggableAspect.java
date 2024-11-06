@@ -1,11 +1,15 @@
 package org.example.aspects;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
 @Aspect
+@Component
+@Slf4j
 public class LoggableAspect {
     @Pointcut("within(@org.example.annotations.Loggable *) && execution(* * (..))")
     public void annotatedByLoggable() {
@@ -13,12 +17,11 @@ public class LoggableAspect {
 
     @Around("annotatedByLoggable()")
     public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        System.out.println("Calling method " + proceedingJoinPoint.getSignature());
+        log.info("Calling method " + proceedingJoinPoint.getSignature());
         long start = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
         long end = System.currentTimeMillis() - start;
-        System.out.println(
-                "Execution of method" + proceedingJoinPoint.getSignature() + " finished. Execution time is " + end);
+        log.info("Execution of method" + proceedingJoinPoint.getSignature() + " finished. Execution time is " + end);
         return result;
     }
 }

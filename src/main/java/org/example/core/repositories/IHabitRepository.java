@@ -4,6 +4,7 @@ package org.example.core.repositories;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
+import org.example.exceptions.HabitNotFoundException;
 
 import java.util.List;
 
@@ -29,11 +30,19 @@ public interface IHabitRepository {
     List<Habit> getAllHabitsByUserId(int userId);
 
     /**
+     * Возвращает привычку пользователя по её идентификатору.
+     *
+     * @param habitId уникальный идентификатор привычки
+     * @return {@link Habit} привычка пользователя
+     */
+    Habit getHabitById(int habitId) throws HabitNotFoundException;
+
+    /**
      * Обновляет существующую привычку на основе переданного DTO.
      *
      * @param dto объект {@link UpdateHabitDto}, содержащий обновлённые данные привычки
      */
-    void update(UpdateHabitDto dto);
+    void update(int habitId, UpdateHabitDto dto);
 
     /**
      * Удаляет привычку по её идентификатору.

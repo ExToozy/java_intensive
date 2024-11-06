@@ -23,7 +23,9 @@
                 <constraints primaryKey="true" foreignKeyName="pk_habits"/>
             </column>
             <column name="user_id" type="INTEGER">
-                <constraints nullable="false" references="users(id)" foreignKeyName="pk_habits_users"/>
+                <constraints nullable="false" references="users(id)"
+                             foreignKeyName="pk_habits_users"
+                             deleteCascade="true"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -44,7 +46,8 @@
             </column>
             <column name="habit_id" type="INTEGER">
                 <constraints nullable="false" references="habits(id)"
-                             foreignKeyName="pk_habit_tracks_habit"/>
+                             foreignKeyName="pk_habit_tracks_habit"
+                             deleteCascade="true"/>
             </column>
             <column name="complete_date" type="DATE" defaultValueComputed="CURRENT_DATE">
                 <constraints nullable="false"/>
