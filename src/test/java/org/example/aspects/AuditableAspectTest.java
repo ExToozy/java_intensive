@@ -1,10 +1,11 @@
 package org.example.aspects;
 
+import com.example.audit_aspect_starter.aspects.AuditableAspect;
+import com.example.audit_aspect_starter.repositories.JdbcUserAuditRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.example.infrastructure.data.repositories.JdbcUserAuditRepository;
 import org.example.infrastructure.util.TokenHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,7 +68,6 @@ class AuditableAspectTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         ServletRequestAttributes mockRequestAttributes = mock(ServletRequestAttributes.class);
 
-        // Настроим поведение, чтобы RequestContextHolder возвращал наш мок
         when(mockRequestAttributes.getRequest()).thenReturn(mockRequest);
         RequestContextHolder.setRequestAttributes(mockRequestAttributes);
 

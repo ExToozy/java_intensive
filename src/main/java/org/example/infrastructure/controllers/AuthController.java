@@ -1,8 +1,8 @@
 package org.example.infrastructure.controllers;
 
+import com.example.logging_aspect_starter.annotations.Loggable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.annotations.Loggable;
 import org.example.core.dtos.auth_dtos.AuthDto;
 import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.models.User;

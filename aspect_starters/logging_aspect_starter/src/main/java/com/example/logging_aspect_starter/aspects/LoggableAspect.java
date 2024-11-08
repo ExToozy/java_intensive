@@ -1,4 +1,4 @@
-package org.example.aspects;
+package com.example.logging_aspect_starter.aspects;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class LoggableAspect {
-    @Pointcut("within(@org.example.annotations.Loggable *) && execution(* * (..))")
+    @Pointcut("within(@com.example.logging_aspect_starter.annotations.Loggable *) && execution(* * (..))")
     public void annotatedByLoggable() {
     }
 

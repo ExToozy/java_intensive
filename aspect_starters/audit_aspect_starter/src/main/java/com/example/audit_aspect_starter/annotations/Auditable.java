@@ -1,4 +1,4 @@
-package org.example.annotations;
+package com.example.audit_aspect_starter.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

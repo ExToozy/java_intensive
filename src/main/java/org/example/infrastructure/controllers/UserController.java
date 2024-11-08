@@ -1,8 +1,8 @@
 package org.example.infrastructure.controllers;
 
+import com.example.audit_aspect_starter.annotations.Auditable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.annotations.Auditable;
 import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
 import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.dtos.user_dtos.UserDto;

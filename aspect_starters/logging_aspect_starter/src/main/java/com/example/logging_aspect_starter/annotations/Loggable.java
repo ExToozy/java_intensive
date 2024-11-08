@@ -1,4 +1,4 @@
-package org.example.annotations;
+package com.example.logging_aspect_starter.annotations;
 
 
 import java.lang.annotation.ElementType;

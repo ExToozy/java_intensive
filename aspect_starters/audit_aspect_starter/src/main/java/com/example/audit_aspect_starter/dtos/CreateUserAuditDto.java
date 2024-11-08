@@ -1,4 +1,4 @@
-package org.example.core.dtos.user_audit_dtos;
+package com.example.audit_aspect_starter.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

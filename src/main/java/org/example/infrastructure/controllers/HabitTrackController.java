@@ -1,8 +1,8 @@
 package org.example.infrastructure.controllers;
 
+import com.example.audit_aspect_starter.annotations.Auditable;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.annotations.Auditable;
 import org.example.core.models.HabitTrack;
 import org.example.core.services.HabitService;
 import org.example.core.services.HabitTrackService;

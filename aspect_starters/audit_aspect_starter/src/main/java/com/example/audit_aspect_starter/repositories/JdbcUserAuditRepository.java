@@ -1,10 +1,10 @@
-package org.example.infrastructure.data.repositories;
+package com.example.audit_aspect_starter.repositories;
 
+import com.example.audit_aspect_starter.dtos.CreateUserAuditDto;
+import com.example.audit_aspect_starter.util.ConnectionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.core.dtos.user_audit_dtos.CreateUserAuditDto;
-import org.example.infrastructure.constants.SqlConstants;
-import org.example.infrastructure.util.ConnectionManager;
+import com.example.audit_aspect_starter.constants.SqlConstants;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;

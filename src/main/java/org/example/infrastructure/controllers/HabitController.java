@@ -1,13 +1,13 @@
 package org.example.infrastructure.controllers;
 
+import com.example.audit_aspect_starter.annotations.Auditable;
+import com.example.logging_aspect_starter.annotations.Loggable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.annotations.Auditable;
-import org.example.annotations.Loggable;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
@@ -44,7 +44,7 @@ public class HabitController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved habits"),
             @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized")
     })
-//    @Auditable
+    @Auditable
     @GetMapping
     public List<Habit> getUserHabits(@RequestHeader("Authorization") String token) throws InvalidTokenException {
         int userId = TokenHelper.getUserIdFromToken(token);

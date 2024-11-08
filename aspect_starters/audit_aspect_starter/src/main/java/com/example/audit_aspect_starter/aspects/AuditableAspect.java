@@ -1,5 +1,8 @@
-package org.example.aspects;
+package com.example.audit_aspect_starter.aspects;
 
+import com.example.audit_aspect_starter.dtos.CreateUserAuditDto;
+import com.example.audit_aspect_starter.repositories.JdbcUserAuditRepository;
+import com.example.audit_aspect_starter.util.TokenHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,10 +12,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.example.core.dtos.user_audit_dtos.CreateUserAuditDto;
-import org.example.exceptions.InvalidTokenException;
-import org.example.infrastructure.data.repositories.JdbcUserAuditRepository;
-import org.example.infrastructure.util.TokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +20,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Parameter;
+import java.util.Optional;
 
 @Aspect
 @Slf4j
@@ -34,7 +34,7 @@ public class AuditableAspect {
     JdbcUserAuditRepository jdbcUserAuditRepository;
 
 
-    @Pointcut("@annotation(org.example.annotations.Auditable)")
+    @Pointcut("@annotation(com.example.audit_aspect_starter.annotations.Auditable)")
     public void annotatedByAuditable() {
     }
 
@@ -64,10 +64,14 @@ public class AuditableAspect {
         return responseBody;
     }
 
-    private void createUserAudit(String token, Object requestBody, Object responseBody, HttpServletRequest request) throws InvalidTokenException, JsonProcessingException {
+    private void createUserAudit(String token, Object requestBody, Object responseBody, HttpServletRequest request) throws JsonProcessingException {
         if (token != null && request != null) {
             String requestUri = request.getRequestURI();
-            int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+            Optional<Integer> userIdFromToken = TokenHelper.getUserIdFromToken(token);
+            Integer userId = userIdFromToken.orElse(null);
+            if (userId == null) {
+                return;
+            }
             String requestBodyStr = null;
             String responseBodyStr = null;
             if (requestBody != null) {
@@ -76,8 +80,9 @@ public class AuditableAspect {
             if (responseBody != null) {
                 responseBodyStr = mapper.writeValueAsString(responseBody);
             }
-            CreateUserAuditDto dto = new CreateUserAuditDto(userIdFromToken, requestUri, requestBodyStr, responseBodyStr);
+            CreateUserAuditDto dto = new CreateUserAuditDto(userId, requestUri, requestBodyStr, responseBodyStr);
             jdbcUserAuditRepository.create(dto);
+            log.info("User audit added to db");
         }
     }
 }
