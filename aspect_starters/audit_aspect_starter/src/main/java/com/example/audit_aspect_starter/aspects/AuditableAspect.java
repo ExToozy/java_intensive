@@ -28,6 +28,9 @@ import java.util.Optional;
 public class AuditableAspect {
 
     @Autowired
+    TokenHelper tokenHelper;
+
+    @Autowired
     ObjectMapper mapper;
 
     @Autowired
@@ -67,9 +70,10 @@ public class AuditableAspect {
     private void createUserAudit(String token, Object requestBody, Object responseBody, HttpServletRequest request) throws JsonProcessingException {
         if (token != null && request != null) {
             String requestUri = request.getRequestURI();
-            Optional<Integer> userIdFromToken = TokenHelper.getUserIdFromToken(token);
+            Optional<Integer> userIdFromToken = tokenHelper.getUserIdFromToken(token);
             Integer userId = userIdFromToken.orElse(null);
             if (userId == null) {
+                log.warn("userId not contains in token");
                 return;
             }
             String requestBodyStr = null;

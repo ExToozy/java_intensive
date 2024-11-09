@@ -20,19 +20,19 @@ public final class UpdateHabitDto {
     @NotNull(message = "Name must not be null")
     @NotBlank(message = "Name must not be blank")
     @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
-    @Schema(name = "habit name", example = "Walk 500 steps")
+    @Schema(description = "habit name", example = "Walk 500 steps")
     private String name;
 
     @NotNull(message = "Description must not be null")
     @NotBlank(message = "Description can not be blank")
     @Size(min = 3, max = 255, message = "Description must be between 3 and 255 characters")
-    @Schema(name = "habit description", example = "I need do it everyday")
+    @Schema(description = "habit description", example = "I need do it everyday")
     private String description;
 
     @NotNull(message = "Frequency must not be null")
     @NotBlank(message = "Frequency must not be blank")
     @InEnumValues(enumClass = HabitFrequency.class)
     @Size(min = 3, max = 10, message = "Frequency must be between 3 and 10 characters")
-    @Schema(name = "habit frequency", example = "DAILY")
+    @Schema(description = "habit frequency", example = "DAILY")
     private String frequency;
 }

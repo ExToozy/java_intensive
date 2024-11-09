@@ -16,6 +16,7 @@ import org.example.exceptions.HabitNotFoundException;
 import org.example.exceptions.InvalidTokenException;
 import org.example.infrastructure.util.JwtProvider;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ import java.util.Map;
 
 @Loggable
 @RestController
-@RequestMapping("api/v1/habits")
+@RequestMapping(value = "api/v1/habits", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "Habits", description = "Operations for managing user habits")
 public class HabitController {

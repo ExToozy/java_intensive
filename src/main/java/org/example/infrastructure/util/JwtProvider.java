@@ -7,7 +7,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.example.core.models.User;
-import org.example.core.util.RegexUtil;
 import org.example.exceptions.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -39,7 +38,7 @@ public class JwtProvider {
      */
     private boolean isValidToken(String token) {
         try {
-            if (RegexUtil.isValidToken(token)) {
+            if (token.startsWith("Bearer ")) {
                 String jwtToken = token.substring(7);
                 Jwts.parser()
                         .verifyWith(jwtSecret)
@@ -49,7 +48,7 @@ public class JwtProvider {
             }
             return false;
         } catch (JwtException e) {
-            log.error(e.getMessage());
+            log.warn(e.getMessage());
         } catch (IllegalArgumentException e) {
             log.error("Token error", e);
         }
@@ -76,7 +75,6 @@ public class JwtProvider {
                 .compact();
 
     }
-
 
     /**
      * Извлекает идентификатор пользователя из токена.

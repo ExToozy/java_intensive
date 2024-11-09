@@ -1,6 +1,10 @@
 package org.example.infrastructure.controllers;
 
 import com.example.audit_aspect_starter.annotations.Auditable;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.core.dtos.user_dtos.ChangeAdminStatusDto;
@@ -14,6 +18,7 @@ import org.example.infrastructure.constants.ErrorMessageConstants;
 import org.example.infrastructure.data.mappers.UserMapper;
 import org.example.infrastructure.util.JwtProvider;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,20 +34,20 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping(value = "/api/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-//@Api(tags = "User Management", description = "Operations for managing users")
+@Tag(name = "User Management", description = "Operations for managing users")
 public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
     private final JwtProvider jwtProvider;
 
-    //    @ApiOperation(value = "Retrieve all users", notes = "Fetches a list of all users (admin access required)")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Successfully retrieved users"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized"),
-//            @ApiResponse(code = 403, message = "Access denied")
-//    })
+    @Operation(summary = "Retrieve all users", description = "Fetches a list of all users (admin access required)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved users"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Access denied")
+    })
     @Auditable
     @GetMapping
     public List<UserDto> getUsers(
@@ -53,12 +58,12 @@ public class UserController {
         return userMapper.toUserDtoList(userService.getAll());
     }
 
-    //    @ApiOperation(value = "Delete a user", notes = "Deletes a user by ID (admin or self-access required)")
-//    @ApiResponses({
-//            @ApiResponse(code = 204, message = "Successfully deleted user"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized"),
-//            @ApiResponse(code = 403, message = "Access denied")
-//    })
+    @Operation(summary = "Delete a user", description = "Deletes a user by ID (admin or self-access required)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successfully deleted user"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Access denied")
+    })
     @Auditable
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -71,13 +76,13 @@ public class UserController {
         userService.remove(userId);
     }
 
-    //    @ApiOperation(value = "Retrieve a user by ID", notes = "Fetches a user by ID (admin or self-access required)")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Successfully retrieved user"),
-//            @ApiResponse(code = 400, message = "User not found"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized"),
-//            @ApiResponse(code = 403, message = "Access denied")
-//    })
+    @Operation(summary = "Retrieve a user by ID", description = "Fetches a user by ID (admin or self-access required)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Access denied")
+    })
     @Auditable
     @GetMapping("/{id}")
     public UserDto getUser(
@@ -89,14 +94,14 @@ public class UserController {
         return userMapper.toUserDto(userService.getById(userId));
     }
 
-    //    @ApiOperation(value = "Update a user", notes = "Updates user information (admin or self-access required)")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Successfully updated user"),
-//            @ApiResponse(code = 400, message = "Validation error"),
-//            @ApiResponse(code = 400, message = "User not found"),
-//            @ApiResponse(code = 403, message = "Access denied"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized"),
-//    })
+    @Operation(summary = "Update a user", description = "Updates user information (admin or self-access required)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully updated user"),
+            @ApiResponse(responseCode = "400", description = "Validation error"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "403", description = "Access denied"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized"),
+    })
     @Auditable
     @PutMapping("/{id}")
     public void updateUser(
@@ -109,13 +114,13 @@ public class UserController {
         userService.update(userId, updateUserDto);
     }
 
-    //    @ApiOperation(value = "Change user admin status", notes = "Changes the admin status of a user (admin access required)")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Successfully changed user admin status"),
-//            @ApiResponse(code = 400, message = "User not found"),
-//            @ApiResponse(code = 403, message = "Access denied"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized"),
-//    })
+    @Operation(summary = "Change user admin status", description = "Changes the admin status of a user (admin access required)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully changed user admin status"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "403", description = "Access denied"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized"),
+    })
     @Auditable
     @PostMapping("/{id}/change-admin-status")
     public void updateUserStatus(

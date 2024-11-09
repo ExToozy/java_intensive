@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 public class HabitTrackDto {
-    @Schema(name = "habit id", example = "1")
+    @Schema(description = "habit id", example = "1")
     private int id;
 
-    @Schema(name = "habit id", example = "1")
+    @Schema(description = "habit id", example = "1")
     private int habitId;
 
-    @Schema(name = "Habit completion day", example = "[2024, 10, 30]")
+    @Schema(description = "Habit completion day", example = "[2024, 10, 30]")
     private String completeDate;
 }

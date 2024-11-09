@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "DTO representing a user")
 public final class UserDto {
 
-    @Schema(name = "Unique identifier of the user", example = "1")
+    @Schema(description = "Unique identifier of the user", example = "1")
     private int userId;
 
-    @Schema(name = "User's email address", example = "user@example.com")
+    @Schema(description = "User's email address", example = "user@example.com")
     private String email;
 }

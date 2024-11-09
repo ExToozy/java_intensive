@@ -17,13 +17,13 @@ public class AuthUserDto {
     @NotNull(message = "Email must not be null")
     @NotBlank(message = "Email must not be blank")
     @Size(min = 3, max = 255, message = "Email must be between 3 and 255 characters")
-    @Schema(name = "User's email", example = "user@example.com")
+    @Schema(description = "User's email", example = "user@example.com")
     private String email;
 
 
     @NotNull(message = "Password must not be null")
     @NotBlank(message = "Password must not be blank")
     @Size(min = 3, max = 255, message = "Password must be between 3 and 255 characters")
-    @Schema(name = "User's password", example = "password")
+    @Schema(description = "User's password", example = "user@example.com")
     private String password;
 }

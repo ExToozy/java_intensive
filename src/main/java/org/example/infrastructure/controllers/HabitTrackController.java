@@ -1,6 +1,9 @@
 package org.example.infrastructure.controllers;
 
 import com.example.audit_aspect_starter.annotations.Auditable;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.core.models.HabitTrack;
@@ -11,6 +14,7 @@ import org.example.exceptions.HabitTrackNotFoundException;
 import org.example.exceptions.InvalidTokenException;
 import org.example.infrastructure.util.JwtProvider;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/tracks")
+@RequestMapping(value = "/api/v1/tracks", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "Habit Tracks", description = "Operations for managing habit tracking")
 public class HabitTrackController {
@@ -32,12 +36,12 @@ public class HabitTrackController {
     private final HabitService habitService;
     private final JwtProvider jwtProvider;
 
-    //    @ApiOperation(value = "Retrieve tracks for a habit", notes = "Fetches all tracking records for a habit by ID")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Successfully retrieved habit tracks"),
-//            @ApiResponse(code = 400, message = "Habit not found"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized")
-//    })
+    @Operation(summary = "Retrieve tracks for a habit", description = "Fetches all tracking records for a habit by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved habit tracks"),
+            @ApiResponse(responseCode = "404", description = "Habit not found"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized")
+    })
     @Auditable
     @GetMapping("/by-habit-id/{habitId}")
     public List<HabitTrack> getHabitTracks(
@@ -51,12 +55,12 @@ public class HabitTrackController {
         throw new HabitNotFoundException();
     }
 
-    //    @ApiOperation(value = "Remove all tracks for a habit", notes = "Deletes all tracking records for a habit by ID")
-//    @ApiResponses({
-//            @ApiResponse(code = 204, message = "Successfully removed habit tracks"),
-//            @ApiResponse(code = 400, message = "Habit not found"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized")
-//    })
+    @Operation(summary = "Remove all tracks for a habit", description = "Deletes all tracking records for a habit by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successfully removed habit tracks"),
+            @ApiResponse(responseCode = "404", description = "Habit not found"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized")
+    })
     @Auditable
     @DeleteMapping("/by-habit-id/{habitId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -72,12 +76,12 @@ public class HabitTrackController {
         }
     }
 
-    //    @ApiOperation(value = "Remove a specific track", notes = "Deletes a tracking record by ID")
-//    @ApiResponses({
-//            @ApiResponse(code = 204, message = "Successfully removed track"),
-//            @ApiResponse(code = 400, message = "Track not found"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized")
-//    })
+    @Operation(summary = "Remove a specific track", description = "Deletes a tracking record by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successfully removed track"),
+            @ApiResponse(responseCode = "404", description = "Track not found"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized")
+    })
     @Auditable
     @DeleteMapping("/{trackId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -93,12 +97,12 @@ public class HabitTrackController {
         }
     }
 
-    //    @ApiOperation(value = "Mark habit as complete", notes = "Marks a habit as completed")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Habit marked as complete"),
-//            @ApiResponse(code = 400, message = "Habit not found"),
-//            @ApiResponse(code = 401, message = "Invalid token or user unauthorized")
-//    })
+    @Operation(summary = "Mark habit as complete", description = "Marks a habit as completed")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Habit marked as complete"),
+            @ApiResponse(responseCode = "404", description = "Habit not found"),
+            @ApiResponse(responseCode = "401", description = "Invalid token or user unauthorized")
+    })
     @Auditable
     @PostMapping("/complete-habit/{habitId}")
     public void completeHabit(

@@ -16,11 +16,11 @@ public class UpdateUserDto {
 
     @NotBlank(message = "Email must not be blank")
     @Size(min = 3, max = 255, message = "Email must be between 3 and 255 characters")
-    @Schema(name = "User's email address", example = "user@mail.ru")
+    @Schema(description = "User's email address", example = "user@mail.ru")
     private String email;
 
     @NotBlank(message = "Password must not be blank")
     @Size(min = 3, max = 255, message = "Password must be between 3 and 255 characters")
-    @Schema(name = "User's password", example = "password")
+    @Schema(description = "User's password", example = "password")
     private String password;
 }

@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class ChangeAdminStatusDto {
 
     @NotNull(message = "isAdmin must not be null")
-    @Schema(name = "Indicates whether the user is an administrator", example = "true")
+    @Schema(description = "Indicates whether the user is an administrator", example = "true")
     private boolean isAdmin;
 }
