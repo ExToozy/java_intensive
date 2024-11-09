@@ -6,12 +6,10 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.example.core.dtos.auth_dtos.AuthDto;
 import org.example.core.dtos.user_dtos.AuthUserDto;
-import org.example.core.models.User;
 import org.example.core.services.AuthService;
 import org.example.exceptions.InvalidEmailException;
 import org.example.exceptions.UserAlreadyExistException;
 import org.example.exceptions.UserNotFoundException;
-import org.example.infrastructure.data.mappers.AuthMapper;
 import org.example.infrastructure.exception_handlers.GlobalExceptionHandler;
 import org.example.infrastructure.exception_handlers.UserExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,9 +39,6 @@ class AuthControllerTest {
     @Mock
     private AuthService authService;
 
-    @Mock
-    private AuthMapper authMapper;
-
     @InjectMocks
     private AuthController authController;
 
@@ -62,11 +57,9 @@ class AuthControllerTest {
     @DisplayName("When user login with valid credentials then return AuthDto")
     void login_whenValidCredentials_thenReturnAuthDto() throws Exception {
         AuthUserDto authUserDto = new AuthUserDto("test@mail.ru", "password");
-        User user = new User(1, "test@mail.ru", "password", false);
         AuthDto authDto = new AuthDto("1");
 
-        when(authService.login(authUserDto)).thenReturn(user);
-        when(authMapper.toAuthDtoMap(user)).thenReturn(authDto);
+        when(authService.login(authUserDto)).thenReturn(authDto);
 
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -76,7 +69,6 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.token").value("1"));
 
         verify(authService, times(1)).login(authUserDto);
-        verify(authMapper, times(1)).toAuthDtoMap(user);
     }
 
     @Test
@@ -90,7 +82,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authUserDto))
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("User not found"));
 
         verify(authService, times(1)).login(authUserDto);
@@ -100,11 +92,9 @@ class AuthControllerTest {
     @DisplayName("When user register with valid data then return Auth Dto")
     void register_whenValidData_thenReturnAuthDto() throws Exception {
         AuthUserDto authUserDto = new AuthUserDto("test@mail.ru", "password");
-        User user = new User(1, "test@mail.ru", "password", false);
         AuthDto authDto = new AuthDto("1");
 
-        when(authService.register(authUserDto)).thenReturn(user);
-        when(authMapper.toAuthDtoMap(user)).thenReturn(authDto);
+        when(authService.register(authUserDto)).thenReturn(authDto);
 
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +104,6 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.token").value("1"));
 
         verify(authService, times(1)).register(authUserDto);
-        verify(authMapper, times(1)).toAuthDtoMap(user);
     }
 
     @Test
@@ -158,11 +147,12 @@ class AuthControllerTest {
         String expectedJson = """
                 {
                   "password": [
-                    "Must not be blank"
+                    "Password must not be blank",
+                    "Password must be between 3 and 255 characters"
                   ],
                   "email": [
-                    "Must not be blank",
-                    "Must not be null"
+                    "Email must not be blank",
+                    "Email must not be null"
                   ]
                 }
                 """;

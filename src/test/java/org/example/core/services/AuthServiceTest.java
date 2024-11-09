@@ -1,12 +1,13 @@
 package org.example.core.services;
 
+import io.jsonwebtoken.Claims;
 import org.assertj.core.api.SoftAssertions;
+import org.example.core.dtos.auth_dtos.AuthDto;
 import org.example.core.dtos.user_dtos.AuthUserDto;
-import org.example.core.models.User;
-import org.example.core.util.PasswordManager;
 import org.example.exceptions.InvalidEmailException;
 import org.example.exceptions.UserAlreadyExistException;
 import org.example.exceptions.UserNotFoundException;
+import org.example.infrastructure.util.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
@@ -30,11 +30,20 @@ class AuthServiceTest {
     @Autowired
     AuthService authService;
 
+    @Autowired
+    JwtProvider jwtProvider;
+
     @DisplayName("Check login with correct credentials")
     @Test
     void login_shouldGetUser_whenCredentialsIsCorrect() throws UserNotFoundException {
-        User user = authService.login(new AuthUserDto("ex@mail.ru", "123"));
-        assertThat(user.getId()).isEqualTo(1);
+        AuthDto authDto = authService.login(new AuthUserDto("ex@mail.ru", "123"));
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(authDto).isNotNull();
+        softly.assertThat(authDto.getToken()).isNotNull();
+        Claims claims = jwtProvider.getClaims(authDto.getToken());
+        softly.assertThat(claims).containsEntry("user_id", 1).containsEntry("is_admin", false);
+        softly.assertAll();
     }
 
     @DisplayName("Check login with invalid credentials")
@@ -47,12 +56,13 @@ class AuthServiceTest {
     @DisplayName("Check register with valid email")
     @Test
     void register_shouldGetUser_whenEmailIsValid() throws UserAlreadyExistException, InvalidEmailException {
-        User user = authService.register(new AuthUserDto("newUser@mail.ru", "123"));
+        AuthDto authDto = authService.register(new AuthUserDto("newUser@mail.ru", "123"));
 
         SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(user.getPassword()).isEqualTo(PasswordManager.getPasswordHash("123"));
-        softly.assertThat(user.getEmail()).isEqualTo("newUser@mail.ru");
-        softly.assertThat(user.getId()).isNotNull();
+        softly.assertThat(authDto).isNotNull();
+        softly.assertThat(authDto.getToken()).isNotNull();
+        Claims claims = jwtProvider.getClaims(authDto.getToken());
+        softly.assertThat(claims).containsEntry("user_id", 4).containsEntry("is_admin", false);
         softly.assertAll();
     }
 

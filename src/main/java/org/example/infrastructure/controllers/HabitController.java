@@ -14,7 +14,7 @@ import org.example.core.models.Habit;
 import org.example.core.services.HabitService;
 import org.example.exceptions.HabitNotFoundException;
 import org.example.exceptions.InvalidTokenException;
-import org.example.infrastructure.util.TokenHelper;
+import org.example.infrastructure.util.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +38,7 @@ import java.util.Map;
 @Tag(name = "Habits", description = "Operations for managing user habits")
 public class HabitController {
     private final HabitService habitService;
+    private final JwtProvider jwtProvider;
 
     @Operation(summary = "Retrieve user's habits", description = "Fetches all habits for the authenticated user")
     @ApiResponses({
@@ -47,7 +48,7 @@ public class HabitController {
     @Auditable
     @GetMapping
     public List<Habit> getUserHabits(@RequestHeader("Authorization") String token) throws InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         return habitService.getUserHabits(userId);
     }
 
@@ -64,7 +65,7 @@ public class HabitController {
             @RequestHeader("Authorization") String token,
             @RequestBody @Valid CreateHabitDto createHabitDto
     ) throws InvalidTokenException {
-        int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
         if (userIdFromToken == createHabitDto.getUserId()) {
             habitService.createHabit(createHabitDto);
         }
@@ -82,7 +83,7 @@ public class HabitController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws HabitNotFoundException, InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         return habitService.getUserHabit(userId, habitId);
     }
 
@@ -99,7 +100,7 @@ public class HabitController {
             @PathVariable("habitId") int habitId,
             @RequestBody @Valid UpdateHabitDto updateHabitDto
     ) throws HabitNotFoundException, InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         habitService.updateUserHabit(userId, habitId, updateHabitDto);
     }
 
@@ -116,7 +117,7 @@ public class HabitController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws HabitNotFoundException, InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         habitService.removeUserHabit(userId, habitId);
     }
 
@@ -132,7 +133,7 @@ public class HabitController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws HabitNotFoundException, InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         return Map.of("deadline", habitService.getHabitDeadlineDay(userId, habitId));
     }
 
@@ -148,7 +149,7 @@ public class HabitController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws HabitNotFoundException, InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         return Map.of("completion_status", habitService.isCompleteUserHabit(userId, habitId));
     }
 
@@ -162,7 +163,7 @@ public class HabitController {
     public List<Map<String, Object>> getStatisticsOfAllUserHabits(
             @RequestHeader("Authorization") String token
     ) throws InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         return habitService.getStatisticsOfAllUserHabits(userId);
     }
 
@@ -178,7 +179,7 @@ public class HabitController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws HabitNotFoundException, InvalidTokenException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         return habitService.getStatisticsOfOneUserHabit(userId, habitId);
     }
 }

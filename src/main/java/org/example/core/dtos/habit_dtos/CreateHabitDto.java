@@ -19,26 +19,27 @@ import org.example.core.models.HabitFrequency;
 @NoArgsConstructor
 public final class CreateHabitDto {
 
-    @NotNull(message = "Must not be null")
-    @Positive(message = "Must be greater than zero")
+    @NotNull(message = "id must not be null")
+    @Positive(message = "id must be greater than zero")
     @Schema(name = "user id to create", example = "1")
     private int userId;
 
-    @NotNull(message = "Must not be null")
-    @NotBlank(message = "Must not be blank")
-    @Size(min = 3, max = 100, message = "Too long")
+    @NotNull(message = "Name must not be null")
+    @NotBlank(message = "Name must not be blank")
+    @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
     @Schema(name = "habit name", example = "Walk 500 steps")
     private String name;
 
-    @NotNull(message = "Must not be null")
-    @NotBlank(message = "Can not be blank")
+    @NotNull(message = "Description must not be null")
+    @NotBlank(message = "Description can not be blank")
+    @Size(min = 3, max = 255, message = "Description must be between 3 and 255 characters")
     @Schema(name = "habit description", example = "I need do it everyday")
-    @Size(min = 3, max = 255, message = "Too long")
     private String description;
 
-    @NotNull(message = "Must not be null")
-    @NotBlank(message = "Must not be blank")
-    @Schema(name = "habit frequency", example = "DAILY")
+    @NotNull(message = "Frequency must not be null")
+    @NotBlank(message = "Frequency must not be blank")
     @InEnumValues(enumClass = HabitFrequency.class)
+    @Size(min = 3, max = 10, message = "Frequency must be between 3 and 10 characters")
+    @Schema(name = "habit frequency", example = "DAILY")
     private String frequency;
 }

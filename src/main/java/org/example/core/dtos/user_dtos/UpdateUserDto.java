@@ -14,12 +14,13 @@ import lombok.NoArgsConstructor;
 @Schema(description = "DTO for updating user details")
 public class UpdateUserDto {
 
-    @NotBlank(message = "Must not be blank")
+    @NotBlank(message = "Email must not be blank")
+    @Size(min = 3, max = 255, message = "Email must be between 3 and 255 characters")
     @Schema(name = "User's email address", example = "user@mail.ru")
     private String email;
 
-    @NotBlank(message = "Must not be blank")
-    @Size(min = 3, max = 255, message = "Must be between 3 and 255 characters")
+    @NotBlank(message = "Password must not be blank")
+    @Size(min = 3, max = 255, message = "Password must be between 3 and 255 characters")
     @Schema(name = "User's password", example = "password")
     private String password;
 }

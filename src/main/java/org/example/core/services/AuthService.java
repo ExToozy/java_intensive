@@ -1,6 +1,7 @@
 package org.example.core.services;
 
 import lombok.RequiredArgsConstructor;
+import org.example.core.dtos.auth_dtos.AuthDto;
 import org.example.core.dtos.user_dtos.AuthUserDto;
 import org.example.core.models.User;
 import org.example.core.util.PasswordManager;
@@ -8,6 +9,7 @@ import org.example.core.util.RegexUtil;
 import org.example.exceptions.InvalidEmailException;
 import org.example.exceptions.UserAlreadyExistException;
 import org.example.exceptions.UserNotFoundException;
+import org.example.infrastructure.util.JwtProvider;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserService userService;
+    private final JwtProvider jwtProvider;
 
 
     /**
@@ -28,12 +31,12 @@ public class AuthService {
      * @return объект {@link User}, если аутентификация успешна
      * @throws UserNotFoundException если пользователь не найден или пароль неверен
      */
-    public User login(AuthUserDto dto) throws UserNotFoundException {
+    public AuthDto login(AuthUserDto dto) throws UserNotFoundException {
         User user = userService.getUserByEmail(dto.getEmail());
         if (!PasswordManager.checkPasswordEquals(dto.getPassword(), user.getPassword())) {
             throw new UserNotFoundException();
         }
-        return user;
+        return new AuthDto(jwtProvider.generateAccessToken(user));
     }
 
     /**
@@ -45,7 +48,7 @@ public class AuthService {
      * @throws UserAlreadyExistException если пользователь с таким email уже существует
      * @throws InvalidEmailException     если формат email некорректен
      */
-    public User register(AuthUserDto dto) throws SecurityException, UserAlreadyExistException, InvalidEmailException {
+    public AuthDto register(AuthUserDto dto) throws SecurityException, UserAlreadyExistException, InvalidEmailException {
         if (RegexUtil.isInvalidEmail(dto.getEmail())) {
             throw new InvalidEmailException();
         }
@@ -61,6 +64,7 @@ public class AuthService {
         }
 
         dto.setPassword(passwordHash);
-        return userService.create(dto);
+        User user = userService.create(dto);
+        return new AuthDto(jwtProvider.generateAccessToken(user));
     }
 }

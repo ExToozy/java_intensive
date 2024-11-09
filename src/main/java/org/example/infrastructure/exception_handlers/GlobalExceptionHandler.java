@@ -6,6 +6,7 @@ import org.example.infrastructure.constants.ErrorMessageConstants;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -78,5 +79,11 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleAnotherExceptions(Exception ex) {
         log.error("Internal server error", ex);
         return Map.of("error", ErrorMessageConstants.INTERVAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleAnotherExceptions(HttpMessageNotReadableException ex) {
+        return Map.of("error", ErrorMessageConstants.JSON_ERROR);
     }
 }

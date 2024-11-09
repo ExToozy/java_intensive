@@ -14,7 +14,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class HabitExceptionHandler {
     @ExceptionHandler(HabitNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleHabitNotFoundException(HabitNotFoundException e) {
         return Map.of("error", ErrorMessageConstants.HABIT_NOT_FOUND);
     }

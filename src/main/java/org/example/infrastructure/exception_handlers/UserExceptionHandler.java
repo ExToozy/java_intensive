@@ -23,7 +23,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleUserAlreadyExistException(UserNotFoundException e) {
         return Map.of("error", ErrorMessageConstants.USER_NOT_FOUND);
     }

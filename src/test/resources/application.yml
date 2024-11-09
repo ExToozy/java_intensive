@@ -16,3 +16,7 @@ spring:
 springdoc:
   packages-to-scan: org.example.infrastructure.controllers
   paths-to-match: /api/**
+
+jwt:
+  token:
+    signing-key: c3Nzc3Nzc3NzdWVwci1zaWNyZXQta2V5LWZvci1qd3QtdG9rZW4=

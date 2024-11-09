@@ -11,4 +11,5 @@ public class ErrorMessageConstants {
     public final static String UNKNOWN_ENDPOINT = "Endpoint not found";
     public final static String ACCESS_DENIED = "Access denied";
     public static final String INTERVAL_SERVER_ERROR = "Internal server error. Try later";
+    public static final String JSON_ERROR = "Request json is not readable";
 }

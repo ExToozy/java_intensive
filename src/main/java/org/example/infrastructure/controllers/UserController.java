@@ -12,7 +12,7 @@ import org.example.exceptions.InvalidTokenException;
 import org.example.exceptions.UserNotFoundException;
 import org.example.infrastructure.constants.ErrorMessageConstants;
 import org.example.infrastructure.data.mappers.UserMapper;
-import org.example.infrastructure.util.TokenHelper;
+import org.example.infrastructure.util.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +35,7 @@ import java.util.List;
 public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
+    private final JwtProvider jwtProvider;
 
     //    @ApiOperation(value = "Retrieve all users", notes = "Fetches a list of all users (admin access required)")
 //    @ApiResponses({
@@ -47,7 +48,7 @@ public class UserController {
     public List<UserDto> getUsers(
             @RequestHeader("Authorization") String token
     ) throws InvalidTokenException, AccessDeniedException {
-        int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
         throwAccessDeniedIfUserNotAdmin(userIdFromToken);
         return userMapper.toUserDtoList(userService.getAll());
     }
@@ -65,7 +66,7 @@ public class UserController {
             @RequestHeader("Authorization") String token,
             @PathVariable("id") int userId
     ) throws InvalidTokenException, AccessDeniedException {
-        int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
         throwAccessDeniedIfUserNotAdminOrSelfAccess(userId, userIdFromToken);
         userService.remove(userId);
     }
@@ -83,7 +84,7 @@ public class UserController {
             @RequestHeader("Authorization") String token,
             @PathVariable("id") int userId
     ) throws UserNotFoundException, InvalidTokenException, AccessDeniedException {
-        int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
         throwAccessDeniedIfUserNotAdminOrSelfAccess(userId, userIdFromToken);
         return userMapper.toUserDto(userService.getById(userId));
     }
@@ -103,7 +104,7 @@ public class UserController {
             @PathVariable("id") int userId,
             @RequestBody @Valid UpdateUserDto updateUserDto
     ) throws UserNotFoundException, InvalidEmailException, InvalidTokenException, AccessDeniedException {
-        int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
         throwAccessDeniedIfUserNotAdminOrSelfAccess(userId, userIdFromToken);
         userService.update(userId, updateUserDto);
     }
@@ -122,7 +123,7 @@ public class UserController {
             @PathVariable("id") int userId,
             @RequestBody @Valid ChangeAdminStatusDto changeAdminStatusDto
     ) throws UserNotFoundException, InvalidTokenException, AccessDeniedException {
-        int userIdFromToken = TokenHelper.getUserIdFromToken(token);
+        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
         throwAccessDeniedIfUserNotAdmin(userIdFromToken);
         userService.changeUserAdminStatus(userId, changeAdminStatusDto);
     }

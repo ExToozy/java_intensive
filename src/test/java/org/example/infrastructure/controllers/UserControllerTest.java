@@ -8,6 +8,7 @@ import org.example.core.models.User;
 import org.example.core.services.UserService;
 import org.example.infrastructure.data.mappers.UserMapper;
 import org.example.infrastructure.exception_handlers.UserExceptionHandler;
+import org.example.infrastructure.util.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,20 +33,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private String test_token;
     private MockMvc mockMvc;
-
     @Mock
     private UserService userService;
-
     @Mock
     private UserMapper userMapper;
-
     @InjectMocks
-    private UserController authController;
+    private UserController userController;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(authController)
+        JwtProvider jwtProvider = new JwtProvider("a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5");
+        test_token = "Bearer " + jwtProvider.generateAccessToken(new User(1, "ex@mail.ru", "password", false));
+        userController = new UserController(userMapper, userService, jwtProvider);
+        mockMvc = MockMvcBuilders.standaloneSetup(userController)
                 .setControllerAdvice(new UserExceptionHandler())
                 .build();
     }
@@ -79,7 +81,7 @@ class UserControllerTest {
 
         mockMvc.perform(get("/api/v1/users")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("Authorization", "Bearer 1"))
+                        .header("Authorization", test_token))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
@@ -106,7 +108,7 @@ class UserControllerTest {
 
         mockMvc.perform(get("/api/v1/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("Authorization", "Bearer 1"))
+                        .header("Authorization", test_token))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
@@ -123,7 +125,7 @@ class UserControllerTest {
 
         mockMvc.perform(delete("/api/v1/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("Authorization", "Bearer 1"))
+                        .header("Authorization", test_token))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -140,7 +142,7 @@ class UserControllerTest {
         mockMvc.perform(put("/api/v1/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -158,7 +160,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/users/1/change-admin-status")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .content(objectMapper.writeValueAsString(changeAdminStatusDto)))
                 .andDo(print())
                 .andExpect(status().isOk());

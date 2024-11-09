@@ -9,7 +9,7 @@ import org.example.core.services.HabitTrackService;
 import org.example.exceptions.HabitNotFoundException;
 import org.example.exceptions.HabitTrackNotFoundException;
 import org.example.exceptions.InvalidTokenException;
-import org.example.infrastructure.util.TokenHelper;
+import org.example.infrastructure.util.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +30,7 @@ public class HabitTrackController {
 
     private final HabitTrackService habitTrackService;
     private final HabitService habitService;
+    private final JwtProvider jwtProvider;
 
     //    @ApiOperation(value = "Retrieve tracks for a habit", notes = "Fetches all tracking records for a habit by ID")
 //    @ApiResponses({
@@ -43,7 +44,7 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws InvalidTokenException, HabitNotFoundException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         if (habitService.isUserHabitOrUserIsAdmin(userId, habitId)) {
             return habitTrackService.getHabitTracks(habitId);
         }
@@ -63,7 +64,7 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws InvalidTokenException, HabitNotFoundException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         if (habitService.isUserHabitOrUserIsAdmin(userId, habitId)) {
             habitTrackService.removeHabitTracks(habitId);
         } else {
@@ -84,7 +85,7 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("trackId") int trackId
     ) throws InvalidTokenException, HabitTrackNotFoundException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         if (habitService.isUserHabitTrackOrUserIsAdmin(userId, trackId)) {
             habitTrackService.remove(trackId);
         } else {
@@ -104,7 +105,7 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws InvalidTokenException, HabitNotFoundException {
-        int userId = TokenHelper.getUserIdFromToken(token);
+        int userId = jwtProvider.getUserIdFromToken(token);
         if (habitService.isUserHabitOrUserIsAdmin(userId, habitId)) {
             habitTrackService.completeHabit(habitId);
         } else {

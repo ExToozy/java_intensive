@@ -5,16 +5,17 @@ import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitFrequency;
+import org.example.core.models.User;
 import org.example.core.services.HabitService;
 import org.example.infrastructure.exception_handlers.GlobalExceptionHandler;
 import org.example.infrastructure.exception_handlers.HabitExceptionHandler;
+import org.example.infrastructure.util.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
@@ -35,16 +36,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class HabitControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private String test_token;
     private MockMvc mockMvc;
-
     @Mock
     private HabitService habitService;
 
-    @InjectMocks
-    private HabitController habitController;
-
     @BeforeEach
     void setUp() {
+        JwtProvider jwtProvider = new JwtProvider("a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5a2V5");
+        test_token = "Bearer " + jwtProvider.generateAccessToken(new User(1, "ex@mail.ru", "password", false));
+        HabitController habitController = new HabitController(habitService, jwtProvider);
         mockMvc = MockMvcBuilders.standaloneSetup(habitController)
                 .setControllerAdvice(new HabitExceptionHandler(), new GlobalExceptionHandler())
                 .build();
@@ -89,7 +90,7 @@ class HabitControllerTest {
 
         mockMvc.perform(get("/api/v1/habits")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -118,7 +119,7 @@ class HabitControllerTest {
 
         mockMvc.perform(post("/api/v1/habits")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .content(objectMapper.writeValueAsString(dto))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
@@ -149,7 +150,7 @@ class HabitControllerTest {
 
         mockMvc.perform(get("/api/v1/habits/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -165,7 +166,7 @@ class HabitControllerTest {
 
         mockMvc.perform(put("/api/v1/habits/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .content(objectMapper.writeValueAsString(habit))
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
@@ -180,7 +181,7 @@ class HabitControllerTest {
         when(habitService.getHabitDeadlineDay(1, 1)).thenReturn(LocalDate.of(2024, 11, 2));
         mockMvc.perform(get("/api/v1/habits/1/deadline")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -195,7 +196,7 @@ class HabitControllerTest {
         when(habitService.isCompleteUserHabit(1, 1)).thenReturn(true);
         mockMvc.perform(get("/api/v1/habits/1/completion-status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -246,7 +247,7 @@ class HabitControllerTest {
                 """;
         mockMvc.perform(get("/api/v1/habits/statistics")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 1")
+                        .header("Authorization", test_token)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
                 .andExpect(status().isOk())
