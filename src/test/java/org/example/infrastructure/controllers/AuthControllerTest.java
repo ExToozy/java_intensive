@@ -146,14 +146,16 @@ class AuthControllerTest {
         AuthUserDto authUserDto = new AuthUserDto(null, "");
         String expectedJson = """
                 {
-                  "password": [
-                    "Password must not be blank",
-                    "Password must be between 3 and 255 characters"
-                  ],
-                  "email": [
-                    "Email must not be blank",
-                    "Email must not be null"
-                  ]
+                  "error": {
+                    "password": [
+                      "Password must not be blank",
+                      "Password must be between 3 and 255 characters"
+                    ],
+                    "email": [
+                      "Email must not be blank",
+                      "Email must not be null"
+                    ]
+                  }
                 }
                 """;
         mockMvc.perform(post("/api/v1/auth/register")
