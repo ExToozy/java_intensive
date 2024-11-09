@@ -1,12 +1,16 @@
 package org.example.core.services;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.Habit;
 import org.example.core.models.HabitTrack;
 import org.example.core.repositories.IHabitRepository;
+import org.example.core.repositories.IHabitTrackRepository;
 import org.example.exceptions.HabitNotFoundException;
+import org.example.exceptions.InvalidTokenException;
+import org.example.infrastructure.util.JwtProvider;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,18 +30,29 @@ public class HabitService {
 
     private final IHabitRepository habitRepository;
 
-    private final HabitTrackService habitTrackService;
+    private final IHabitTrackRepository habitTrackRepository;
 
     private final UserService userService;
+
+    private final JwtProvider jwtProvider;
 
 
     /**
      * Создаёт новую привычку.
      *
-     * @param dto {@link CreateHabitDto}, данные для создания привычки
+     * @param token токен пользователя
+     * @param dto   {@link CreateHabitDto}, данные для создания привычки
      */
-    public void createHabit(CreateHabitDto dto) {
-        habitRepository.create(dto);
+    public void createUserHabit(String token, CreateHabitDto dto) throws InvalidTokenException {
+        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
+        Claims claims = jwtProvider.getClaims(token).orElse(null);
+        if (claims == null) {
+            return;
+        }
+        boolean isAdmin = claims.get("is_admin", Boolean.class);
+        if (userIdFromToken == dto.getUserId() || isAdmin) {
+            habitRepository.create(dto);
+        }
     }
 
     /**
@@ -68,7 +83,7 @@ public class HabitService {
     }
 
     private boolean isCompleteHabit(Habit habit) {
-        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
+        List<HabitTrack> tracks = habitTrackRepository.getHabitTracks(habit.getId());
         Period period = habit.getFrequency().getPeriod();
         return tracks.stream()
                 .anyMatch(habitTrack -> habitTrack.getCompleteDate().isAfter(LocalDate.now().minusDays(period.getDays())));
@@ -110,7 +125,7 @@ public class HabitService {
      * @return словарь {@code Map<String, Object>} статистика по привычке
      */
     private Map<String, Object> getHabitStats(Habit habit) {
-        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
+        List<HabitTrack> tracks = habitTrackRepository.getHabitTracks(habit.getId());
         Map<String, Object> statistic = new HashMap<>();
 
         int trackCount = tracks.size();
@@ -137,7 +152,7 @@ public class HabitService {
         if (!isCompleteHabit(habit)) {
             return 0;
         }
-        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habit.getId());
+        List<HabitTrack> tracks = habitTrackRepository.getHabitTracks(habit.getId());
         tracks.sort((o1, o2) -> o2.getCompleteDate().compareTo(o1.getCompleteDate()));
         int streak = 1;
         for (int i = 0; i < tracks.size() - 1; i++) {
@@ -178,7 +193,7 @@ public class HabitService {
      */
     public LocalDate getHabitDeadlineDay(int userId, int habitId) throws HabitNotFoundException {
         Habit habit = getUserHabit(userId, habitId);
-        List<HabitTrack> tracks = habitTrackService.getHabitTracks(habitId);
+        List<HabitTrack> tracks = habitTrackRepository.getHabitTracks(habitId);
         LocalDate lastCompleteDay;
         if (tracks.isEmpty()) {
             lastCompleteDay = habit.getDayOfCreation();
@@ -230,17 +245,5 @@ public class HabitService {
         }
         List<Habit> userHabits = habitRepository.getAllHabitsByUserId(userId);
         return userHabits.stream().anyMatch(habit -> habit.getId() == habitId);
-    }
-
-    public boolean isUserHabitTrackOrUserIsAdmin(int userId, int trackId) {
-        if (userService.isUserAdmin(userId)) {
-            return true;
-        }
-        List<Habit> userHabits = habitRepository.getAllHabitsByUserId(userId);
-        return userHabits
-                .stream()
-                .anyMatch(habit -> habitTrackService.getHabitTracks(habit.getId())
-                        .stream()
-                        .anyMatch(habitTrack -> habitTrack.getId() == trackId));
     }
 }

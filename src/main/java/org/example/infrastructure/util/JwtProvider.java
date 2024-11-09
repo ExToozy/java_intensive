@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Утилита для работы с токенами аутентификации.
@@ -83,9 +84,9 @@ public class JwtProvider {
      * @return идентификатор пользователя
      */
     public int getUserIdFromToken(String token) throws InvalidTokenException {
-        if (isValidToken(token)) {
-            String jwtToken = token.substring(7);
-            return getClaims(jwtToken).get("user_id", Integer.class);
+        Claims claims = getClaims(token).orElse(null);
+        if (claims != null) {
+            return claims.get("user_id", Integer.class);
         }
         throw new InvalidTokenException();
     }
@@ -97,11 +98,15 @@ public class JwtProvider {
      * @param token токен пользователя
      * @return идентификатор пользователя
      */
-    public Claims getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(jwtSecret)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+    public Optional<Claims> getClaims(String token) {
+        if (isValidToken(token)) {
+            String jwtToken = token.substring(7);
+            return Optional.ofNullable(Jwts.parser()
+                    .verifyWith(jwtSecret)
+                    .build()
+                    .parseSignedClaims(jwtToken)
+                    .getPayload());
+        }
+        return Optional.empty();
     }
 }

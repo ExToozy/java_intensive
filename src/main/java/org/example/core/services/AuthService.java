@@ -36,7 +36,8 @@ public class AuthService {
         if (!PasswordManager.checkPasswordEquals(dto.getPassword(), user.getPassword())) {
             throw new UserNotFoundException();
         }
-        return new AuthDto(jwtProvider.generateAccessToken(user));
+        String jwtToken = "%s %s".formatted(AuthDto.TOKEN_TYPE, jwtProvider.generateAccessToken(user));
+        return new AuthDto(jwtToken);
     }
 
     /**
@@ -65,6 +66,8 @@ public class AuthService {
 
         dto.setPassword(passwordHash);
         User user = userService.create(dto);
-        return new AuthDto(jwtProvider.generateAccessToken(user));
+        
+        String jwtToken = "%s %s".formatted(AuthDto.TOKEN_TYPE, jwtProvider.generateAccessToken(user));
+        return new AuthDto(jwtToken);
     }
 }

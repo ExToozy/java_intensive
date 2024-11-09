@@ -66,10 +66,7 @@ public class HabitController {
             @RequestHeader("Authorization") String token,
             @RequestBody @Valid CreateHabitDto createHabitDto
     ) throws InvalidTokenException {
-        int userIdFromToken = jwtProvider.getUserIdFromToken(token);
-        if (userIdFromToken == createHabitDto.getUserId()) {
-            habitService.createHabit(createHabitDto);
-        }
+        habitService.createUserHabit(token, createHabitDto);
     }
 
     @Operation(summary = "Retrieve a habit", description = "Fetches habit by ID")

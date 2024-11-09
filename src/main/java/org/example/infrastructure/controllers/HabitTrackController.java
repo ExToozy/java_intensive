@@ -7,12 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.core.models.HabitTrack;
-import org.example.core.services.HabitService;
 import org.example.core.services.HabitTrackService;
 import org.example.exceptions.HabitNotFoundException;
 import org.example.exceptions.HabitTrackNotFoundException;
 import org.example.exceptions.InvalidTokenException;
-import org.example.infrastructure.util.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +31,6 @@ import java.util.List;
 public class HabitTrackController {
 
     private final HabitTrackService habitTrackService;
-    private final HabitService habitService;
-    private final JwtProvider jwtProvider;
 
     @Operation(summary = "Retrieve tracks for a habit", description = "Fetches all tracking records for a habit by ID")
     @ApiResponses({
@@ -48,11 +44,7 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws InvalidTokenException, HabitNotFoundException {
-        int userId = jwtProvider.getUserIdFromToken(token);
-        if (habitService.isUserHabitOrUserIsAdmin(userId, habitId)) {
-            return habitTrackService.getHabitTracks(habitId);
-        }
-        throw new HabitNotFoundException();
+        return habitTrackService.getHabitTracks(token, habitId);
     }
 
     @Operation(summary = "Remove all tracks for a habit", description = "Deletes all tracking records for a habit by ID")
@@ -68,12 +60,7 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws InvalidTokenException, HabitNotFoundException {
-        int userId = jwtProvider.getUserIdFromToken(token);
-        if (habitService.isUserHabitOrUserIsAdmin(userId, habitId)) {
-            habitTrackService.removeHabitTracks(habitId);
-        } else {
-            throw new HabitNotFoundException();
-        }
+        habitTrackService.removeUserHabitTracks(token, habitId);
     }
 
     @Operation(summary = "Remove a specific track", description = "Deletes a tracking record by ID")
@@ -89,12 +76,7 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("trackId") int trackId
     ) throws InvalidTokenException, HabitTrackNotFoundException {
-        int userId = jwtProvider.getUserIdFromToken(token);
-        if (habitService.isUserHabitTrackOrUserIsAdmin(userId, trackId)) {
-            habitTrackService.remove(trackId);
-        } else {
-            throw new HabitTrackNotFoundException();
-        }
+        habitTrackService.remove(token, trackId);
     }
 
     @Operation(summary = "Mark habit as complete", description = "Marks a habit as completed")
@@ -109,11 +91,6 @@ public class HabitTrackController {
             @RequestHeader("Authorization") String token,
             @PathVariable("habitId") int habitId
     ) throws InvalidTokenException, HabitNotFoundException {
-        int userId = jwtProvider.getUserIdFromToken(token);
-        if (habitService.isUserHabitOrUserIsAdmin(userId, habitId)) {
-            habitTrackService.completeHabit(habitId);
-        } else {
-            throw new HabitNotFoundException();
-        }
+        habitTrackService.completeHabit(token, habitId);
     }
 }
