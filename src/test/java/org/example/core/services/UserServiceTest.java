@@ -7,6 +7,7 @@ import org.example.core.dtos.user_dtos.UpdateUserDto;
 import org.example.core.util.PasswordManager;
 import org.example.exceptions.InvalidEmailException;
 import org.example.exceptions.UserNotFoundException;
+import org.example.infrastructure.util.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,9 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    JwtProvider jwtProvider;
 
     @DisplayName("Check that create successfully create user")
     @Test

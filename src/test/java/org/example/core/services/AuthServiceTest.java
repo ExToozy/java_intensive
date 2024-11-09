@@ -41,7 +41,7 @@ class AuthServiceTest {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(authDto).isNotNull();
         softly.assertThat(authDto.getToken()).isNotNull();
-        Claims claims = jwtProvider.getClaims(authDto.getToken());
+        Claims claims = jwtProvider.getClaims(authDto.getToken()).get();
         softly.assertThat(claims).containsEntry("user_id", 1).containsEntry("is_admin", false);
         softly.assertAll();
     }
@@ -61,7 +61,7 @@ class AuthServiceTest {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(authDto).isNotNull();
         softly.assertThat(authDto.getToken()).isNotNull();
-        Claims claims = jwtProvider.getClaims(authDto.getToken());
+        Claims claims = jwtProvider.getClaims(authDto.getToken()).get();
         softly.assertThat(claims).containsEntry("user_id", 4).containsEntry("is_admin", false);
         softly.assertAll();
     }

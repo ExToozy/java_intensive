@@ -1,6 +1,11 @@
 package org.example.core.services;
 
 import org.assertj.core.api.SoftAssertions;
+import org.example.core.models.User;
+import org.example.exceptions.HabitNotFoundException;
+import org.example.exceptions.InvalidTokenException;
+import org.example.infrastructure.util.JwtProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +27,23 @@ class HabitTrackServiceTest {
     @Autowired
     HabitTrackService habitTrackService;
 
+    @Autowired
+    JwtProvider jwtProvider;
+    private String testToken;
+
+    @BeforeEach
+    void setUp() {
+        testToken = "Bearer " + jwtProvider.generateAccessToken(new User(1, "ex@mail.ru", "password", false));
+    }
+
 
     @DisplayName("Check after completeHabit execute HabitTrack was created")
     @Test
-    void completeHabit_shouldCreateHabitTrackInMemory_whenExecuteCompleteHabitMethod() {
-        habitTrackService.completeHabit(2);
+    void completeHabit_shouldCreateHabitTrackInMemory_whenExecuteCompleteHabitMethod() throws InvalidTokenException, HabitNotFoundException {
+        habitTrackService.completeHabit(testToken, 2);
 
         SoftAssertions softly = new SoftAssertions();
-        var tracks = habitTrackService.getHabitTracks(2);
+        var tracks = habitTrackService.getHabitTracks(testToken, 2);
         softly.assertThat(tracks).hasSize(1);
         var track = tracks.get(0);
         softly.assertThat(track.getHabitId()).isEqualTo(2);
@@ -39,8 +53,8 @@ class HabitTrackServiceTest {
 
     @DisplayName("Check that getHabitTracks return all habit tracks")
     @Test
-    void getHabitTracks_shouldReturnAllHabitTracks() {
-        var tracks = habitTrackService.getHabitTracks(3);
+    void getHabitTracks_shouldReturnAllHabitTracks() throws InvalidTokenException, HabitNotFoundException {
+        var tracks = habitTrackService.getHabitTracks(testToken, 3);
 
         assertThat(tracks)
                 .isNotNull()
@@ -51,10 +65,10 @@ class HabitTrackServiceTest {
 
     @DisplayName("Check that removeHabitTracks remove all habit tracks")
     @Test
-    void removeHabitTracks_shouldRemoveHabitFromMemory() {
-        habitTrackService.removeHabitTracks(2);
+    void removeHabitTracks_shouldRemoveHabitFromMemory() throws InvalidTokenException, HabitNotFoundException {
+        habitTrackService.removeUserHabitTracks(testToken, 2);
 
-        var tracks = habitTrackService.getHabitTracks(2);
+        var tracks = habitTrackService.getHabitTracks(testToken, 2);
         assertThat(tracks)
                 .isNotNull()
                 .isEmpty();

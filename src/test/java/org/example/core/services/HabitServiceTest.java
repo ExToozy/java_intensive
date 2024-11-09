@@ -4,7 +4,11 @@ import org.assertj.core.api.SoftAssertions;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.HabitFrequency;
+import org.example.core.models.User;
 import org.example.exceptions.HabitNotFoundException;
+import org.example.exceptions.InvalidTokenException;
+import org.example.infrastructure.util.JwtProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +36,17 @@ class HabitServiceTest {
     @Autowired
     HabitTrackService habitTrackService;
 
+    @Autowired
+    JwtProvider jwtProvider;
+    private String testTokenForUser1;
+    private String testTokenForUser2;
+
+    @BeforeEach
+    void setUp() {
+        testTokenForUser1 = "Bearer " + jwtProvider.generateAccessToken(new User(1, "ex@mail.ru", "password", false));
+        testTokenForUser2 = "Bearer " + jwtProvider.generateAccessToken(new User(2, "admin", "password", true));
+    }
+
 
     @DisplayName("Check that getUserHabits return user habits")
     @Test
@@ -43,9 +58,9 @@ class HabitServiceTest {
 
     @DisplayName("Check create habit")
     @Test
-    void createHabit_shouldAddHabitInMemory_whenAllIsCorrect() {
-        habitService.createHabit(
-                new CreateHabitDto(
+    void createHabit_shouldAddHabitInDb_whenAllIsCorrect() throws InvalidTokenException {
+        habitService.createUserHabit(
+                testTokenForUser2, new CreateHabitDto(
                         2,
                         "testName",
                         "testDescription",
@@ -118,15 +133,15 @@ class HabitServiceTest {
 
     @DisplayName("Check remove habits and their tracks")
     @Test
-    void removeHabitAndTracks_shouldRemoveHabitAndTheirTracksInMemory() throws HabitNotFoundException {
+    void removeHabitAndTracks_shouldRemoveHabitAndTheirTracksInDb() throws HabitNotFoundException, InvalidTokenException {
         habitService.removeUserHabit(1, 3);
         var userHabits = habitService.getUserHabits(1);
 
-        var habitTracks = habitTrackService.getHabitTracks(3);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(userHabits).isNotNull().hasSize(2);
-        softly.assertThat(habitTracks).isNotNull().isEmpty();
+        softly.assertThatThrownBy(() -> habitTrackService.getHabitTracks(testTokenForUser1, 3))
+                .isInstanceOf(HabitNotFoundException.class);
         softly.assertAll();
     }
 
