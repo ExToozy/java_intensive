@@ -5,7 +5,7 @@ RestAPI приложение для отслеживания привычек.
 ## Стек:
 
 Java 17, JUnit, AssertJ, Mockito, Gradle, Jdbc,
-TestContainers, PostgreSQL, Servlets, AspectJ,
+TestContainers, PostgreSQL, Liquibase, Servlets, AspectJ,
 MapStruct, Jackson, Docker
 Spring Web, Spring MVC, Spring Test, Spring AOP,
 OpenAPI swagger, Spring Boot, custom starters
