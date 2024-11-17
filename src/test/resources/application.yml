@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: habit_tracker
+
+  datasource:
+    url: jdbc:tc:postgresql:latest:///habit_tracker_test_db
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: test
+    password: test
+
+  liquibase:
+    change-log: db/changelog/changelog.xml
+    default-schema: habit_tracker_schema
+    liquibase-schema: liquibase_schema
+
+springdoc:
+  packages-to-scan: org.example.infrastructure.controllers
+  paths-to-match: /api/**
+
+jwt:
+  token:
+    signing-key: c3Nzc3Nzc3NzdWVwci1zaWNyZXQta2V5LWZvci1qd3QtdG9rZW4=

@@ -17,5 +17,4 @@ public class SqlConstants {
     public static final String REMOVE_USER_SQL = "DELETE FROM habit_tracker_schema.users WHERE id = ?";
     public static final String CHANGE_USER_STATUS_SQL = "UPDATE habit_tracker_schema.users SET is_admin = ? WHERE id = ?";
     public static final String GET_USER_BY_ID_SQL = "SELECT * FROM habit_tracker_schema.users WHERE id = ?";
-    public static final String CREATE_USER_AUDIT_SQL = "INSERT INTO habit_tracker_schema.user_audit (user_id, request_uri, request_body, response_body) VALUES (?, ?, ?, ?)";
 }

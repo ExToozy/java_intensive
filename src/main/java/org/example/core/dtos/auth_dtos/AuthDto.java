@@ -1,7 +1,6 @@
 package org.example.core.dtos.auth_dtos;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(description = "DTO for returning authentication token information")
+@Schema(description = "DTO for returning authentication token information")
 public class AuthDto {
-
-    @ApiModelProperty(value = "authentication token for the user", example = "1")
+    public final static String TOKEN_TYPE = "Bearer";
+    @Schema(description = "authentication token for the user", example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleEBtYWlsLnJ1IiwiZXhwIjoxNzMxMTQxNDk0LCJ1c2VyX2lkIjoxLCJpc19hZG1pbiI6ZmFsc2V9.vgooxCQAqkLj93Ci1NMs47Ol8FMwL7A787IHEch20_A")
     private String token;
+
+
 }

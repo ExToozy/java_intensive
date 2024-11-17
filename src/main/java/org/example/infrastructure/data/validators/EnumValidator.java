@@ -1,9 +1,9 @@
 package org.example.infrastructure.data.validators;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.example.annotations.InEnumValues;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 
 public class EnumValidator implements ConstraintValidator<InEnumValues, String> {

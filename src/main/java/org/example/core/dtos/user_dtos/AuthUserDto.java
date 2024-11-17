@@ -1,27 +1,29 @@
 package org.example.core.dtos.user_dtos;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(description = "DTO for user authentication")
+@Schema(description = "DTO for user authentication")
 public class AuthUserDto {
-    @NotNull(message = "Must not be null")
-    @NotBlank(message = "Must not be blank")
-    @ApiModelProperty(value = "User's email", example = "user@example.com", required = true)
+    @NotNull(message = "Email must not be null")
+    @NotBlank(message = "Email must not be blank")
+    @Size(min = 3, max = 255, message = "Email must be between 3 and 255 characters")
+    @Schema(description = "User's email", example = "user@example.com")
     private String email;
 
 
-    @NotNull(message = "Must not be null")
-    @NotBlank(message = "Must not be blank")
-    @ApiModelProperty(value = "User's password", example = "password", required = true)
+    @NotNull(message = "Password must not be null")
+    @NotBlank(message = "Password must not be blank")
+    @Size(min = 3, max = 255, message = "Password must be between 3 and 255 characters")
+    @Schema(description = "User's password", example = "user@example.com")
     private String password;
 }

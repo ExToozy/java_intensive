@@ -4,43 +4,30 @@ import org.assertj.core.api.SoftAssertions;
 import org.example.core.dtos.habit_dtos.CreateHabitDto;
 import org.example.core.dtos.habit_dtos.UpdateHabitDto;
 import org.example.core.models.HabitFrequency;
+import org.example.core.models.User;
 import org.example.exceptions.HabitNotFoundException;
-import org.example.infrastructure.configs.DbConfig;
-import org.example.infrastructure.data.repositories.JdbcHabitRepository;
-import org.example.infrastructure.data.repositories.JdbcHabitTrackRepository;
-import org.example.infrastructure.data.repositories.JdbcUserRepository;
-import org.example.infrastructure.migration.MigrationTool;
-import org.example.infrastructure.util.ConnectionManager;
-import org.junit.jupiter.api.AfterEach;
+import org.example.exceptions.InvalidTokenException;
+import org.example.infrastructure.util.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {
-        DbConfig.class,
-        HabitService.class,
-        HabitTrackService.class,
-        UserService.class,
-        JdbcUserRepository.class,
-        JdbcHabitRepository.class,
-        JdbcHabitTrackRepository.class,
-        ConnectionManager.class
-})
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(value = "classpath:application.yml")
+@Sql(value = {"classpath:test_sql_scripts/remove-all-data.sql", "classpath:test_sql_scripts/insert-test-data.sql"})
 class HabitServiceTest {
 
     @Autowired
@@ -50,21 +37,16 @@ class HabitServiceTest {
     HabitTrackService habitTrackService;
 
     @Autowired
-    DbConfig dbConfig;
-
-    private Connection connection;
+    JwtProvider jwtProvider;
+    private String testTokenForUser1;
+    private String testTokenForUser2;
 
     @BeforeEach
-    void setUp() throws SQLException {
-        ConnectionManager connectionManager = new ConnectionManager(dbConfig);
-        connection = connectionManager.open();
-        new MigrationTool(dbConfig, connectionManager).runMigrate();
+    void setUp() {
+        testTokenForUser1 = "Bearer " + jwtProvider.generateAccessToken(new User(1, "ex@mail.ru", "password", false));
+        testTokenForUser2 = "Bearer " + jwtProvider.generateAccessToken(new User(2, "admin", "password", true));
     }
 
-    @AfterEach
-    void tearDown() throws SQLException {
-        connection.close();
-    }
 
     @DisplayName("Check that getUserHabits return user habits")
     @Test
@@ -76,9 +58,9 @@ class HabitServiceTest {
 
     @DisplayName("Check create habit")
     @Test
-    void createHabit_shouldAddHabitInMemory_whenAllIsCorrect() {
-        habitService.createHabit(
-                new CreateHabitDto(
+    void createHabit_shouldAddHabitInDb_whenAllIsCorrect() throws InvalidTokenException {
+        habitService.createUserHabit(
+                testTokenForUser2, new CreateHabitDto(
                         2,
                         "testName",
                         "testDescription",
@@ -151,15 +133,15 @@ class HabitServiceTest {
 
     @DisplayName("Check remove habits and their tracks")
     @Test
-    void removeHabitAndTracks_shouldRemoveHabitAndTheirTracksInMemory() throws HabitNotFoundException {
+    void removeHabitAndTracks_shouldRemoveHabitAndTheirTracksInDb() throws HabitNotFoundException, InvalidTokenException {
         habitService.removeUserHabit(1, 3);
         var userHabits = habitService.getUserHabits(1);
 
-        var habitTracks = habitTrackService.getHabitTracks(3);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(userHabits).isNotNull().hasSize(2);
-        softly.assertThat(habitTracks).isNotNull().isEmpty();
+        softly.assertThatThrownBy(() -> habitTrackService.getHabitTracks(testTokenForUser1, 3))
+                .isInstanceOf(HabitNotFoundException.class);
         softly.assertAll();
     }
 
