@@ -1,5 +1,35 @@
-1. [Дз1](https://github.com/ExToozy/java_intensive/pull/1)
-2. [Дз2](https://github.com/ExToozy/java_intensive/pull/2)
-3. [Дз3](https://github.com/ExToozy/java_intensive/pull/3)
-4. [Дз4](https://github.com/ExToozy/java_intensive/pull/4)
-5. [Дз5 PR](https://github.com/ExToozy/java_intensive/pull/5) `ссылка на pull request`
+# Описание:
+
+RestAPI приложение для отслеживания привычек.
+
+## Стек:
+
+Java 17, JUnit, AssertJ, Mockito, Gradle, Jdbc,
+TestContainers, PostgreSQL, Servlets, AspectJ,
+MapStruct, Jackson, Docker
+Spring Web, Spring MVC, Spring Test, Spring AOP,
+OpenAPI swagger, Spring Boot, custom starters
+
+## Инструкция по запуску проекта:
+
+Требования
+
+- Java 17
+- Gradle
+
+```bash
+git clone https://github.com/ExToozy/java_intensive.git
+cd java_intensive
+git checkout homework5
+cd .\aspect_starters\audit_aspect_starter\
+gradle publishToMavenLocal
+cd ..\logging_aspect_starter\
+gradle publishToMavenLocal 
+docker-compose up -d
+cd ../..
+gradle bootRun
+```
+
+### Эндпоинты доступны по:
+
+- http://localhost:8080/swagger-ui.html
